@@ -26,7 +26,7 @@
         small.ml-1 #{time_ago_in_words(@aid_request.created_at)} ago
       - if @aid_request.updated_at != @aid_request.created_at
         dt.col-3 Updated
-        dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at
+        dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at.to_s(:date_and_time)
       dt.col-3 Notes
       dd.col-9.ShowAidRequest-notes= @aid_request.notes
     .row
