@@ -1,0 +1,45 @@
+.row
+  .col-sm-6
+    h1.h3.ShowAidRequest-callerName
+      = [@aid_request.caller_last_name, @aid_request.caller_first_name].reject(&:blank?).join(", ").titleize
+      small.float-right= status_badge_for(@aid_request)
+  .col-sm-6
+    - if @aid_request.indications.any?
+      .alert.alert-danger.ShowAidRequest-indicationsArea
+        ul.list-unstyled
+          - @aid_request.indications.compact.each do |i|
+            li= fa_icon 'exclamation-triangle', text: i.upcase
+.row
+  .col-sm-6
+    dl.row
+      dt.col-3 Phone
+      dd.col-9.ShowAidRequest-phone= link_to number_to_phone(@aid_request.caller_phone_number), "tel:#{@aid_request.caller_phone_number}"
+      dt.col-3 Address
+      dd.col-9.ShowAidRequest-address= link_to @aid_request.caller_address, "#gmap-top"
+      dt.col-3 Needs
+      dd.col-9.ShowAidRequest-suppliesNeeded= @aid_request.supplies_needed
+      dt.col-3 Persons
+      dd.col-9.ShowAidRequest-persons= @aid_request.persons
+      dt.col-3 Logged
+      dd.col-9.ShowAidRequest-volunteerName 
+        = @aid_request.volunteer_name
+        small.ml-1 #{time_ago_in_words(@aid_request.created_at)} ago
+      - if @aid_request.updated_at != @aid_request.created_at
+        dt.col-3 Updated
+        dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at
+      dt.col-3 Notes
+      dd.col-9.ShowAidRequest-notes= @aid_request.notes
+  .col-sm-6
+    .list-group
+      .list-group-item#gmap-top
+        iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")
+      .list-group-item.text-center
+        img src="https://maps.googleapis.com/maps/api/streetview?location=#{@aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" max-width='100%'
+.row
+  .col-6.text-center
+    = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
+      = fa_icon 'arrow-left', text: "Back"
+  .col-6.text-center
+    = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary m-1" do
+      = fa_icon 'edit', text: 'Edit'
+  

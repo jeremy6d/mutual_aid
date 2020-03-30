@@ -1,0 +1,259 @@
+doctype html
+html lang="en" 
+  head
+    meta charset="utf-8" /
+    meta content="IE=edge" http-equiv="X-UA-Compatible" /
+    meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
+    meta name="description" content="Management Application for Richmond Mutual Aid"
+    meta name="author" content="Jeremy Weiland"
+    title Richmond Mutual Aid
+    = csrf_meta_tags
+    = csp_meta_tag
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
+    link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous"
+    script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"
+  body#page-top
+    /! Page Wrapper
+    #wrapper
+      /! Sidebar
+      ul#accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordion
+        /! Sidebar - Brand
+        a.sidebar-brand.d-flex.align-items-center.justify-content-center href="/"
+          .sidebar-brand-icon
+            img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Anarchy-symbol-white.svg" style="height: 2rem;" 
+          .sidebar-brand-text.mx-3 Richmond Mutual Aid
+        /! Divider
+        hr.sidebar-divider.my-0/
+        / ! Nav Item - Dashboard
+        li(class="nav-item #{'active' if @controller == 'aid_requests'}")
+          = link_to aid_requests_path, class: "nav-link" do
+            = fa_icon 'life-ring', text: "Requests"
+        /! Divider
+        /hr.sidebar-divider/
+        /! Heading
+        /.sidebar-heading
+          | Interface
+        / /! Nav Item - Pages Collapse Menu
+        / li.nav-item
+        /   a.nav-link.collapsed aria-controls="collapseTwo" aria-expanded="true" data-target="#collapseTwo" data-toggle="collapse" href="#" 
+        /     i.fas.fa-fw.fa-cog
+        /     span Components
+        /   #collapseTwo.collapse aria-labelledby="headingTwo" data-parent="#accordionSidebar" 
+        /     .bg-white.py-2.collapse-inner.rounded
+        /       h6.collapse-header Custom Components:
+        /       a.collapse-item href="buttons.html"  Buttons
+        /       a.collapse-item href="cards.html"  Cards
+        / /! Nav Item - Utilities Collapse Menu
+        / li.nav-item
+        /   a.nav-link.collapsed aria-controls="collapseUtilities" aria-expanded="true" data-target="#collapseUtilities" data-toggle="collapse" href="#" 
+        /     i.fas.fa-fw.fa-wrench
+        /     span Utilities
+        /   #collapseUtilities.collapse aria-labelledby="headingUtilities" data-parent="#accordionSidebar" 
+        /     .bg-white.py-2.collapse-inner.rounded
+        /       h6.collapse-header Custom Utilities:
+        /       a.collapse-item href="utilities-color.html"  Colors
+        /       a.collapse-item href="utilities-border.html"  Borders
+        /       a.collapse-item href="utilities-animation.html"  Animations
+        /       a.collapse-item href="utilities-other.html"  Other
+        / /! Divider
+        / hr.sidebar-divider/
+        / /! Heading
+        / .sidebar-heading
+        /   | Addons
+        / /! Nav Item - Pages Collapse Menu
+        / li.nav-item
+        /   a.nav-link.collapsed aria-controls="collapsePages" aria-expanded="true" data-target="#collapsePages" data-toggle="collapse" href="#" 
+        /     i.fas.fa-fw.fa-folder
+        /     span Pages
+        /   #collapsePages.collapse aria-labelledby="headingPages" data-parent="#accordionSidebar" 
+        /     .bg-white.py-2.collapse-inner.rounded
+        /       h6.collapse-header Login Screens:
+        /       a.collapse-item href="login.html"  Login
+        /       a.collapse-item href="register.html"  Register
+        /       a.collapse-item href="forgot-password.html"  Forgot Password
+        /       .collapse-divider
+        /       h6.collapse-header Other Pages:
+        /       a.collapse-item href="404.html"  404 Page
+        /       a.collapse-item href="blank.html"  Blank Page
+        / /! Nav Item - Charts
+        / li.nav-item
+        /   a.nav-link href="charts.html" 
+        /     i.fas.fa-fw.fa-chart-area
+        /     span Charts
+        / /! Nav Item - Tables
+        / li.nav-item
+        /   a.nav-link href="tables.html" 
+        /     i.fas.fa-fw.fa-table
+        /     span Tables
+        / /! Divider
+        / hr.sidebar-divider.d-none.d-md-block/
+        / /! Sidebar Toggler (Sidebar)
+        / .text-center.d-none.d-md-inline
+        /   button#sidebarToggle.rounded-circle.border-0
+        / /! End of Sidebar
+        / /! Content Wrapper
+      #content-wrapper.d-flex.flex-column
+        /! Main Content
+        #content
+          /! Topbar
+          nav.navbar.navbar-expand.navbar-light.bg-white.topbar.mb-4.static-top.shadow
+            a.navbar-brand.d-none.d-sm-block.d-md-none(href="/") Richmond Mutual Aid
+            /! Sidebar Toggle (Topbar)
+            button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3
+              i.fa.fa-bars
+            /! Topbar Search
+            form.d-none.d-sm-inline-block.form-inline.mr-auto.ml-md-3.my-2.my-md-0.mw-100.navbar-search
+              .input-group
+                input.form-control.bg-light.border-0.small aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" /
+                .input-group-append
+                  button.btn.btn-primary type="button" 
+                    i.fas.fa-search.fa-sm
+            /! Topbar Navbar
+            / ul.navbar-nav.ml-auto
+            /   /! Nav Item - Search Dropdown (Visible Only XS)
+            /   li.nav-item.dropdown.no-arrow.d-sm-none
+            /     a#searchDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+            /       i.fas.fa-search.fa-fw
+            /     /! Dropdown - Messages
+            /     .dropdown-menu.dropdown-menu-right.p-3.shadow.animated--grow-in aria-labelledby="searchDropdown" 
+            /       form.form-inline.mr-auto.w-100.navbar-search
+            /         .input-group
+            /           input.form-control.bg-light.border-0.small aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" /
+            /           .input-group-append
+            /             button.btn.btn-primary type="button" 
+            /               i.fas.fa-search.fa-sm
+            /   /! Nav Item - Alerts
+            /   li.nav-item.dropdown.no-arrow.mx-1
+            /     a#alertsDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+            /       i.fas.fa-bell.fa-fw
+            /       /! Counter - Alerts
+            /       span.badge.badge-danger.badge-counter 3+
+            /     /! Dropdown - Alerts
+            /     .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in aria-labelledby="alertsDropdown" 
+            /       h6.dropdown-header
+            /         | Alerts Center
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .mr-3
+            /         .icon-circle.bg-primary
+            /           i.fas.fa-file-alt.text-white
+            /       div
+            /         .small.text-gray-500 December 12, 2019
+            /         span.font-weight-bold A new monthly report is ready to download!
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .mr-3
+            /         .icon-circle.bg-success
+            /           i.fas.fa-donate.text-white
+            /       div
+            /         .small.text-gray-500 December 7, 2019
+            /         | $290.29 has been deposited into your account!
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .mr-3
+            /         .icon-circle.bg-warning
+            /           i.fas.fa-exclamation-triangle.text-white
+            /       div
+            /         .small.text-gray-500 December 2, 2019
+            /         | Spending Alert: We've noticed unusually high spending for your account.
+            /       a.dropdown-item.text-center.small.text-gray-500 href="#"  Show All Alerts
+            /   /! Nav Item - Messages
+            /   li.nav-item.dropdown.no-arrow.mx-1
+            /     a#messagesDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+            /       i.fas.fa-envelope.fa-fw
+            /       /! Counter - Messages
+            /       span.badge.badge-danger.badge-counter 7
+            /     /! Dropdown - Messages
+            /     .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in aria-labelledby="messagesDropdown" 
+            /       h6.dropdown-header
+            /         | Message Center
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .dropdown-list-image.mr-3
+            /         img.rounded-circle alt="" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" /
+            /         .status-indicator.bg-success
+            /       .font-weight-bold
+            /         .text-truncate Hi there! I am wondering if you can help me with a problem I've been having.
+            /         .small.text-gray-500 Emily Fowler · 58m
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .dropdown-list-image.mr-3
+            /         img.rounded-circle alt="" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" /
+            /         .status-indicator
+            /       div
+            /         .text-truncate I have the photos that you ordered last month, how would you like them sent to you?
+            /         .small.text-gray-500 Jae Chun · 1d
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .dropdown-list-image.mr-3
+            /         img.rounded-circle alt="" src="https://source.unsplash.com/CS2uCrpNzJY/60x60" /
+            /         .status-indicator.bg-warning
+            /       div
+            /         .text-truncate Last month's report looks great, I am very happy with the progress so far, keep up the good work!
+            /         .small.text-gray-500 Morgan Alvarez · 2d
+            /       a.dropdown-item.d-flex.align-items-center href="#" 
+            /       .dropdown-list-image.mr-3
+            /         img.rounded-circle alt="" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" /
+            /         .status-indicator.bg-success
+            /       div
+            /         .text-truncate Am I a good boy? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...
+            /         .small.text-gray-500 Chicken the Dog · 2w
+            /       a.dropdown-item.text-center.small.text-gray-500 href="#"  Read More Messages
+            .topbar-divider.d-none.d-sm-block
+            /! Nav Item - User Information
+            / li.nav-item.dropdown.no-arrow
+              a#userDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+                span.mr-2.d-none.d-lg-inline.text-gray-600.small Valerie Luna
+                img.img-profile.rounded-circle src="https://source.unsplash.com/QAB-WJcbgJk/60x60" /
+              /! Dropdown - User Information
+              .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in aria-labelledby="userDropdown" 
+                a.dropdown-item href="#" 
+                  i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
+                  | Profile
+                a.dropdown-item href="#" 
+                  i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
+                  | Settings
+                a.dropdown-item href="#" 
+                  i.fas.fa-list.fa-sm.fa-fw.mr-2.text-gray-400
+                  | Activity Log
+                .dropdown-divider
+                a.dropdown-item data-target="#logoutModal" data-toggle="modal" href="#" 
+                  i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
+                  | Logout
+          /! End of Topbar
+          /! Begin Page Content
+          .container-fluid= yield
+          /! /.container-fluid
+        /! End of Main Content
+        /! Footer
+        footer.sticky-footer.bg-white
+          .container.my-auto
+            .copyright.text-center.my-auto
+              span
+                | &copy; #{Time.now.year} Jeremy Weiland
+
+        /! End of Footer
+      /! End of Content Wrapper
+    /! End of Page Wrapper
+    /! Scroll to Top Button
+    a.scroll-to-top.rounded href="#page-top" 
+      i.fas.fa-angle-up
+    /! Logout Modal
+    #logoutModal.modal.fade aria-hidden="true" aria-labelledby="exampleModalLabel" role="dialog" tabindex="-1" 
+      .modal-dialog role="document" 
+        .modal-content
+          .modal-header
+            h5#exampleModalLabel.modal-title Ready to Leave?
+            button.close aria-label="Close" data-dismiss="modal" type="button" 
+              span aria-hidden="true"  ×
+          .modal-body Select "Logout" below if you are ready to end your current session.
+          .modal-footer
+            button.btn.btn-secondary data-dismiss="modal" type="button"  Cancel
+            a.btn.btn-primary href="login.html"  Logout
+    /! Bootstrap core JavaScript
+    / script src="vendor/jquery/jquery.min.js" 
+    / script src="vendor/bootstrap/js/bootstrap.bundle.min.js" 
+    / /! Core plugin JavaScript
+    / script src="vendor/jquery-easing/jquery.easing.min.js" 
+    / /! Custom scripts for all pages
+    / script src="js/sb-admin-2.min.js" 
+    / /! Page level plugins
+    / script src="vendor/chart.js/Chart.min.js" 
+    / /! Page level custom scripts
+    / script src="js/demo/chart-area-demo.js" 
+    / script src="js/demo/chart-pie-demo.js" 

@@ -1,1 +1,13 @@
 @import '~bootstrap/scss/bootstrap';
+@import './sb_admin';
+
+.fa5-text {
+  @extend .ml-2;
+}
+
+// main {
+//   @extend .mx-5;
+//   // @include media-breakpoint-up(sm) {
+//   //   margin 0;
+//   // }
+// }

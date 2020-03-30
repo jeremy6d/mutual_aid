@@ -6,7 +6,7 @@ ruby '2.6.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
@@ -31,12 +31,20 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'font_awesome5_rails'
 gem 'devise'
 gem 'slim-rails'
+gem 'simple_form'
+gem 'aasm'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'rails-pry'
+  gem 'pry-rails'
   %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
       gem lib, git: "https://github.com/rspec/#{lib}.git", branch: 'master'
   end
+  gem 'factory_bot_rails'
+  gem 'launchy'
+  gem 'pry-rails'
+  gem 'timecop'
+  gem 'seed_dump'
 end
 
 group :development do
@@ -54,7 +62,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
-  gem 'factory_bot_rails'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

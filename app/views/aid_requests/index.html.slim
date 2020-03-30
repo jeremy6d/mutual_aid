@@ -1,0 +1,51 @@
+.row
+  .col-sm-4.text-center
+    h1 Requests
+  .col-sm-8.text-center
+    = link_to new_aid_request_path, class: "btn btn-primary m-1" do
+      = fas_icon 'plus', text: "New"
+
+.list-group
+  - @aid_requests.each do |req|
+    = link_to req, class: "list-group-item list-group-item-action" do
+      .d-flex.w-100.justify-content-between
+        h5.mb-1= req.caller_last_name
+        small= distance_of_time_in_words req.created_at
+      p.mb-1= req.caller_address
+      small
+
+/table.table
+  thead
+    tr
+      th Volunteer name
+      th Caller first name
+      th Caller last name
+      th Caller phone number
+      th Caller address
+      th Supplies needed
+      th Persons
+      th Notes
+      th Status
+      th
+      th
+      th
+
+  tbody
+    - @aid_requests.each do |aid_request|
+      tr
+        td = aid_request.volunteer_name
+        td = aid_request.caller_first_name
+        td = aid_request.caller_last_name
+        td = aid_request.caller_phone_number
+        td = aid_request.caller_address
+        td = aid_request.supplies_needed
+        td = aid_request.persons
+        td = aid_request.notes
+        td = aid_request.status
+        td = link_to 'Show', aid_request
+        td = link_to 'Edit', edit_aid_request_path(aid_request)
+        td = link_to 'Destroy', aid_request, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+
