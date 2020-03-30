@@ -98,7 +98,6 @@ html lang="en"
         #content
           /! Topbar
           nav.navbar.navbar-expand.navbar-light.bg-white.topbar.mb-4.static-top.shadow
-            a.navbar-brand.d-none.d-sm-block.d-md-none(href="/") Richmond Mutual Aid
             /! Sidebar Toggle (Topbar)
             button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3
               i.fa.fa-bars
@@ -110,19 +109,19 @@ html lang="en"
                   button.btn.btn-primary type="button" 
                     i.fas.fa-search.fa-sm
             /! Topbar Navbar
-            / ul.navbar-nav.ml-auto
-            /   /! Nav Item - Search Dropdown (Visible Only XS)
-            /   li.nav-item.dropdown.no-arrow.d-sm-none
-            /     a#searchDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
-            /       i.fas.fa-search.fa-fw
-            /     /! Dropdown - Messages
-            /     .dropdown-menu.dropdown-menu-right.p-3.shadow.animated--grow-in aria-labelledby="searchDropdown" 
-            /       form.form-inline.mr-auto.w-100.navbar-search
-            /         .input-group
-            /           input.form-control.bg-light.border-0.small aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" /
-            /           .input-group-append
-            /             button.btn.btn-primary type="button" 
-            /               i.fas.fa-search.fa-sm
+            ul.navbar-nav.ml-auto
+              /! Nav Item - Search Dropdown (Visible Only XS)
+              li.nav-item.dropdown.no-arrow.d-sm-none
+                a#searchDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+                  i.fas.fa-search.fa-fw
+                /! Dropdown - Messages
+                .dropdown-menu.dropdown-menu-right.p-3.shadow.animated--grow-in aria-labelledby="searchDropdown" 
+                  form.form-inline.mr-auto.w-100.navbar-search
+                    .input-group
+                      input.form-control.bg-light.border-0.small aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" /
+                      .input-group-append
+                        button.btn.btn-primary type="button" 
+                          i.fas.fa-search.fa-sm
             /   /! Nav Item - Alerts
             /   li.nav-item.dropdown.no-arrow.mx-1
             /     a#alertsDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 

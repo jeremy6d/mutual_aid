@@ -13,10 +13,11 @@ require("channels")
 import $ from 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import './bootstrap_custom.js'
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library, dom  } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
+dom.watch()
 import 'jquery-easing';
 import Chart from 'chartjs';
 
@@ -38,6 +39,14 @@ $(document).on('turbolinks:load', function() {
 
     (function($) {
       "use strict"; // Start of use strict
+
+      if ($(window).width() < 768) {
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+        if ($(".sidebar").hasClass("toggled")) {
+          $('.sidebar .collapse').collapse('hide');
+        };
+      }
 
       // Toggle the side navigation
       $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {

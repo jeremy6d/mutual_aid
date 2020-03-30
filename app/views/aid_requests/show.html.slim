@@ -8,7 +8,7 @@
       .alert.alert-danger.ShowAidRequest-indicationsArea
         ul.list-unstyled
           - @aid_request.indications.compact.each do |i|
-            li= fa_icon 'exclamation-triangle', text: i.upcase
+            li= fa_icon 'exclamation-triangle', text: i.humanize.upcase
 .row
   .col-sm-6
     dl.row
@@ -29,17 +29,17 @@
         dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at
       dt.col-3 Notes
       dd.col-9.ShowAidRequest-notes= @aid_request.notes
+    .row
+      .col-6.text-center
+        = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
+          = fa_icon 'arrow-left', text: "Back"
+      .col-6.text-center
+        = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary m-1" do
+          = fa_icon 'edit', text: 'Edit'
   .col-sm-6
     .list-group
-      .list-group-item#gmap-top
+      .list-group-item(name="gmap-top")
         iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")
       .list-group-item.text-center
         img src="https://maps.googleapis.com/maps/api/streetview?location=#{@aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" max-width='100%'
-.row
-  .col-6.text-center
-    = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
-      = fa_icon 'arrow-left', text: "Back"
-  .col-6.text-center
-    = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary m-1" do
-      = fa_icon 'edit', text: 'Edit'
   

@@ -10,9 +10,8 @@
     = link_to req, class: "list-group-item list-group-item-action" do
       .d-flex.w-100.justify-content-between
         h5.mb-1= req.caller_last_name
-        small= distance_of_time_in_words req.created_at
       p.mb-1= req.caller_address
-      small
+      small #{distance_of_time_in_words req.created_at} ago
 
 /table.table
   thead

@@ -1,7 +1,7 @@
 class AidRequest < ApplicationRecord
   include AASM
 
-  INDICATIONS = %w(diabetes immunocompromised)
+  INDICATIONS = %w(diabetes immunocompromised see_notes)
 
   aasm column: :status do
     state :unfulfilled, initial: true
@@ -42,6 +42,7 @@ class AidRequest < ApplicationRecord
 
 private
   def scan_for_indications
+    indications ||= []
     ["immun", "compromised"].each do |phrase|
       indications << "immunocompromised" if notes =~ /#{phrase}/i
     end

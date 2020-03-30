@@ -7,16 +7,12 @@ module AidRequestsHelper
 
   def status_color_for(req)
     case req.status
-    when "new"
-      "default"
-    when "picked"
-      "info"
-    when "packed"
+    when "unfulfilled"
       "primary"
-    when "shipped"
+    when "in_progress"
       "warning"
-    when "delivered"
-      "danger"
+    when "fulfilled"
+      "success"
     when "dismissed"
       "dark"
     end
@@ -24,15 +20,11 @@ module AidRequestsHelper
 
   def status_icon_for(req)
     icon = case req.status
-    when "new"
+    when "unfulfilled"
+      "inbox"
+    when "in_progress"
       "tasks"
-    when "picked"
-      "box-open"
-    when "packed"
-      "box-closed"
-    when "shipped"
-      "shipping-fast"
-    when "delivered"
+    when "fulfilled"
       "check-square"
     when "dismissed"
       "times-octagon"
