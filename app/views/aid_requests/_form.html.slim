@@ -1,9 +1,8 @@
 = simple_form_for @aid_request do |f|
   .row
-    .col-sm-3= f.input :volunteer_name
-    .col-sm-3= f.input :caller_first_name
-    .col-sm-3= f.input :caller_last_name
-    .col-sm-3= f.input :caller_phone_number
+    .col-sm-4= f.input :caller_first_name
+    .col-sm-4= f.input :caller_last_name
+    .col-sm-4= f.input :caller_phone_number
   .row
     .col-sm-4= f.input :caller_address, as: :text
     .col-sm-4= f.input :supplies_needed, as: :text

@@ -10,6 +10,7 @@ module MutualAid
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+    config.active_record.schema_format = :sql
     config.time_zone = 'Eastern Time (US & Canada)'
     config.generators do |g|
       g.test_framework :rspec,  fixtures: true,

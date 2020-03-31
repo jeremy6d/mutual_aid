@@ -1,4 +1,5 @@
 class AidRequestsController < ApplicationController
+  before_action :authenticate_volunteer!
   before_action :set_aid_request, only: [:show, :edit, :update, :destroy]
 
   # GET /aid_requests
@@ -25,7 +26,8 @@ class AidRequestsController < ApplicationController
   # POST /aid_requests.json
   def create
     @aid_request = AidRequest.new(aid_request_params)
-
+binding.pry
+    @aid_request.original_taker = current_volunteer
     respond_to do |format|
       if @aid_request.save
         format.html { redirect_to @aid_request, notice: 'Aid request was successfully created.' }

@@ -22,7 +22,13 @@ class AidRequest < ApplicationRecord
     end
   end
 
-  # before_create :scan_for_indications
+  # has_many :needed_items
+  belongs_to :original_taker, class_name: "Volunteer", 
+                              inverse_of: :requests_taken
+
+  def volunteer_name
+    original_taker.full_name
+  end
 
   def indications=(set)
     to_write = set.map(&:downcase).map(&:strip) & INDICATIONS
@@ -36,19 +42,25 @@ class AidRequest < ApplicationRecord
   end
 
   def notes=(in_notes)
-    scan_for_indications
-    super
+    add_indications_for in_notes
+    super in_notes
   end
 
+  # def needed_items=(items)
+  #   items.each do |i|
+  #     needed_items.find_or_build_by(name: i)
+  #   end
+  # end
+
 private
-  def scan_for_indications
+  def add_indications_for(txt)
     indications ||= []
     ["immun", "compromised"].each do |phrase|
-      indications << "immunocompromised" if notes =~ /#{phrase}/i
+      indications << "immunocompromised" if txt =~ /#{phrase}/i
     end
     ["diab", "diba", "betes", "betse", "bets"].each do |phrase|
-      indications << "diabetes" if notes =~ /#{phrase}/i
+      indications << "diabetes" if txt =~ /#{phrase}/i
     end
-    indications.uniq!
+    indications = indications.uniq
   end
 end
