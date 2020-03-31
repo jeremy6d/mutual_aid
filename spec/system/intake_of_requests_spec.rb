@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.feature "Intake of aid request", type: :system, headless: false do
+RSpec.feature "Intake of aid request", type: :system do
   let(:volunteer) do
-    FactoryBot.create :volunteer
+    FactoryBot.create :volunteer, first_name: "Buster", last_name: "Bluth"
   end
 
   it "handles the happy path" do
@@ -14,10 +14,11 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
     fill_in "Password", with: "password"
     click_on "Sign in"
 
+    expect(find(".Navbar-volunteerName")).to have_content("Buster Bluth")
+
     click_on "New"
 
     # volunteer A enters information
-    fill_in "Volunteer name", with: "GOB"
     fill_in "Caller first name", with: "Steve"
     fill_in "Caller last name", with: "Holt"
     fill_in "Caller phone number", with: "1-555-555-5555"
@@ -30,10 +31,11 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
 
     # aid request is saved
     expect(current_path).to eql(aid_request_path(AidRequest.last))
-    expect(find(".ShowAidRequest-indicationsArea")).to have_content("DIABETIC")
+    expect(find(".ShowAidRequest-indicationsArea")).to have_content("DIABET")
     expect(find(".ShowAidRequest-callerName")).to have_content("Holt, Steve")
-    expect(find(".ShowAidRequest-callerPhone")).to have_content("(55dd5) 555-5555")
-    expect(find(".ShowAidRequest-callerAddress")).to have_content("517 W 20th St\nRichmond VA 23225")
+    expect(find(".ShowAidRequest-callerPhone")).to have_content("(555) 555-5555")
+    expect(find(".ShowAidRequest-callerAddress")).to have_content("517 W 20th St")
+    expect(find(".ShowAidRequest-callerAddress")).to have_content("Richmond VA 23225")
     expect(find(".ShowAidRequest-persons")).to have_content("2 adults, 1 child")
     expect(find(".ShowAidRequest-notes")).to have_content("1 adult is diabetic")
 

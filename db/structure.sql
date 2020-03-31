@@ -279,7 +279,8 @@ CREATE TABLE public.aid_requests (
     indications character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    original_taker_id bigint
+    original_taker_id bigint,
+    log_data jsonb
 );
 
 
@@ -433,6 +434,13 @@ CREATE UNIQUE INDEX index_volunteers_on_reset_password_token ON public.volunteer
 
 
 --
+-- Name: aid_requests logidze_on_aid_requests; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER logidze_on_aid_requests BEFORE INSERT OR UPDATE ON public.aid_requests FOR EACH ROW WHEN ((COALESCE(current_setting('logidze.disabled'::text, true), ''::text) <> 'on'::text)) EXECUTE FUNCTION public.logidze_logger('null', 'updated_at');
+
+
+--
 -- Name: aid_requests fk_rails_4566916b7c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -452,6 +460,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200331023643'),
 ('20200331023919'),
 ('20200331023920'),
-('20200331144632');
+('20200331144632'),
+('20200331234514');
 
 

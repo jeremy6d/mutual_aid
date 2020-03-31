@@ -13,9 +13,9 @@
   .col-sm-6
     dl.row
       dt.col-3 Phone
-      dd.col-9.ShowAidRequest-phone= link_to number_to_phone(@aid_request.caller_phone_number), "tel:#{@aid_request.caller_phone_number}"
+      dd.col-9.ShowAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
       dt.col-3 Address
-      dd.col-9.ShowAidRequest-address= link_to @aid_request.caller_address, "#gmap-top"
+      dd.col-9.ShowAidRequest-callerAddress= link_to @aid_request.caller_address.gsub(/\n/, '<br />'), "#gmap-top"
       dt.col-3 Needs
       dd.col-9.ShowAidRequest-suppliesNeeded= @aid_request.supplies_needed
       dt.col-3 Persons
@@ -30,16 +30,26 @@
       dt.col-3 Notes
       dd.col-9.ShowAidRequest-notes= @aid_request.notes
     .row
-      .col-6.text-center
+      .col-4.text-center
         = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
           = fa_icon 'arrow-left', text: "Back"
-      .col-6.text-center
+      .col-4.text-center
+        - if @aid_request.unfulfilled?
+          = link_to start_aid_request_path(@aid_request), class: "btn btn-lg btn-success m-1" do
+            = fa_icon 'tasks', text: "Fulfill"
+        /- if @aid_request.in_progress?
+          = link_to aid_requests_path, class: "btn btn-lg btn-success m-1", method: :patch do
+            = fa_icon 'check', text: "Complete"
+        /= link_to aid_requests_path, class: "btn btn-lg btn-dark m-1", data: { prompt: "Are you sure?" } do
+            = fa_icon status_icon_for(@aid_request), text: "Dismiss"
+      .col-4.text-center
         = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary m-1" do
           = fa_icon 'edit', text: 'Edit'
   .col-sm-6
-    .list-group
-      .list-group-item(name="gmap-top")
-        iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")
-      .list-group-item.text-center
-        img src="https://maps.googleapis.com/maps/api/streetview?location=#{@aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" max-width='100%'
+    - unless Rails.env.test?
+      .list-group
+        .list-group-item(name="gmap-top")
+          iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")
+        .list-group-item.text-center
+          img src="https://maps.googleapis.com/maps/api/streetview?location=#{@aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" max-width='100%'
   

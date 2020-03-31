@@ -1,11 +1,16 @@
 class AidRequestsController < ApplicationController
   before_action :authenticate_volunteer!
-  before_action :set_aid_request, only: [:show, :edit, :update, :destroy]
+  before_action :set_aid_request, only: [:show, :edit, :update, :destroy, :start]
 
   # GET /aid_requests
   # GET /aid_requests.json
   def index
-    @aid_requests = AidRequest.all
+    @aid_requests = case params[:status]
+    when "", nil, "all"
+      AidRequest.order(created_at: :desc)
+    else
+      AidRequest.where(status: params[:status]).order(updated_at: :desc)
+    end
   end
 
   # GET /aid_requests/1
@@ -26,7 +31,6 @@ class AidRequestsController < ApplicationController
   # POST /aid_requests.json
   def create
     @aid_request = AidRequest.new(aid_request_params)
-binding.pry
     @aid_request.original_taker = current_volunteer
     respond_to do |format|
       if @aid_request.save
@@ -71,6 +75,6 @@ binding.pry
 
     # Only allow a list of trusted parameters through.
     def aid_request_params
-      params.require(:aid_request).permit(:volunteer_name, :caller_first_name, :caller_last_name, :caller_phone_number, :caller_address, :supplies_needed, :persons, :notes, :status, indications: [])
+      params.require(:aid_request).permit(:caller_first_name, :caller_last_name, :caller_phone_number, :caller_address, :supplies_needed, :persons, :notes, :status, indications: [])
     end
 end

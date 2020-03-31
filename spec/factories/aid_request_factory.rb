@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :aid_request do
     caller_first_name { "Robert" }
     caller_last_name { "Loblaw" }
-    volunteer_name { "George Michael" }
+    original_taker { create :volunteer }
     indications { ["immunocompromised"] }
     caller_address {
       %Q~1203 Main St

@@ -1,17 +1,37 @@
-.row
-  .col-sm-4.text-center
-    h1 Requests
-  .col-sm-8.text-center
-    = link_to new_aid_request_path, class: "btn btn-primary m-1" do
-      = fas_icon 'plus', text: "New"
-
-.list-group
+.btn-group.w-100
+  - AidRequest.aasm.states.map(&:name).map(&:to_s).each do |status|
+    = link_to aid_requests_path(status: status), title: status, class: "btn btn-#{status_color_for(status)} #{'btn-active' if status_filter == status}", role: "button", aria: { pressed: (status_filter == status)}
+      .d-none.d-md-block= fa_icon status_icon_for(status), text: status.humanize
+      .d-xs-block.d-md-none= fa_icon status_icon_for(status)
+  = link_to aid_requests_path(status: "all"), class: "btn btn-primary #{'btn-active' if status_filter == "all"}", role: "button", aria: { pressed: (status_filter == 'all')} do
+    .d-none.d-md-block= fas_icon 'folder-open', text: "All"
+    .d-xs-block.d-md-none= fas_icon 'folder-open'
+  = link_to new_aid_request_path, class: "btn btn-info", role: "button" do
+    .d-none.d-md-block= fas_icon 'plus', text: "New"
+    .d-xs-block.d-md-none= fas_icon 'plus'
+h1= [status_filter.humanize.titleize, "Requests"].join(" ")
+.card-group
   - @aid_requests.each do |req|
-    = link_to req, class: "list-group-item list-group-item-action" do
-      .d-flex.w-100.justify-content-between
-        h5.mb-1= req.caller_last_name
-      p.mb-1= req.caller_address
-      small #{distance_of_time_in_words req.created_at} ago
+    .card(style="max-width: 18rem;" class="border-#{status_color_for req}")
+      .card-header
+        small.float-right
+          - if req.created_at < 1.week.ago
+            = req.created_at.to_s(:date_only)
+          - elsif req.created_at > 1.day.ago
+            = req.created_at.to_s(:time_only)
+          - else 
+            = req.created_at.strftime("%A")
+        h5= link_to(req.caller_name, req)
+              
+      .mt-3 
+        ul.list-unstyled.px-3
+          li
+            = link_to "tel:#{req.caller_phone_number}" do
+              = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
+          li= req.caller_address.gsub(/\n/, '<br />')
+          li Needs: #{req.supplies_needed}
+          li= req.persons
+      .card-footer updated #{time_ago_in_words req.updated_at} ago
 
 /table.table
   thead

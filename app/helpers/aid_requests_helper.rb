@@ -5,10 +5,11 @@ module AidRequestsHelper
     end
   end
 
-  def status_color_for(req)
-    case req.status
+  def status_color_for(obj)
+    status = obj.is_a?(AidRequest) ? obj.status : obj
+    case status.to_s
     when "unfulfilled"
-      "primary"
+      "danger"
     when "in_progress"
       "warning"
     when "fulfilled"
@@ -18,8 +19,9 @@ module AidRequestsHelper
     end
   end
 
-  def status_icon_for(req)
-    icon = case req.status
+  def status_icon_for(obj)
+    status = obj.is_a?(AidRequest) ? obj.status : obj
+    icon = case status.to_s
     when "unfulfilled"
       "inbox"
     when "in_progress"
@@ -27,7 +29,11 @@ module AidRequestsHelper
     when "fulfilled"
       "check-square"
     when "dismissed"
-      "times-octagon"
+      "ban"
     end
+  end
+
+  def status_filter
+    params.fetch(:status, "all")
   end
 end
