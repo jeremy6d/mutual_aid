@@ -1,0 +1,7 @@
+h1 Fulfillment for #{@aid_request.caller_name}
+
+.btn-group
+  = link_to edit_aid_request_fulfillment_path(@aid_request, @fulfillment), class: "btn btn-primary" do
+    = fa_icon 'edit', text: "Edit"
+  = link_to :back, class: "btn btn-outline-dark" do
+    = fa_icon 'arrow-left', text: "Back"

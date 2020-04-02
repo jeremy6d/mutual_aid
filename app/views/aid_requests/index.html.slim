@@ -28,7 +28,7 @@ h1= [status_filter.humanize.titleize, "Requests"].join(" ")
           li
             = link_to "tel:#{req.caller_phone_number}" do
               = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
-          li= req.caller_address.gsub(/\n/, '<br />')
+          li= raw req.caller_address.gsub(/\n/, '<br />')
           li Needs: #{req.supplies_needed}
           li= req.persons
       .card-footer updated #{time_ago_in_words req.updated_at} ago

@@ -25,7 +25,7 @@ class AidRequest < ApplicationRecord
 
   before_create :detect_indications_in_notes!
 
-  # has_many :needed_items
+  has_many :fulfillments, inverse_of: :fulfiller
   belongs_to :original_taker, class_name: "Volunteer", 
                               inverse_of: :requests_taken
 

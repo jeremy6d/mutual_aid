@@ -7,6 +7,7 @@ class Volunteer < ApplicationRecord
 
   has_many :requests_taken, class_name: "AidRequest", 
                             inverse_of: :taken_by
+  has_many :fulfillments, inverse_of: :fulfillers
 
   validates_presence_of :first_name, :last_name
 

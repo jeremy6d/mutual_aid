@@ -1,0 +1,34 @@
+= simple_form_for [@aid_request, @fulfillment] do |f|
+  .row
+    .col
+      = f.error_notification
+      = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  .row
+    .col-md-6
+      .card
+        .card-header.FulfillAidRequest-indicationsArea
+          - @aid_request.indications.each do |ind|
+            .alert.alert-danger= ind
+        .card-body
+          h4
+            = status_badge_for(@aid_request)
+            span.FulfillAidRequest-callerName= @aid_request.caller_name
+            lead.FulfillAidRequest-persons= @aid_request.persons
+          .FulfillAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
+          p.FulfillAidRequest-notes= @aid_request.notes
+        .card-footer
+          h5 Needs
+      .list-item-group
+        - @aid_request.supplies_needed.split(",").each do |need|
+          .list-item= need
+
+    .col-md-6
+      .form-inputs
+        = f.input :contents, as: :text
+        = f.input :notes, as: :text
+        = f.input :contents_sheet_image, as: :file
+        = f.input :num_bags, as: :numeric, label: "Number of bags"
+      .form-actions
+        button.btn.btn-primary
+          = fa_icon 'truck-pickup', text: "Ready for delivery"
+

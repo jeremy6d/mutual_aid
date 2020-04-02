@@ -23,6 +23,8 @@ RSpec.describe "/aid_requests", type: :request do
     skip("Add a hash of attributes invalid for your model")
   }
 
+  before { sign_in FactoryBot.create(:volunteer) }
+
   describe "GET /index" do
     it "renders a successful response" do
       AidRequest.create! valid_attributes
