@@ -1,0 +1,19 @@
+h1 Listing fulfillments
+
+table
+  thead
+    tr
+      th
+      th
+      th
+
+  tbody
+    - @fulfillments.each do |fulfillment|
+      tr
+        td = link_to 'Show', fulfillment
+        td = link_to 'Edit', edit_fulfillment_path(fulfillment)
+        td = link_to 'Destroy', fulfillment, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Fulfillment', new_aid_request_fulfillment_path(@aid_request)

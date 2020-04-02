@@ -1,8 +1,9 @@
 .row
   .col-sm-6
     h1.h3.ShowAidRequest-callerName
+      .badge.badge-lg.badge-dark= @aid_request.id
       = [@aid_request.caller_last_name, @aid_request.caller_first_name].reject(&:blank?).join(", ").titleize
-      small.float-right= status_badge_for(@aid_request)
+      small.float-right.ShowAidRequest-status= status_badge_for(@aid_request)
   .col-sm-6
     - if @aid_request.indications.any?
       .alert.alert-danger.ShowAidRequest-indicationsArea
@@ -15,7 +16,7 @@
       dt.col-3 Phone
       dd.col-9.ShowAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
       dt.col-3 Address
-      dd.col-9.ShowAidRequest-callerAddress= link_to @aid_request.caller_address.gsub(/\n/, '<br />'), "#gmap-top"
+      dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address.gsub(/\n/, '<br />')), "#gmap-top"
       dt.col-3 Needs
       dd.col-9.ShowAidRequest-suppliesNeeded= @aid_request.supplies_needed
       dt.col-3 Persons
@@ -29,14 +30,18 @@
         dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at.to_s(:date_and_time)
       dt.col-3 Notes
       dd.col-9.ShowAidRequest-notes= @aid_request.notes
+    .list-group.FulfillmentList-listParent
+      - @aid_request.fulfillments.each do |f|
+        .list-group-item.FulfillmentList-fulfillmentItem
+          = link_to "#{f.status.titleize} fulfillment #{f.id} (#{time_ago_in_words f.created_at})", [@aid_request, f]
     .row
       .col-4.text-center
         = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
           = fa_icon 'arrow-left', text: "Back"
       .col-4.text-center
         - if @aid_request.unfulfilled?
-          = link_to start_aid_request_path(@aid_request), class: "btn btn-lg btn-success m-1" do
-            = fa_icon 'tasks', text: "Fulfill"
+          = link_to new_aid_request_fulfillment_path(@aid_request), class: "btn btn-lg btn-success m-1" do
+            = fa_icon 'box-open', text: "Start a new fulfillment"
         /- if @aid_request.in_progress?
           = link_to aid_requests_path, class: "btn btn-lg btn-success m-1", method: :patch do
             = fa_icon 'check', text: "Complete"

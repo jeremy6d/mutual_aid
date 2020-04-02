@@ -1,24 +1,57 @@
-# README
+# Richmond Mutual Aid Supply Drive System
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The purpose of this system is to streamline operations and broadcast better information about the supply drive efforts.
 
-Things you may want to cover:
+See the tests for more details!
 
-* Ruby version
+## Happy path
 
-* System dependencies
+(Another request 2 was logged and fulfillment 2 was created for it previously)
 
-* Configuration
+User HOTLINE enters request 1 information and submits
+  - information is persisted to the database
+  - request is marked "unfulfilled"
+  - redirects to the new request form
+  - shows a flash saying message entered
 
-* Database creation
+User PACKER creates a fulfillment 1
+  - system should print a fulfillment sheet
+    - sheet has map of location and streetview
+    - sheet has details of request and fulfillment 1
+    - sheet lists total number of bags
+    - sheet displays unique id of request and fulfillment 1
+  - fufillment form should have all details for request available
 
-* Database initialization
+PACKER packs the bag
+PACKER attaches a photo of a list of contents
+PACKER enters adds a bag and prints another sheet
+- system should print another fulfillment sheet
 
-* How to run the test suite
+PACKER attaches sheets to bags and marks fulfillment 1 "packed"
+- redirects to request view
+  - request is marked "in progress"
+  - fulfillment 1 and "packed" status shown in list
+  - thumbnail of list
 
-* Services (job queues, cache servers, search engines, etc.)
+User DRIVER picks up this fulfillment and another, picks each in the delivery list, and submits them as a new delivery attached to him
+  - delivery view shown with fufillment 1
+  - fulfillment 1 is marked "on the way"
+  - fulfillment 2 is marked "on the way"
 
-* Deployment instructions
+DRIVER makes delivery and marks fulfillment 1 "delivered"
+  - fulfillment 1 is marked "delivered"
+  - request 1 is marked "complete"
+  - fulfillement 2 details come up on screen
 
-* ...
+DRIVER makes delivery and marks fulfillment 2 "delivered"
+  - fulfillment 2 is marked "delivered"
+  - request 2 is marked "complete"
+  - delivery complete screen shown
+
+User INVENTORY pulls up fulfillment in outgoing inventory queue
+  - fulfillment is displayed with all fulfillment details
+
+INVENTORY marks the fulfillment "reconciled"
+
+
+

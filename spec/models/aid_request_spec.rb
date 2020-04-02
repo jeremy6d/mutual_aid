@@ -19,9 +19,9 @@ RSpec.describe AidRequest, type: :model do
     expect(subject. indications).to include("diabetes")
   end
 
-  it "processes supplies needed into needs records" do
-    subject.supplies_needed = "bread, milk, soap, cheese whiz, gravy"
-    subject.save
-    expect(subject.reload.needs.count).to eql(5)
-  end
+  # it "processes supplies needed into needs records" do
+  #   subject.supplies_needed = "bread, milk, soap, cheese whiz, gravy"
+  #   subject.save
+  #   expect(subject.reload.needs.count).to eql(5)
+  # end
 end

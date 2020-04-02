@@ -4,6 +4,7 @@ ENV['RAILS_ENV'] ||= 'test'
 # ENV['RAILS_SYSTEM_TESTING_SCREENSHOT'] = 'inline'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
+require 'faker'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
@@ -32,7 +33,9 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do
     driven_by :rack_test
   end
-config.include Rails.application.routes.url_helpers
+  config.include Rails.application.routes.url_helpers
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  
   config.before(:each, type: :system, js: true) do
     if ENV["SELENIUM_DRIVER_URL"].present?
       driven_by :selenium, using: :chrome,

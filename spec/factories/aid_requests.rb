@@ -12,5 +12,15 @@ FactoryBot.define do
     supplies_needed { "milk, bread, bleach, soap" }
     persons { "2 adults, 1 child" }
     notes { "Child suffers from diabetes" }
+
+    trait :packed do
+      transient do
+        fulfillment_ct { 1 }
+      end
+
+      after(:create) do |r, evaluator|
+        create_list :fulfillment, evaluator.fulfillment_ct, aid_request: r
+      end
+    end
   end
 end

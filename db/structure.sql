@@ -263,6 +263,74 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.active_storage_attachments (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    record_type character varying NOT NULL,
+    record_id bigint NOT NULL,
+    blob_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: active_storage_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.active_storage_attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: active_storage_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.active_storage_attachments_id_seq OWNED BY public.active_storage_attachments.id;
+
+
+--
+-- Name: active_storage_blobs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.active_storage_blobs (
+    id bigint NOT NULL,
+    key character varying NOT NULL,
+    filename character varying NOT NULL,
+    content_type character varying,
+    metadata text,
+    byte_size bigint NOT NULL,
+    checksum character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: active_storage_blobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.active_storage_blobs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: active_storage_blobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage_blobs.id;
+
+
+--
 -- Name: aid_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -313,6 +381,42 @@ CREATE TABLE public.ar_internal_metadata (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: fulfillments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fulfillments (
+    id bigint NOT NULL,
+    fulfiller_id bigint,
+    aid_request_id bigint,
+    contents text,
+    notes text,
+    status character varying,
+    num_bags integer DEFAULT 1,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: fulfillments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fulfillments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fulfillments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fulfillments_id_seq OWNED BY public.fulfillments.id;
 
 
 --
@@ -367,6 +471,20 @@ ALTER SEQUENCE public.volunteers_id_seq OWNED BY public.volunteers.id;
 
 
 --
+-- Name: active_storage_attachments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_attachments ALTER COLUMN id SET DEFAULT nextval('public.active_storage_attachments_id_seq'::regclass);
+
+
+--
+-- Name: active_storage_blobs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval('public.active_storage_blobs_id_seq'::regclass);
+
+
+--
 -- Name: aid_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -374,10 +492,33 @@ ALTER TABLE ONLY public.aid_requests ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: fulfillments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fulfillments ALTER COLUMN id SET DEFAULT nextval('public.fulfillments_id_seq'::regclass);
+
+
+--
 -- Name: volunteers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.volunteers ALTER COLUMN id SET DEFAULT nextval('public.volunteers_id_seq'::regclass);
+
+
+--
+-- Name: active_storage_attachments active_storage_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_attachments
+    ADD CONSTRAINT active_storage_attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: active_storage_blobs active_storage_blobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_blobs
+    ADD CONSTRAINT active_storage_blobs_pkey PRIMARY KEY (id);
 
 
 --
@@ -397,6 +538,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: fulfillments fulfillments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fulfillments
+    ADD CONSTRAINT fulfillments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -413,10 +562,45 @@ ALTER TABLE ONLY public.volunteers
 
 
 --
+-- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_active_storage_attachments_on_blob_id ON public.active_storage_attachments USING btree (blob_id);
+
+
+--
+-- Name: index_active_storage_attachments_uniqueness; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON public.active_storage_attachments USING btree (record_type, record_id, name, blob_id);
+
+
+--
+-- Name: index_active_storage_blobs_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_blobs USING btree (key);
+
+
+--
 -- Name: index_aid_requests_on_original_taker_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_aid_requests_on_original_taker_id ON public.aid_requests USING btree (original_taker_id);
+
+
+--
+-- Name: index_fulfillments_on_aid_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fulfillments_on_aid_request_id ON public.fulfillments USING btree (aid_request_id);
+
+
+--
+-- Name: index_fulfillments_on_fulfiller_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fulfillments_on_fulfiller_id ON public.fulfillments USING btree (fulfiller_id);
 
 
 --
@@ -449,6 +633,22 @@ ALTER TABLE ONLY public.aid_requests
 
 
 --
+-- Name: fulfillments fk_rails_62debf2cb1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fulfillments
+    ADD CONSTRAINT fk_rails_62debf2cb1 FOREIGN KEY (fulfiller_id) REFERENCES public.volunteers(id);
+
+
+--
+-- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_attachments
+    ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -461,6 +661,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200331023919'),
 ('20200331023920'),
 ('20200331144632'),
-('20200331234514');
+('20200331234514'),
+('20200401205703'),
+('20200401221719');
 
 

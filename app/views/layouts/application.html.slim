@@ -228,7 +228,16 @@ html lang="en"
                           = fa_icon 'sign-in-alt', text: 'Sign in'
           /! End of Topbar
           /! Begin Page Content
-          .container-fluid= yield
+          .container-fluid
+            .Flash.no-print
+              - flash.each do |name, msg|
+                - if msg.is_a?(String)
+                  div class="Flash-message Flash-#{name} alert alert-dismissable fade show" role="alert"
+                    button.close type="button" data-dismiss="alert" aria-label="Close"
+                      span aria-hidden="true" 
+                        | ×
+                    = content_tag :div, msg, :id => "flash_#{name}"
+            main= yield
           /! /.container-fluid
         /! End of Main Content
         /! Footer
