@@ -10,7 +10,8 @@ dl
         - @fulfillment.contents.split(" ").each do |item|
           .list-group-item= item.strip
     - if @fulfillment.contents_sheet_image.attached?
-      = image_tag @fulfillment.contents_sheet_image.variant(resize_to_limit: [300, 300])
+      = link_to url_for(@fulfillment.contents_sheet_image) do
+        = image_tag @fulfillment.contents_sheet_image.variant(resize_to_limit: [300, 300])
 .p= @fulfillmentnotes
 
 .btn-group
