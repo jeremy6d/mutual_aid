@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Intake of aid request", type: :system, headless: false do
+RSpec.feature "Intake of aid request", type: :system do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),

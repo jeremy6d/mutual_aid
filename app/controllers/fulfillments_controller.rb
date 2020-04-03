@@ -72,6 +72,6 @@ class FulfillmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def fulfillment_params
-      params.require(:fulfillment).permit(:notes,)
+      params.require(:fulfillment).permit(:notes, :contents, :contents_sheet_image, :num_bags)
     end
 end

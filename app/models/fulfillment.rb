@@ -26,5 +26,15 @@ class Fulfillment < ApplicationRecord
 
   has_one_attached :contents_sheet_image
 
+  validate :contents_provided
+
   after_create { aid_request.start! }
+
+private
+
+  def contents_provided
+    unless contents_sheet_image.attached? || contents.present?
+      errors.add :base, "Either a contents list or an image are required"
+    end
+  end
 end
