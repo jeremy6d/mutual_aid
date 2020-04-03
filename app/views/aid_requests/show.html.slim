@@ -33,15 +33,18 @@
     .list-group.FulfillmentList-listParent
       - @aid_request.fulfillments.each do |f|
         .list-group-item.FulfillmentList-fulfillmentItem
-          = link_to "#{f.status.titleize} fulfillment #{f.id} (#{time_ago_in_words f.created_at})", [@aid_request, f]
+          - if f.contents_sheet_image.attached?
+            = link_to url_for(f.contents_sheet_image), class: "mr-3" do
+              = fa_icon 'file-signature', title: "Open attached contents sheet"
+          = link_to raw("<strong>#{f.status.titleize}</strong> fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f]
     .row
       .col-4.text-center
         = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
           = fa_icon 'arrow-left', text: "Back"
       .col-4.text-center
-        - if @aid_request.unfulfilled?
+        - unless @aid_request.fulfilled?
           = link_to new_aid_request_fulfillment_path(@aid_request), class: "btn btn-lg btn-success m-1" do
-            = fa_icon 'box-open', text: "Start a new fulfillment"
+            = fa_icon 'box-open', text: "Fulfill"
         /- if @aid_request.in_progress?
           = link_to aid_requests_path, class: "btn btn-lg btn-success m-1", method: :patch do
             = fa_icon 'check', text: "Complete"

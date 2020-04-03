@@ -348,7 +348,8 @@ CREATE TABLE public.aid_requests (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     original_taker_id bigint,
-    log_data jsonb
+    log_data jsonb,
+    allergies character varying
 );
 
 
@@ -417,6 +418,39 @@ CREATE SEQUENCE public.fulfillments_id_seq
 --
 
 ALTER SEQUENCE public.fulfillments_id_seq OWNED BY public.fulfillments.id;
+
+
+--
+-- Name: needs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.needs (
+    id bigint NOT NULL,
+    name character varying,
+    notes text,
+    aid_request_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: needs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.needs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: needs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.needs_id_seq OWNED BY public.needs.id;
 
 
 --
@@ -499,6 +533,13 @@ ALTER TABLE ONLY public.fulfillments ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: needs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.needs ALTER COLUMN id SET DEFAULT nextval('public.needs_id_seq'::regclass);
+
+
+--
 -- Name: volunteers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -543,6 +584,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.fulfillments
     ADD CONSTRAINT fulfillments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: needs needs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.needs
+    ADD CONSTRAINT needs_pkey PRIMARY KEY (id);
 
 
 --
@@ -604,6 +653,13 @@ CREATE INDEX index_fulfillments_on_fulfiller_id ON public.fulfillments USING btr
 
 
 --
+-- Name: index_needs_on_aid_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_needs_on_aid_request_id ON public.needs USING btree (aid_request_id);
+
+
+--
 -- Name: index_volunteers_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -662,6 +718,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200331023920'),
 ('20200331144632'),
 ('20200331234514'),
+('20200331235352'),
+('20200401133447'),
 ('20200401205703'),
 ('20200401221719');
 

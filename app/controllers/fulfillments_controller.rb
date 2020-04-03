@@ -1,4 +1,5 @@
 class FulfillmentsController < ApplicationController
+  before_action :authenticate_volunteer!
   before_action :set_fulfillment, only: [:show, :edit, :update, :destroy]
 
   # GET /fulfillments

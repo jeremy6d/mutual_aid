@@ -58,7 +58,7 @@ RSpec.feature "Intake of aid request", type: :system do
 
     signing_in_as(packer_volunteer) do
       click_on "Holt, Steve"
-      click_on "Start a new fulfillment"
+      click_on "Fulfill"
 
       expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
