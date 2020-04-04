@@ -18,10 +18,10 @@ FactoryBot.define do
       caller_last_name { Faker::Name.last_name }
       caller_address { Faker::Address.full_address }
       caller_phone_number { Faker::PhoneNumber.cell_phone }
-      indications { ["allergies", "diabetc","", ""].sample }
+      indications { AidRequest::INDICATIONS.sample(rand(0..2)) }
       supplies_needed { rand(1..5).times.collect { Faker::Food.ingredient }.join(", ") }
       persons { "#{rand(1..3)} #{%w(adults children seniors).sample}" }
-      notes { Faker::Lorem.sentences(number: rand(1..4)) }
+      notes { Faker::Lorem.sentences(number: rand(1..4)).join("\n") }
       transient do
         fulfillment_ct { rand(1..3) }
       end

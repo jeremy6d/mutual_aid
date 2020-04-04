@@ -10,10 +10,10 @@
     .d-none.d-md-block= fas_icon 'plus', text: "New"
     .d-xs-block.d-md-none= fas_icon 'plus'
 h1= [status_filter.humanize.titleize, "Requests"].join(" ")
-.card-group
+/.card-deck
   - @aid_requests.each do |req|
-    .card(style="max-width: 18rem;" class="border-#{status_color_for req}")
-      .card-header
+    .card(style="min-width: 20%; max-width: 18rem;" class="border-#{status_color_for req}")
+      .card-body
         small.float-right
           - if req.created_at < 1.week.ago
             = req.created_at.to_s(:date_only)
@@ -21,50 +21,42 @@ h1= [status_filter.humanize.titleize, "Requests"].join(" ")
             = req.created_at.to_s(:time_only)
           - else 
             = req.created_at.strftime("%A")
-        h5= link_to(req.caller_name, req)
-              
-      .mt-3 
-        ul.list-unstyled.px-3
-          li
-            = link_to "tel:#{req.caller_phone_number}" do
-              = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
-          li= raw req.caller_address.gsub(/\n/, '<br />')
-          li Needs: #{req.supplies_needed}
-          li= req.persons
+        h5.card-title= link_to(req.caller_name, req)
+        .mt-3 
+          ul.list-group.list-group-flush.list-unstyled
+            li.list-group-item
+              = link_to "tel:#{req.caller_phone_number}" do
+                = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
+            li.list-group-item= raw req.caller_address.gsub(/\n/, '<br />')
+            li.list-group-item Needs: #{req.supplies_needed}
+            li.list-group-item= req.persons
       .card-footer updated #{time_ago_in_words req.updated_at} ago
 
-/table.table
+table.table(style="text-size: 12pt;")
   thead
     tr
-      th Volunteer name
-      th Caller first name
-      th Caller last name
-      th Caller phone number
-      th Caller address
-      th Supplies needed
-      th Persons
-      th Notes
-      th Status
-      th
-      th
-      th
+      th(scope="col") Status
+      th(scope="col") Name
+      th(scope="col" width="20%") Needs
+      th(scope="col" width="20%") Address
+      th(scope="col") Age
 
   tbody
     - @aid_requests.each do |aid_request|
-      tr
-        td = aid_request.volunteer_name
-        td = aid_request.caller_first_name
-        td = aid_request.caller_last_name
-        td = aid_request.caller_phone_number
-        td = aid_request.caller_address
+      tr(class="#{'bg-danger' if false}")
+        td 
+          = status_badge_for aid_request
+          / if urgent, say so!
+        td 
+          = link_to aid_request do
+            .badge.badge-dark.badge-pill.mr-3 ##{aid_request.id}
+            = aid_request.caller_name
         td = aid_request.supplies_needed
-        td = aid_request.persons
-        td = aid_request.notes
-        td = aid_request.status
-        td = link_to 'Show', aid_request
-        td = link_to 'Edit', edit_aid_request_path(aid_request)
-        td = link_to 'Destroy', aid_request, data: { confirm: 'Are you sure?' }, method: :delete
-
-br
-
-
+        td = aid_request.caller_address
+        td 
+          dl.small 
+            dt Recieved
+            dd #{time_ago_in_words aid_request.created_at} ago
+            - if aid_request.updated_at > aid_request.created_at
+              dt Updated
+              dd  #{time_ago_in_words aid_request.updated_at} ago

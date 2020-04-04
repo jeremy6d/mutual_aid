@@ -108,6 +108,7 @@ RSpec.feature "Intake of aid request", type: :system do
 
       within(all(".ViewDelivery-fulfillmentCard").first) do
         click_on "Mark delivered"
+        sleep 1
       end
 
       expect(find(".ViewDelivery-markDeliveredArea")).to have_content("Delivered!")
@@ -115,7 +116,7 @@ RSpec.feature "Intake of aid request", type: :system do
       find(".ViewDelivery-fulfillmentCard:last-child .card-header button").click
 
       click_on "Mark delivered"
-
+      sleep 1
       expect(find(".ViewDelivery-markDeliveredArea")).to have_content("Delivered!")
     end
 
