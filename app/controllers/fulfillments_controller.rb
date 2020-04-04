@@ -53,7 +53,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def delivered
-    @fulfillment.deliver!
+    use_logidze_responsible { @fulfillment.deliver! }
     head :no_content
   end
 

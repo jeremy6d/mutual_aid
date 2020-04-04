@@ -30,7 +30,10 @@ class Fulfillment < ApplicationRecord
   validate :contents_provided
 
   after_create { aid_request.start! }
-  after_update { delivery.touch }
+  after_update do 
+    delivery.touch
+    aid_request.check_deliveries!
+  end
 
   def public_id
     "##{aid_request.id}F#{'%03d' % id}"

@@ -63,6 +63,10 @@
     self.indications = (self.indications + detected).uniq
   end
 
+  def check_deliveries!
+    complete! if fulfillments.all?(&:delivered?)
+  end
+
   # def needed_items=(items)
   #   items.each do |i|
   #     needed_items.find_or_build_by(name: i)

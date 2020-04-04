@@ -1,6 +1,6 @@
 class AidRequestsController < ApplicationController
   before_action :authenticate_volunteer!
-  before_action :set_aid_request, only: [:show, :edit, :update, :destroy, :start]
+  before_action :set_aid_request, only: [:show, :edit, :update, :destroy]
 
   # GET /aid_requests
   # GET /aid_requests.json
