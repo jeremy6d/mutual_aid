@@ -6,11 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-admin = Volunteer.create! first_name: "Jeremy", 
-                          last_name: "Weiland", 
-                          password: "password",
-                          password_confirmation: "password",
-                          email: "jeremy@jeremyweiland.com"
+if Volunteer.count.zero?
+  admin = Volunteer.create! first_name: "Jeremy", 
+                            last_name: "Weiland", 
+                            password: "password",
+                            password_confirmation: "password",
+                            email: "jeremy@jeremyweiland.com"
+end
 
 10.times do 
   FactoryBot.create :random_aid_request, :packed

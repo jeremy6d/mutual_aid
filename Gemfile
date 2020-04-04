@@ -36,6 +36,7 @@ gem 'aasm'
 gem "logidze"
 gem "aws-sdk-s3", require: false
 gem 'factory_bot_rails'
+gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -43,12 +44,10 @@ group :development, :test do
   %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
       gem lib, git: "https://github.com/rspec/#{lib}.git", branch: 'master'
   end
-  
   gem 'launchy'
   gem 'pry-rails'
   gem 'timecop'
   gem 'seed_dump'
-  gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
 end
 
 group :development do

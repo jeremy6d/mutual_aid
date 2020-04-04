@@ -34,10 +34,10 @@ html lang="en"
             = fa_icon 'phone-alt', text: "Requests"
         li(class="nav-item #{'active' if @controller == 'deliveries'}")
           = link_to new_delivery_path, class: "nav-link" do
-            = fa_icon 'box', text: "Make a delivery"
+            = fa_icon 'truck', text: "Make a delivery"
         li(class="nav-item #{'active' if @controller == 'deliveries'}")
           = link_to my_deliveries_path, class: "nav-link" do
-            = fa_icon 'box', text: "My deliveries"
+            = fa_icon 'shipping-fast', text: "My deliveries"
         /! Divider
         /hr.sidebar-divider/
         /! Heading
