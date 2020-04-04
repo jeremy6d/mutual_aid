@@ -18,5 +18,4 @@ h1 My deliveries
       .list-group
         - @past_deliveries.each do |d|
           .list-group-item.FulfillmentList-fulfillmentItem
-            = link_to d do
-              = fa_icon 'clipboard-check', text: "#{d.fulfillments.count} fulfillments started #{time_ago_in_words d.created_at}"
+            = fa_icon 'clipboard-check', text: "#{d.fulfillments.count} fulfillments started #{time_ago_in_words d.created_at}"

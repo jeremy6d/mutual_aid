@@ -13,6 +13,20 @@ FactoryBot.define do
     persons { "2 adults, 1 child" }
     notes { "Child suffers from diabetes" }
 
+    factory :random_aid_request do
+      caller_first_name { Faker::Name.first_name }
+      caller_last_name { Faker::Name.last_name }
+      caller_address { Faker::Address.full_address }
+      caller_phone_number { Faker::PhoneNumber.cell_phone }
+      indications { ["allergies", "diabetc","", ""].sample }
+      supplies_needed { rand(1..5).times.collect { Faker::Food.ingredient }.join(", ") }
+      persons { "#{rand(1..3)} #{%w(adults children seniors).sample}" }
+      notes { Faker::Lorem.sentences(number: rand(1..4)) }
+      transient do
+        fulfillment_ct { rand(1..3) }
+      end
+    end
+
     trait :packed do
       transient do
         fulfillment_ct { 1 }

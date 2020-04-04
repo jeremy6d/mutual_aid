@@ -20,7 +20,7 @@ class Fulfillment < ApplicationRecord
     end
   end
 
-  belongs_to :delivery, optional: true, inverse_of: :driver
+  belongs_to :delivery, optional: true, inverse_of: :driver, foreign_key: "driver_id"
   belongs_to :aid_request
   belongs_to :fulfiller, class_name: "Volunteer", 
                          inverse_of: :fulfillments_packed
@@ -31,8 +31,8 @@ class Fulfillment < ApplicationRecord
 
   after_create { aid_request.start! }
   after_update do 
-    delivery.touch
-    aid_request.check_deliveries!
+    delivery.touch if delivery.present?
+    aid_request.check_deliveries! if delivered?
   end
 
   def public_id

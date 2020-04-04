@@ -9,6 +9,12 @@ RSpec.describe Delivery, type: :model do
     3.times.map { |n| FactoryBot.create(:fulfillment) }
   end
 
+  it "disallows creation without at least one fulfillment" do
+    delivery = FactoryBot.build(:delivery)
+    expect(delivery).not_to be_valid
+    expect(delivery.errors[:fulfillments]).not_to be_empty
+  end
+
   context "determining status" do
     it "starts out as empty" do
       expect(Delivery.new).to be_empty
@@ -23,8 +29,7 @@ RSpec.describe Delivery, type: :model do
 
     it "registers as delivered when all fulfillments are delivered" do
       subject.fulfillments.each &:deliver!
-
-      expect(subject).to be_delivered
+      expect(subject.reload).to be_delivered
     end
   end
 end 

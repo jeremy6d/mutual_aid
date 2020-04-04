@@ -6,10 +6,11 @@ class Delivery < ApplicationRecord
     end
   end
 
-
   has_many :fulfillments
   belongs_to :driver, class_name: "Volunteer", 
                       inverse_of: :deliveries
+
+  validates :fulfillments, length: { minimum: 1 }
 
   after_create do 
     fulfillments.each &:pickup!

@@ -18,8 +18,8 @@ h1
     dt Contents
     dd
       - if @fulfillment.contents.present?
-        pm.list-group
-          - @fulfillment.contents.split(" ").each do |item|
+        .list-group
+          - @fulfillment.contents.split(",").each do |item|
             .list-group-item= item.strip
       - if @fulfillment.contents_sheet_image.attached?
         .text-center
