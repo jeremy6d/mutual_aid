@@ -6,9 +6,10 @@ class Volunteer < ApplicationRecord
          :trackable
 
   has_many :requests_taken, class_name: "AidRequest", 
-                            inverse_of: :taken_by
+                            inverse_of: :original_taker
   has_many :fulfillments_packed, inverse_of: :fulfillers, 
-                                 foreign_key: 'fulfiller_id'
+                                 foreign_key: 'fulfiller_id',
+                                 class_name: "Fulfillment"
   has_many :deliveries, inverse_of: :driver, 
                         foreign_key: 'driver_id'
 

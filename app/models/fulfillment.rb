@@ -20,7 +20,7 @@ class Fulfillment < ApplicationRecord
     end
   end
 
-  belongs_to :delivery, optional: true, inverse_of: :driver, foreign_key: "driver_id"
+  belongs_to :delivery, optional: true, inverse_of: :driver
   belongs_to :aid_request
   belongs_to :fulfiller, class_name: "Volunteer", 
                          inverse_of: :fulfillments_packed

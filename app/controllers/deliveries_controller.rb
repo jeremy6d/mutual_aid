@@ -9,9 +9,8 @@ class DeliveriesController < ApplicationController
   end
 
   def mine
-    scope = current_volunteer.deliveries
-    @in_progress_deliveries = scope.on_the_way
-    @past_deliveries = scope.delivered
+    @in_progress_deliveries = current_volunteer.deliveries.on_the_way
+    @past_deliveries = current_volunteer.deliveries.delivered
   end
 
   # GET /deliveries/1

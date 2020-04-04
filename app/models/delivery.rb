@@ -8,7 +8,8 @@ class Delivery < ApplicationRecord
 
   has_many :fulfillments
   belongs_to :driver, class_name: "Volunteer", 
-                      inverse_of: :deliveries
+                      inverse_of: :deliveries,
+                      foreign_key: "driver_id"
 
   validates :fulfillments, length: { minimum: 1 }
 
@@ -24,14 +25,15 @@ class Delivery < ApplicationRecord
     update_status and save!
   end
 
-  Status::ALL.each do |s|
-    define_method "#{s}?" do
-      self.status == s
-    end
+  scope :delivered, -> { where(status: Delivery::Status::DELIVERED) }
+  scope :on_the_way, -> { where(status: Delivery::Status::ON_THE_WAY) }
 
-    scope s, -> {
-      where(status: s)
-    }
+  def delivered?
+    self.status == Delivery::Status::DELIVERED
+  end
+
+  def on_the_way?
+    self.status == Delivery::Status::ON_THE_WAY
   end
 
 private
