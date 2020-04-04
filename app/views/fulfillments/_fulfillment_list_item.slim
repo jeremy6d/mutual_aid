@@ -1,0 +1,6 @@
+.list-group-item.FulfillmentList-fulfillmentItem
+  .badge.badge-pill.badge-dark.mr-3 #{@aid_request.id}F#{'%03d' % f.id}
+  - if f.contents_sheet_image.attached?
+    = link_to url_for(f.contents_sheet_image) do
+      = fa_icon 'file-signature', title: "Open attached contents sheet"
+  = link_to raw("<strong>#{f.status.titleize}</strong> fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"

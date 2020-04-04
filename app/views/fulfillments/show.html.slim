@@ -1,20 +1,32 @@
-h1 Fulfillment for #{@aid_request.caller_name}
-dl
-  dt Created
-  dd= @fulfillment.created_at.to_s(:date_and_time)
-  dt Updated
-  dd= @fulfillment.updated_at.to_s(:date_and_time)
-  dt Contents
-    - if @fulfillment.contents.present?
-      pm.list-group
-        - @fulfillment.contents.split(" ").each do |item|
-          .list-group-item= item.strip
-    - if @fulfillment.contents_sheet_image.attached?
-      = link_to url_for(@fulfillment.contents_sheet_image) do
-        = image_tag @fulfillment.contents_sheet_image.variant(resize_to_limit: [300, 300])
-.p= @fulfillmentnotes
+h1
+  .badge.badge-pill.badge-dark.mr-3= @fulfillment.public_id 
+  | Fulfillment for #{@aid_request.caller_name}
+.row
+  .col-md-6
+    dt Phone
+    dd
+    dd= @fulfillment.updated_at.to_s(:date_and_time)
+    dt Status
+    dd= @fulfillment.status
+    dt Notes
+    dd= @fulfillment.notes
+    dt Created
+    dd= @fulfillment.created_at.to_s(:date_and_time)
+    dt Updated
+    
+  .col-md-6
+    dt Contents
+    dd
+      - if @fulfillment.contents.present?
+        pm.list-group
+          - @fulfillment.contents.split(" ").each do |item|
+            .list-group-item= item.strip
+      - if @fulfillment.contents_sheet_image.attached?
+        .text-center
+          = link_to url_for(@fulfillment.contents_sheet_image) do
+            = image_tag @fulfillment.contents_sheet_image.variant(resize_to_limit: [300, 300])
 
-.btn-group
+.btn-group.d-print-none
   = link_to edit_aid_request_fulfillment_path(@aid_request, @fulfillment), class: "btn btn-primary" do
     = fa_icon 'edit', text: "Edit"
   = link_to :back, class: "btn btn-outline-dark" do

@@ -15,10 +15,11 @@ RSpec.feature "Intake of aid request", type: :system do
   # Provision an existing request with a packed fulfillment
   let!(:older_request) do
     FactoryBot.create :aid_request, :packed, caller_first_name: "Lindsay",
-                                             caller_last_name:  "Bluth"
+                                             caller_last_name:  "Bluth",
+                                             caller_address: "100 E Main St, Richmond VA"
   end
 
-  it "handles the happy path" do
+  it "handles the happy path", js: true do
     # User HOTLINE enters request 1 information and submits
     # - information is persisted to the database
     # - request is marked "unfulfilled"
@@ -58,9 +59,10 @@ RSpec.feature "Intake of aid request", type: :system do
 
     signing_in_as(packer_volunteer) do
       click_on "Holt, Steve"
+
       click_on "Fulfill"
 
-      expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
+      # expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
       expect(find(".FulfillAidRequest-callerPhone")).to have_content("(555) 555-5555")
@@ -72,7 +74,7 @@ RSpec.feature "Intake of aid request", type: :system do
       fill_in "Notes", with: "Packed eggs separately"
       fill_in "Number of bags", with: "2"
 
-      click_on "Ready for delivery"
+      click_on "Ready for pickup"
 
       expect(current_path).to eql(aid_request_path(AidRequest.last))
       expect(the_flash(:notice)).to have_content("success")
@@ -84,6 +86,38 @@ RSpec.feature "Intake of aid request", type: :system do
     #   - delivery view shown with fufillment 1
     #   - fulfillment 1 is marked "on the way"
     #   - fulfillment 2 is marked "on the way"
+
+    signing_in_as(driver_volunteer) do
+      click_on "Make a delivery"
+
+      expect(current_path).to eql(new_delivery_path)
+
+      page.find("div.form-check", text: /100 E Main St/i).check
+      page.find("div.form-check", text: /517 W 20th St/i).check
+
+      click_on "Start delivery now"
+    end
+
+    signing_in_as(driver_volunteer) do
+      click_on "My deliveries"
+      expect(current_path).to eql(my_deliveries_path)
+
+      click_on "2 fulfillments started less than a minute ago"
+
+      expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
+
+      within(all(".ViewDelivery-fulfillmentCard").first) do
+        click_on "Mark delivered"
+      end
+
+      expect(find(".ViewDelivery-markDeliveredArea")).to have_content("Delivered!")
+
+      find(".ViewDelivery-fulfillmentCard:last-child .card-header button").click
+
+      click_on "Mark delivered"
+
+      expect(find(".ViewDelivery-markDeliveredArea")).to have_content("Delivered!")
+    end
 
     # DRIVER makes delivery and marks fulfillment 1 "delivered"
     #   - fulfillment 1 is marked "delivered"

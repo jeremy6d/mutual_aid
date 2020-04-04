@@ -1,0 +1,22 @@
+h1 My deliveries
+.row
+  .col-md-6#current-deliveries
+    h2 Current deliveries
+    - if @in_progress_deliveries.none?
+      .jumbotron No deliveries in progress.
+    - else 
+      .list-group
+        - @in_progress_deliveries.each do |d|
+          .list-group-item.FulfillmentList-fulfillmentItem
+            = link_to d do
+              = fa_icon 'shipping-fast', text: "#{d.fulfillments.count} fulfillments started #{time_ago_in_words d.created_at} ago"
+  .col-md-6#past-deliveries
+    h2 Past deliveries
+    - if @past_deliveries.none?
+      .jumbotron No past deliveries found.
+    - else 
+      .list-group
+        - @past_deliveries.each do |d|
+          .list-group-item.FulfillmentList-fulfillmentItem
+            = link_to d do
+              = fa_icon 'clipboard-check', text: "#{d.fulfillments.count} fulfillments started #{time_ago_in_words d.created_at}"

@@ -1,7 +1,7 @@
 .row
   .col-sm-6
     h1.h3.ShowAidRequest-callerName
-      .badge.badge-lg.badge-dark= @aid_request.id
+      .badge.badge-dark.badge-pill.mr-3 ##{@aid_request.id}
       = [@aid_request.caller_last_name, @aid_request.caller_first_name].reject(&:blank?).join(", ").titleize
       small.float-right.ShowAidRequest-status= status_badge_for(@aid_request)
   .col-sm-6
@@ -33,11 +33,12 @@
     .list-group.FulfillmentList-listParent
       - @aid_request.fulfillments.each do |f|
         .list-group-item.FulfillmentList-fulfillmentItem
+          .badge.badge-pill.badge-dark.mr-3 #{@aid_request.id}F#{'%03d' % f.id}
           - if f.contents_sheet_image.attached?
-            = link_to url_for(f.contents_sheet_image), class: "mr-3" do
+            = link_to url_for(f.contents_sheet_image) do
               = fa_icon 'file-signature', title: "Open attached contents sheet"
-          = link_to raw("<strong>#{f.status.titleize}</strong> fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f]
-    .row
+          = link_to raw("<strong>#{f.status.titleize}</strong> fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"
+    .row.d-print-none
       .col-4.text-center
         = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
           = fa_icon 'arrow-left', text: "Back"

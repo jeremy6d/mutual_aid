@@ -1,17 +1,11 @@
-NAMES = [ 'Oscar Bluth', 
-          'Barry Zuckerkorn',
-          'Maggie Lizer',
-          'Lucille Austero',
-          'Steve Holt',
-          'Carl Weathers',
-          'Marta Estrella',
-          'Rita Leeds',
-          'Kitty Sanchez',
-          'Stan Sitwell',
-          'Sally Sitwell',
-          'Moses Taylor',
-          'Tony Wonder',
-          'Cindi Lightballoon' ]
+NAMES = [ 'Oscar Bluth', 'Barry Zuckerkorn',
+          'Maggie Lizer', 'Lucille Austero',
+          'Steve Holt', 'Carl Weathers',
+          'Marta Estrella', 'Rita Leeds',
+          'Kitty Sanchez', 'Stan Sitwell',
+          'Sally Sitwell', 'Moses Taylor',
+          'Tony Wonder', 'Cindi Lightballoon',
+          'Larry Middleman', 'Franklin Bluth' ]
 
 FactoryBot.define do
   factory :volunteer do
@@ -24,15 +18,13 @@ FactoryBot.define do
     factory :another_volunteer do
       transient do
         names do
-          NAMES.map do |n| 
-            n.split(" ")
-          end
+          NAMES.map { |n| n.split(" ") } * 1000 
         end
       end
 
-      sequence(:first_name) { |i| names[i - 1].first }
-      sequence(:last_name)  { |i| names[i - 1].last  }
-      email { "#{first_name.downcase}#{last_name.downcase}@bluth.co" }
+      sequence(:first_name) { |i| names[names.size % i].first }
+      sequence(:last_name)  { |i| names[names.size % i].last  }
+      sequence(:email) { |i| "#{first_name.downcase}#{last_name.downcase}-#{i}@bluth.co" }
     end
   end
 end

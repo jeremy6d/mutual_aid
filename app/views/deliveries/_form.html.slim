@@ -1,0 +1,14 @@
+= simple_form_for(@delivery) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  h3 Fulfillments ready for pickup
+  .hint Choose those you'd like to deliver now
+  .form-inputs
+    .list-item-group
+      = f.association :fulfillments, collection: @fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes
+    = f.input :notes, as: :text
+
+  .form-actions
+    button.btn.btn-large.btn-success
+      = fa_icon 'truck-loading', text: "Start delivery now"

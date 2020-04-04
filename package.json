@@ -19,8 +19,8 @@
     "popper.js": "^1.16.1",
     "turbolinks": "^5.2.0"
   },
+  "license": "CC-BY-NC-SA-4.0",
   "version": "0.1.0",
   "devDependencies": {
     "webpack-dev-server": "^3.10.3"
-  }
-}
+  }}

@@ -38,6 +38,7 @@ $(document).on('turbolinks:load', function() {
     trigger: 'hover',
   });
 
+
     (function($) {
       "use strict"; // Start of use strict
 
@@ -102,10 +103,17 @@ $(document).on('turbolinks:load', function() {
       });
 
     })(jQuery); // End of use strict
-
 });
 
+$(document).on('ajax:success', function(event) {
+  $(event.target).parent().html("<div class='h2'><div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div></div>");
+});
 
+  // $(document).on('ajax:success', '.ViewDelivery-deliverFulfillmentButton', function(e, data) { 
+  //   console.log("here");
+  //   $(this).replaceWith("<div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div>");
+  //   $(this).parents('.collapse').collapse('toggle')
+  // });
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.

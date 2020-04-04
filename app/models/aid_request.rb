@@ -1,4 +1,4 @@
-class AidRequest < ApplicationRecord
+  class AidRequest < ApplicationRecord
   has_logidze
   include AASM
 

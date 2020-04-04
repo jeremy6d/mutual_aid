@@ -5,9 +5,18 @@
   @extend .ml-2;
 }
 
-// main {
-//   @extend .mx-5;
-//   // @include media-breakpoint-up(sm) {
-//   //   margin 0;
-//   // }
-// }
+.Flash {
+
+  &-message {
+    @extend .alert;
+    @extend .fade; 
+    @extend .show;
+  } 
+
+  &-notice {
+    @extend .alert-success;
+  }
+  &-alert {
+    @extend .alert-danger;
+  }
+}

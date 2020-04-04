@@ -20,7 +20,7 @@ html lang="en"
     /! Page Wrapper
     #wrapper
       /! Sidebar
-      ul#accordionSidebar.navbar-nav.bg-gradient-dark.sidebar.sidebar-dark.accordion
+      ul#accordionSidebar.navbar-nav.bg-gradient-dark.sidebar.sidebar-dark.accordion.d-print-none
         /! Sidebar - Brand
         a.sidebar-brand.d-flex.align-items-center.justify-content-center href="/"
           .sidebar-brand-icon
@@ -31,7 +31,13 @@ html lang="en"
         / ! Nav Item - Dashboard
         li(class="nav-item #{'active' if @controller == 'aid_requests'}")
           = link_to aid_requests_path, class: "nav-link" do
-            = fa_icon 'life-ring', text: "Requests"
+            = fa_icon 'phone-alt', text: "Requests"
+        li(class="nav-item #{'active' if @controller == 'deliveries'}")
+          = link_to new_delivery_path, class: "nav-link" do
+            = fa_icon 'box', text: "Make a delivery"
+        li(class="nav-item #{'active' if @controller == 'deliveries'}")
+          = link_to my_deliveries_path, class: "nav-link" do
+            = fa_icon 'box', text: "My deliveries"
         /! Divider
         /hr.sidebar-divider/
         /! Heading
@@ -100,7 +106,7 @@ html lang="en"
         /! Main Content
         #content
           /! Topbar
-          nav.navbar.navbar-expand.navbar-light.bg-white.topbar.mb-4.static-top.shadow
+          nav.navbar.navbar-expand.navbar-light.bg-white.topbar.mb-4.static-top.shadow.d-print-none
             /! Sidebar Toggle (Topbar)
             button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3
               i.fa.fa-bars

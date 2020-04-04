@@ -1,6 +1,6 @@
 class FulfillmentsController < ApplicationController
   before_action :authenticate_volunteer!
-  before_action :set_fulfillment, only: [:show, :edit, :update, :destroy]
+  before_action :set_fulfillment, only: [:show, :edit, :update, :destroy, :delivered]
 
   # GET /fulfillments
   # GET /fulfillments.json
@@ -50,6 +50,11 @@ class FulfillmentsController < ApplicationController
         format.json { render json: @fulfillment.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def delivered
+    @fulfillment.deliver!
+    head :no_content
   end
 
   # DELETE /fulfillments/1

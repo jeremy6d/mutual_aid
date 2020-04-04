@@ -20,15 +20,25 @@ class Fulfillment < ApplicationRecord
     end
   end
 
+  belongs_to :delivery, optional: true, inverse_of: :driver
   belongs_to :aid_request
   belongs_to :fulfiller, class_name: "Volunteer", 
-                         inverse_of: :fulfillments
+                         inverse_of: :fulfillments_packed
 
   has_one_attached :contents_sheet_image
 
   validate :contents_provided
 
   after_create { aid_request.start! }
+  after_update { delivery.touch }
+
+  def public_id
+    "##{aid_request.id}F#{'%03d' % id}"
+  end
+
+  def to_s
+    "#{public_id}: #{aid_request.caller_address.gsub('\n', ', ')}"
+  end
 
 private
 
