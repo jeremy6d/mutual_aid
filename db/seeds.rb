@@ -11,3 +11,8 @@ admin = Volunteer.create! first_name: "Jeremy",
                           password: "password",
                           password_confirmation: "password",
                           email: "jeremy@jeremyweiland.com"
+
+10.times do 
+  FactoryBot.create :random_aid_request, :packed
+  FactoryBot.create :random_aid_request, original_taker: admin
+end
