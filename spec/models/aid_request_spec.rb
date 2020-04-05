@@ -16,7 +16,7 @@ RSpec.describe AidRequest, type: :model do
   it "identifies keywords in notes to elevate as indication" do
     subject.notes = "wgwgewEGdiabetesregseseg"
     subject.save
-    expect(subject. indications).to include("diabetes")
+    expect(subject.indications).to include("diabetes")
   end
 
   # it "processes supplies needed into needs records" do

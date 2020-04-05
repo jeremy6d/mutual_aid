@@ -106,6 +106,8 @@ $(document).on('turbolinks:load', function() {
 });
 
 $(document).on('ajax:success', function(event) {
+  $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-successHeader').removeClass('d-none')
+  $(event.target).parents('.collapse').collapse('toggle');
   $(event.target).parent().html("<div class='h2'><div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div></div>");
 });
 

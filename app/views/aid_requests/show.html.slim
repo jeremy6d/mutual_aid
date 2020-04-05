@@ -16,7 +16,7 @@
       dt.col-3 Phone
       dd.col-9.ShowAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
       dt.col-3 Address
-      dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address.gsub(/\n/, '<br />')), "#gmap-top"
+      dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address&.gsub(/\n/, '<br />')), "#gmap-top"
       dt.col-3 Needs
       dd.col-9.ShowAidRequest-suppliesNeeded= @aid_request.supplies_needed
       dt.col-3 Persons

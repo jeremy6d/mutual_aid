@@ -1,30 +1,44 @@
-h1 View Delivery
+h1 View delivery
+- if @delivery.delivered?  
+  .h2.badge.badge-success.float-right
+    i.fas.fa-check-square
+    span.mr-2 Delivered!
 #accordion
   - @delivery.fulfillments.each do |f|
     .card.ViewDelivery-fulfillmentCard(id="fulfillment-#{f}")
       .card-header(id="header-f#{f.id}")
         h4.mb-0
-          button.btn.btn-link(class="#{'collapsed' if (@delivery.fulfillments.first != f) || (f.delivered?)}" data-toggle="collapse" data-target="#collapse-f#{f.id}" aria-expanded="true" aria-controls="collapse-f#{f.id}")
+          button.btn.btn-link(class="#{'collapsed' if f.delivered?}" data-toggle="collapse" data-target="#collapse-f#{f.id}" aria-expanded="true" aria-controls="collapse-f#{f.id}")
             | fulfillment #{f.public_id} to #{f.aid_request.caller_address}
-      .collapse(class="#{'show' if @delivery.fulfillments.first == f && !f.delivered?}" aria-labelledby="header-f#{f.id}" data-parent="#accordion" id="collapse-f#{f.id}")
+            .ViewDelivery-successHeader.float-left.mr-3(class="#{'d-none' unless f.delivered?}")
+              .badge.badge-success
+                i.fas.fa-check-square
+                span.ml-2 Delivered!
+      .collapse(class="#{'show' unless f.delivered?}" aria-labelledby="header-f#{f.id}" data-parent="#accordion" id="collapse-f#{f.id}")
         .card-body
           .media
             .mr-3 
               iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{f.aid_request.caller_address}" allowfullscreen="true")
             .media-body
               h5.mt-0
-                = f.aid_request.caller_name
-                = link_to number_to_phone(f.aid_request.caller_phone_number, area_code: true), "tel:#{f.aid_request.caller_phone_number}"
+                .ViewDelivery-callerName= f.aid_request.caller_name
+                .ViewDelivery-callerPhone= link_to number_to_phone(f.aid_request.caller_phone_number, area_code: true), "tel:#{f.aid_request.caller_phone_number}"
               dl
                 dt Address
-                dd= raw f.aid_request.caller_address.gsub(/\n/, '<br />')
+                dd= raw f.aid_request.caller_address&.gsub(/\n/, '<br />')
                 dt Number of bags
                 dd= f.num_bags
                 dt Notes
                 dd
                   p= f.notes
                   p= f.aid_request.notes
-              .ViewDelivery-markDeliveredArea.float-right
-                = button_to delivered_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch, class: "btn btn-success ViewDelivery-deliverFulfillmentButton" do
-                  = fa_icon 'truck-loading', text: "Mark delivered"          
-=< link_to 'Back', my_deliveries_path
+              - if f.delivered?
+                .h2.badge.badge-success
+                  i.fas.fa-check-square
+                  span.mr-2 Delivered!
+              - else 
+                .ViewDelivery-markDeliveredArea.float-right
+                  = button_to delivered_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch, class: "btn btn-success ViewDelivery-deliverFulfillmentButton" do
+                    = fa_icon 'truck-loading', text: "Mark delivered"          
+= link_to :back, class: "btn btn-outline-dark" do
+  = fa_icon 'arrow-left', text: "Back"

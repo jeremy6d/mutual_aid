@@ -19,11 +19,12 @@
           .FulfillAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
           p.FulfillAidRequest-notes= @aid_request.notes
         .card-footer
-          h5 Needs
-          .list-item-group
-            - @aid_request.supplies_needed.split(",").each do |need|
-              .list-item
-                = fa_icon 'check-square', text: need.strip  
+          - if @aid_request.supplies_needed
+            h5 Needs
+            .list-item-group
+              - @aid_request.supplies_needed.split(",").each do |need|
+          - else
+            .jumbotron.text-center.lead No recorded needs            
 
     .col-md-6
       .form-inputs

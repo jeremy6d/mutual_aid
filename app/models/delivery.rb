@@ -36,6 +36,10 @@ class Delivery < ApplicationRecord
     self.status == Delivery::Status::ON_THE_WAY
   end
 
+  def empty?
+    self.status == Delivery::Status::EMPTY
+  end
+
 private
   def update_status
     self.status = case 

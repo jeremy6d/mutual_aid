@@ -29,7 +29,7 @@ class Fulfillment < ApplicationRecord
 
   validate :contents_provided
 
-  after_create { aid_request.start! }
+  after_create { aid_request.start! unless aid_request.in_progress? }
   after_update do 
     delivery.touch if delivery.present?
     aid_request.check_deliveries! if delivered?
@@ -40,7 +40,7 @@ class Fulfillment < ApplicationRecord
   end
 
   def to_s
-    "#{public_id}: #{aid_request.caller_address.gsub('\n', ', ')}"
+    [public_id, aid_request.caller_address&.gsub('\n', ', ')].reject(&:blank?).join(": ")
   end
 
 private

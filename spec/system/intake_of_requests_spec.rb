@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Intake of aid request", type: :system do
+RSpec.feature "Intake of aid request", type: :system, headless: false do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
@@ -111,13 +111,13 @@ RSpec.feature "Intake of aid request", type: :system do
         sleep 1
       end
 
-      expect(find(".ViewDelivery-markDeliveredArea")).to have_content("Delivered!")
+      expect(all(".card-header").first).to have_content("Delivered!")
+      expect(all(".card-header").last).not_to have_content("Delivered!")
 
-      find(".ViewDelivery-fulfillmentCard:last-child .card-header button").click
 
       click_on "Mark delivered"
       sleep 1
-      expect(find(".ViewDelivery-markDeliveredArea")).to have_content("Delivered!")
+      all(".card-header").each { |e| expect(e).to have_content("Delivered!") }
     end
 
     # DRIVER makes delivery and marks fulfillment 1 "delivered"
