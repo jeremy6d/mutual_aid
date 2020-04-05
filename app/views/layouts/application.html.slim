@@ -34,7 +34,7 @@ html lang="en"
             = fa_icon 'phone-alt', text: "Requests"
         li(class="nav-item #{'active' if @controller == 'deliveries'}")
           = link_to new_delivery_path, class: "nav-link" do
-            = fa_icon 'truck', text: "Make a delivery"
+            = fa_icon 'box', text: "Make a delivery"
         li(class="nav-item #{'active' if @controller == 'deliveries'}")
           = link_to my_deliveries_path, class: "nav-link" do
             = fa_icon 'shipping-fast', text: "My deliveries"
@@ -207,7 +207,7 @@ html lang="en"
                   /! Nav Item - User Information
                 li.nav-item.dropdown.no-arrow
                   - if volunteer_signed_in?
-                    a#userDropdown.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button")
+                    a#userDropdown.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" data-disabled="true")
                       = fa_icon 'head-side-mask' 
                       span.ml-1.mr-2.d-md-block.d-none.d-lg-inline.text-gray-600.small.Navbar-volunteerName= current_volunteer.full_name
                       / img.img-profile.rounded-circle src="https://source.unsplash.com/QAB-WJcbgJk/60x60" /
