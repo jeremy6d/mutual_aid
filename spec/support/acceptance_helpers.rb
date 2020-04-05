@@ -12,7 +12,7 @@ module AcceptanceHelpers
   end
 
   def sign_out!
-    2.times { find(".Navbar-volunteerName").click }
+    find(".Navbar-volunteerName").click
     click_on "Sign out"
     expect(current_path).to eql(new_volunteer_session_path)
   end

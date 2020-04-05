@@ -218,12 +218,12 @@ html lang="en"
                       = link_to edit_volunteer_registration_path, class: 'dropdown-item' do
                         i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
                         | Profile
-                      a.dropdown-item href="#" 
-                        i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
-                        | Settings
-                      a.dropdown-item href="#" 
-                        i.fas.fa-list.fa-sm.fa-fw.mr-2.text-gray-400
-                        | Activity Log
+                      / a.dropdown-item href="#" 
+                      /   i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
+                      /   | Settings
+                      / a.dropdown-item href="#" 
+                      /   i.fas.fa-list.fa-sm.fa-fw.mr-2.text-gray-400
+                      /   | Activity Log
                       .dropdown-divider
                       = link_to destroy_volunteer_session_url, method: :delete, data: { target: "#logoutModal", toggle: "modal"}, class: "dropdown-item" do
                         i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
@@ -251,7 +251,7 @@ html lang="en"
           .container.my-auto
             .copyright.text-center.my-auto
               span
-                | &copy; #{Time.now.year} Jeremy Weiland
+                | &copy; #{Time.now.year} Richmond Mutual Aid Disaster Relief and J. Weiland
 
         /! End of Footer
       /! End of Content Wrapper
