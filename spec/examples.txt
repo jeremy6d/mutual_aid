@@ -1,9 +1,13 @@
 example_id                                         | status  | run_time        |
 -------------------------------------------------- | ------- | --------------- |
 ./spec/helpers/aid_requests_helper_spec.rb[1:1]    | pending | 0.00002 seconds |
-./spec/models/aid_request_spec.rb[1:1]             | passed  | 0.14502 seconds |
-./spec/models/aid_request_spec.rb[1:2]             | passed  | 0.01081 seconds |
-./spec/models/aid_request_spec.rb[1:3]             | passed  | 0.03929 seconds |
+./spec/models/aid_request_spec.rb[1:1]             | passed  | 0.06748 seconds |
+./spec/models/aid_request_spec.rb[1:2]             | passed  | 0.00546 seconds |
+./spec/models/aid_request_spec.rb[1:3]             | passed  | 0.01086 seconds |
+./spec/models/aid_request_spec.rb[1:4]             | passed  | 0.0062 seconds  |
+./spec/models/aid_request_spec.rb[1:5:1]           | passed  | 0.02202 seconds |
+./spec/models/aid_request_spec.rb[1:5:2]           | passed  | 0.09614 seconds |
+./spec/models/aid_request_spec.rb[1:5:3]           | passed  | 0.02097 seconds |
 ./spec/models/delivery_spec.rb[1:1]                | passed  | 0.18615 seconds |
 ./spec/models/delivery_spec.rb[1:2:1]              | passed  | 0.00118 seconds |
 ./spec/models/delivery_spec.rb[1:2:2]              | passed  | 0.07906 seconds |

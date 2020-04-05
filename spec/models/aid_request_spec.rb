@@ -19,9 +19,26 @@ RSpec.describe AidRequest, type: :model do
     expect(subject.indications).to include("diabetes")
   end
 
-  # it "processes supplies needed into needs records" do
-  #   subject.supplies_needed = "bread, milk, soap, cheese whiz, gravy"
-  #   subject.save
-  #   expect(subject.reload.needs.count).to eql(5)
-  # end
+  it "defaults urgency to false" do
+    expect(subject).not_to be_urgent
+  end
+
+  context "priority queue" do
+    let!(:oldest_request) do
+      FactoryBot.create :random_aid_request, created_at: 2.days.ago
+    end
+
+    let!(:other_request) do
+      FactoryBot.create :random_aid_request, created_at: 1.day.ago
+    end
+
+    before do  
+      subject.urgent = true
+      subject.save
+    end
+    
+    it { expect(AidRequest.prioritized[0]).to eql(subject) }
+    it { expect(AidRequest.prioritized[1]).to eql(oldest_request) }
+    it { expect(AidRequest.prioritized[2]).to eql(other_request) }
+  end
 end
