@@ -1,19 +1,26 @@
-.btn-group.w-100
+ul.nav.nav-tabs
   - AidRequest.aasm.states.map(&:name).map(&:to_s).each do |status|
-    = link_to aid_requests_path(status: status), title: status, class: "btn btn-#{status_color_for(status)} #{'btn-active' if status_filter == status}", role: "button", aria: { pressed: (status_filter == status)}
-      .d-none.d-md-block= fa_icon status_icon_for(status), text: status.humanize
-      .d-xs-block.d-md-none= fa_icon status_icon_for(status)
-  = link_to aid_requests_path(status: "all"), class: "btn btn-primary #{'btn-active' if status_filter == "all"}", role: "button", aria: { pressed: (status_filter == 'all')} do
-    .d-none.d-md-block= fas_icon 'folder-open', text: "All"
-    .d-xs-block.d-md-none= fas_icon 'folder-open'
-  = link_to new_aid_request_path, class: "btn btn-info", role: "button" do
-    .d-none.d-md-block= fas_icon 'plus', text: "New"
-    .d-xs-block.d-md-none= fas_icon 'plus'
+    li.nav-item
+      = link_to aid_requests_path(status: status), title: status, class: "nav-link #{'active' if status_filter == status}" do
+        .d-none.d-md-block= fa_icon status_icon_for(status), text: status.humanize
+        .d-xs-block.d-md-none= fa_icon status_icon_for(status)
+  li.nav-item
+    = link_to aid_requests_path(status: "all"), class: "nav-link #{'active' if status_filter == "all"}" do
+      .d-none.d-md-block= fa_icon "folder", text: "All"
+      .d-xs-block.d-md-none= fa_icon "folder"
+  li.nav-item
+    = link_to aid_requests_path(status: "call_back"), class: "nav-link #{'active' if status_filter == "call_back"}" do
+      .d-none.d-md-block= fa_icon "phone", text: "Call back"
+      .d-xs-block.d-md-none= fa_icon "phone"
+  li.nav-item
+    = link_to new_aid_request_path, class: "nav-link" do
+      .d-none.d-md-block= fa_icon "plus", text: "New request"
+      .d-xs-block.d-md-none= fa_icon "plus"
 h1= [status_filter.humanize.titleize, "Requests"].join(" ")
 .card-deck.d-xs-block.d-md-none
   - @aid_requests.each do |req|
     .card(style="min-width: 20%; max-width: 18rem;")
-      .card-body
+      .card-header(class=header_class_for(req))
         small.float-right
           - if req.created_at < 1.week.ago
             = req.created_at.to_s(:date_only)
@@ -21,7 +28,8 @@ h1= [status_filter.humanize.titleize, "Requests"].join(" ")
             = req.created_at.to_s(:time_only)
           - else 
             = req.created_at.strftime("%A")
-        h5.card-title= link_to(req.caller_name, req)
+        h5.card-title= link_to(req.caller_name, req, class: "text-dark")
+      .card-body
         .mt-3 
           ul.list-group.list-group-flush.list-unstyled
             li.list-group-item
@@ -50,7 +58,7 @@ table.table.d-none.d-md-block(style="text-size: 12pt;")
         td 
           = link_to aid_request do
             .badge.badge-dark.badge-pill.mr-3 ##{aid_request.id}
-            = aid_request.caller_name
+            span(class=(header_class_for(aid_request).split(" ").last))= aid_request.caller_name
         td = truncate aid_request.supplies_needed, length: 50
         td = aid_request.caller_address
         td 

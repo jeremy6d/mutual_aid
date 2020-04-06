@@ -33,7 +33,7 @@ FactoryBot.define do
         end
       end
 
-      sequence(:first_name) { |i| puts "#{(names.size % i)} / #{names.size}"; names[(names.size - 1) % i].first }
+      sequence(:first_name) { |i| names[(names.size - 1) % i].first }
       sequence(:last_name)  { |i| names[(names.size - 1) % i].last  }
     end
   end
