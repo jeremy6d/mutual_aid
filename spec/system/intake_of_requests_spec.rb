@@ -119,29 +119,15 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
       sleep 1
       all(".card-header").each { |e| expect(e).to have_content("Delivered!") }
     end
+  end
 
-    # DRIVER makes delivery and marks fulfillment 1 "delivered"
-    #   - fulfillment 1 is marked "delivered"
-    #   - request 1 is marked "complete"
-    #   - fulfillement 2 details come up on screen
-
-    # DRIVER makes delivery and marks fulfillment 2 "delivered"
-    #   - fulfillment 2 is marked "delivered"
-    #   - request 2 is marked "complete"
-    #   - delivery complete screen shown
-
-
-    # signing_in_as(driver_volunteer) do
-    #   click_on "Fulfillments"
-    #   check "Holt, Steve"
-    #   check "Bluth, Lindsay"
-    #   click_on "Deliver now"
-
-    #   expect(current_path).to eql(delivery_path(Delivery.last))
-    # end
-
-    # volunteer C checks off items
-    # volunteer C creates delivery
-    # volunteer D ships and marks complete
+  it "marks a request as urgent" do
+    sign_in! FactoryBot.create(:volunteer)
+    click_on "New"
+    info = FactoryBot.attributes_for(:random_aid_request, urgent: true)
+    submit_aid_request_for(info)
+    expect(find(".ShowAidRequest-urgent")).to be_visible
+    click_on "Back"
+    expect(all('tbody tr').first.matches_css?(".bg-danger")).to be true
   end
 end

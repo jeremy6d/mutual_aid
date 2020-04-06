@@ -1,9 +1,13 @@
 .row
-  .col-sm-6
-    h1.h3.ShowAidRequest-callerName
-      .badge.badge-dark.badge-pill.mr-3 ##{@aid_request.id}
+  .col-md-12.px-4.py-2.mb-1.rounded(class=(@aid_request.urgent? ? 'bg-danger text-white' : 'bg-light text-black' ))
+    h1.h3.ShowAidRequest-callerName.p-1
+      .badge.badge-dark.badge-pill.mr-2 ##{@aid_request.id}
       = [@aid_request.caller_last_name, @aid_request.caller_first_name].reject(&:blank?).join(", ").titleize
-      small.float-right.ShowAidRequest-status= status_badge_for(@aid_request)
+      span.small.ShowAidRequest-status.float-right.ml-5= status_badge_for(@aid_request)
+      - if @aid_request.urgent?
+        span.ShowAidRequest-urgent.bg-warning.badge.text-dark.float-right= fa_icon 'exclamation-triangle', text: "URGENT"
+  .col-sm-6
+    
   .col-sm-6
     - if @aid_request.indications.any?
       .alert.alert-danger.ShowAidRequest-indicationsArea

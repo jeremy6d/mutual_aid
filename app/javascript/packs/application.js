@@ -21,6 +21,7 @@ library.add(fas, far, fab)
 dom.watch()
 import 'jquery-easing';
 import Chart from 'chartjs';
+import 'bootstrap-switch-button';
 
 // Add all icons to the library so you can use it in your page
 

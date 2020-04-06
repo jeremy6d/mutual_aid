@@ -10,9 +10,9 @@
     .d-none.d-md-block= fas_icon 'plus', text: "New"
     .d-xs-block.d-md-none= fas_icon 'plus'
 h1= [status_filter.humanize.titleize, "Requests"].join(" ")
-/.card-deck
+.card-deck.d-xs-block.d-md-none
   - @aid_requests.each do |req|
-    .card(style="min-width: 20%; max-width: 18rem;" class="border-#{status_color_for req}")
+    .card(style="min-width: 20%; max-width: 18rem;")
       .card-body
         small.float-right
           - if req.created_at < 1.week.ago
@@ -27,12 +27,12 @@ h1= [status_filter.humanize.titleize, "Requests"].join(" ")
             li.list-group-item
               = link_to "tel:#{req.caller_phone_number}" do
                 = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
-            li.list-group-item= raw req.caller_address.gsub(/\n/, '<br />')
+            li.list-group-item= raw req.caller_address&.gsub(/\n/, '<br />')
             li.list-group-item Needs: #{req.supplies_needed}
             li.list-group-item= req.persons
       .card-footer updated #{time_ago_in_words req.updated_at} ago
 
-table.table(style="text-size: 12pt;")
+table.table.d-none.d-md-block(style="text-size: 12pt;")
   thead
     tr
       th(scope="col") Status
@@ -43,7 +43,7 @@ table.table(style="text-size: 12pt;")
 
   tbody
     - @aid_requests.each do |aid_request|
-      tr(class="#{'bg-danger' if false}")
+      tr(class="#{'bg-danger' if aid_request.urgent?}")
         td 
           = status_badge_for aid_request
           / if urgent, say so!

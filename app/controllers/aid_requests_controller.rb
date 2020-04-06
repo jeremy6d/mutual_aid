@@ -21,10 +21,12 @@ class AidRequestsController < ApplicationController
   # GET /aid_requests/new
   def new
     @aid_request = AidRequest.new
+    render :form
   end
 
   # GET /aid_requests/1/edit
   def edit
+    render :form
   end
 
   # POST /aid_requests
@@ -75,6 +77,15 @@ class AidRequestsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def aid_request_params
-      params.require(:aid_request).permit(:caller_first_name, :caller_last_name, :caller_phone_number, :caller_address, :supplies_needed, :persons, :notes, :status, indications: [])
+      params.require(:aid_request).permit(:caller_first_name, 
+                                          :caller_last_name, 
+                                          :caller_phone_number, 
+                                          :caller_address, 
+                                          :supplies_needed, 
+                                          :persons, 
+                                          :notes, 
+                                          :status,
+                                          :urgent,
+                                          indications: [])
     end
 end
