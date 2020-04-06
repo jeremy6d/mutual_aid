@@ -1,9 +1,10 @@
 = simple_form_for @aid_request do |f|
   .row
-    .col-sm-10   
+    .col-md-8  
       h1 Aid request details
-    .col-sm-2 
-      = f.input :urgent, as: :boolean, label: false, input_html: { data: { toggle: 'switchbutton', size: :large, onlabel: "<i class='fa fa-exclamation-triangle'></i> URGENT", offlabel: "Not urgent", onstyle: "danger", offstyle: "outline-danger" } }
+    .col-sm-4
+      .float-left= f.input :call_back, as: :boolean, label: false, input_html: { data: { size: :large, toggle: 'switchbutton', onlabel: "CALL<br />BACK", offlabel: "call</br >back", onstyle: "success", offstyle: "outline-success" } }
+      .float-right= f.input :urgent, as: :boolean, label: false, input_html: { data: { toggle: 'switchbutton', onlabel: "<i class='fa fa-exclamation-triangle'></i><br />URGENT", offlabel: "Not<br />urgent", onstyle: "danger", offstyle: "outline-danger" } }
 
   .row
     .col-md-4= f.input :caller_first_name, label: "First name"

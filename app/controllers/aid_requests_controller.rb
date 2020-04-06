@@ -86,6 +86,7 @@ class AidRequestsController < ApplicationController
                                           :notes, 
                                           :status,
                                           :urgent,
+                                          :call_back,
                                           indications: [])
     end
 end

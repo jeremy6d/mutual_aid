@@ -1,8 +1,10 @@
 .row
-  .col-md-12.px-4.py-2.mb-1.rounded(class=(@aid_request.urgent? ? 'bg-danger text-white' : 'bg-light text-black' ))
+  .col-md-12.px-4.py-2.mb-1.rounded(class=header_class_for(@aid_request))
     h1.h3.ShowAidRequest-callerName.p-1
       .badge.badge-dark.badge-pill.mr-2 ##{@aid_request.id}
       = [@aid_request.caller_last_name, @aid_request.caller_first_name].reject(&:blank?).join(", ").titleize
+      - if @aid_request.call_back?
+        span.ShowAidRequest-callBack.bg-success.badge.text-dark.float-right= fa_icon 'phone-alt', text: "CALL BACK"
       span.small.ShowAidRequest-status.float-right.ml-5= status_badge_for(@aid_request)
       - if @aid_request.urgent?
         span.ShowAidRequest-urgent.bg-warning.badge.text-dark.float-right= fa_icon 'exclamation-triangle', text: "URGENT"

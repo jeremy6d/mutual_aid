@@ -43,7 +43,7 @@ table.table.d-none.d-md-block(style="text-size: 12pt;")
 
   tbody
     - @aid_requests.each do |aid_request|
-      tr(class="#{'bg-danger' if aid_request.urgent?}")
+      tr(class=header_class_for(aid_request))
         td 
           = status_badge_for aid_request
           / if urgent, say so!

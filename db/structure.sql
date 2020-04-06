@@ -349,7 +349,8 @@ CREATE TABLE public.aid_requests (
     updated_at timestamp(6) without time zone NOT NULL,
     original_taker_id bigint,
     log_data jsonb,
-    urgent boolean DEFAULT false
+    urgent boolean DEFAULT false,
+    call_back boolean DEFAULT false
 );
 
 
@@ -738,6 +739,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200401221719'),
 ('20200403171215'),
 ('20200403212439'),
-('20200405172219');
+('20200405172219'),
+('20200406020029');
 
 
