@@ -14,8 +14,10 @@ html lang="en"
     = csp_meta_tag
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
     = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
-    link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous"
-    script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"
+    / link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous"
+    / script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"
+    /link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet"
+    /script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"
   body#page-top
     /! Page Wrapper
     #wrapper
@@ -123,7 +125,7 @@ html lang="en"
               /! Nav Item - Search Dropdown (Visible Only XS)
               li.nav-item.dropdown.no-arrow.d-sm-none
                 a#searchDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
-                  i.fas.fa-search.fa-fw
+                  i.fas.fa-search.fa-fw.fa-2x
                 /! Dropdown - Messages
                 .dropdown-menu.dropdown-menu-right.p-3.shadow.animated--grow-in aria-labelledby="searchDropdown" 
                   form.form-inline.mr-auto.w-100.navbar-search
@@ -208,8 +210,8 @@ html lang="en"
                 li.nav-item.dropdown.no-arrow
                   - if volunteer_signed_in?
                     a#userDropdown.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" data-disabled="true")
-                      = fa_icon 'head-side-mask' 
-                      span.ml-1.mr-2.d-md-block.d-none.d-lg-inline.text-gray-600.small.Navbar-volunteerName= current_volunteer.full_name
+                      = fa_icon 'head-side-mask', class: "fa-2x text-gray-600"
+                      span.ml-1.mr-2.d-md-block.d-none.d-lg-inline.text-gray-600.Navbar-volunteerName= current_volunteer.full_name
                       / img.img-profile.rounded-circle src="https://source.unsplash.com/QAB-WJcbgJk/60x60" /
                     /! Dropdown - User Informationz
                     .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby="userDropdown")

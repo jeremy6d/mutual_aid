@@ -1,0 +1,26 @@
+= simple_form_for @aid_request do |f|
+  .row
+    .col-md-8  
+      h1 Aid request details
+    .col-sm-4
+      .float-left= f.input :call_back, as: :boolean, label: false, input_html: { data: { size: :large, toggle: 'switchbutton', onlabel: "CALL<br />BACK", offlabel: "call</br >back", onstyle: "success", offstyle: "outline-success" } }
+      .float-right= f.input :urgent, as: :boolean, label: false, input_html: { data: { toggle: 'switchbutton', onlabel: "<i class='fa fa-exclamation-triangle'></i><br />URGENT", offlabel: "Not<br />urgent", onstyle: "danger", offstyle: "outline-danger" } }
+
+  .row
+    .col-md-4= f.input :caller_first_name, label: "First name"
+    .col-md-4= f.input :caller_last_name, label: "Last name"
+    .col-md-4= f.input :caller_phone_number, label: "Phone number"
+  .row
+    .col-md-4= f.input :caller_address, as: :text
+    .col-md-4= f.input :supplies_needed, as: :text
+    .col-md-4= f.input :persons, as: :text, hint: "List all adults, children, and seniors with ages if important"
+  .row
+    .col-md-12= f.input :notes, as: :text
+  .row
+    .col-md-6
+      = f.input :indications, as: :check_boxes, collection: AidRequest::INDICATIONS
+    .col-md-3.text-center
+      = link_to aid_requests_path, class: "btn-lg mt-4 btn btn-outline-dark" do
+        = fa_icon 'arrow-left', text: "Back"
+    .col-md-3.text-center
+      button.btn.btn-lg.btn-success.mt-4= fa_icon "plus", text: "Submit"

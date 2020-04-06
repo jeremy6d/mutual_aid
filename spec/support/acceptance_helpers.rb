@@ -22,6 +22,22 @@ module AcceptanceHelpers
     yield volunteer
     sign_out!
   end
+
+  def submit_aid_request_for(info)
+    fill_in "First name", with: info[:caller_first_name]
+    fill_in "Last name", with: info[:caller_last_name]
+    fill_in "Phone number", with: info[:caller_phone_number]
+    fill_in "address", with: info[:caller_address]
+    fill_in "Supplies needed", with: info[:supplies_needed]
+    fill_in "Persons", with: info[:persons]
+    fill_in "Notes", with: info[:notes]
+    info[:indications].to_a.each do |i|
+      check i
+    end
+    find('#aid_request_urgent').check if info[:urgent]
+    find('#aid_request_call_back').check if info[:call_back]
+    click_on "Submit"
+  end
 end
 
 RSpec.configure { |c| c.include AcceptanceHelpers, type: :system }

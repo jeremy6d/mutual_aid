@@ -29,6 +29,10 @@
   belongs_to :original_taker, class_name: "Volunteer", 
                               inverse_of: :requests_taken
 
+  scope :prioritized, -> {
+    order(urgent: :desc, created_at: :asc)
+  }
+
   def volunteer_name
     original_taker&.full_name
   end

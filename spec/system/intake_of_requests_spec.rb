@@ -29,15 +29,13 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
     signing_in_as(hotline_volunteer) do
       click_on "New"
 
-      fill_in "Caller first name", with: "Steve"
-      fill_in "Caller last name", with: "Holt"
-      fill_in "Caller phone number", with: "1-555-555-5555"
-      fill_in "Caller address", with: "517 W 20th St\nRichmond VA 23225"
-      fill_in "Supplies needed", with: "bread, soup, bleach, paper towels"
-      fill_in "Persons", with: "2 adults, 1 child"
-      fill_in "Notes", with: "1 adult is diabetic"
-
-      click_on "Submit"
+      submit_aid_request_for caller_first_name: "Steve",
+                             caller_last_name: "Holt",
+                             caller_phone_number: "1-555-555-5555",
+                             caller_address: "517 W 20th St\nRichmond VA 23225", 
+                             supplies_needed: "bread, soup, bleach, paper towels",
+                             persons: "2 adults, 1 child",
+                             notes: "1 adult is diabetic"
 
       expect(current_path).to eql(aid_request_path(AidRequest.last))
       expect(find(".ShowAidRequest-indicationsArea")).to have_content("DIABET")
@@ -119,29 +117,26 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
       sleep 1
       all(".card-header").each { |e| expect(e).to have_content("Delivered!") }
     end
+  end
 
-    # DRIVER makes delivery and marks fulfillment 1 "delivered"
-    #   - fulfillment 1 is marked "delivered"
-    #   - request 1 is marked "complete"
-    #   - fulfillement 2 details come up on screen
+  it "marks a request as urgent" do
+    sign_in! FactoryBot.create(:volunteer)
+    click_on "New"
+    info = FactoryBot.attributes_for(:random_aid_request, urgent: true)
+    submit_aid_request_for(info)
+    expect(find(".ShowAidRequest-urgent")).to be_visible
+    click_on "Back"
+    expect(all('tbody tr').first.matches_css?(".bg-danger")).to be true
+  end
 
-    # DRIVER makes delivery and marks fulfillment 2 "delivered"
-    #   - fulfillment 2 is marked "delivered"
-    #   - request 2 is marked "complete"
-    #   - delivery complete screen shown
+  it "marks a request as requiring a callback" do
+    sign_in! FactoryBot.create(:volunteer)
+    click_on "New"
+    info = FactoryBot.attributes_for(:random_aid_request, call_back: true)
+    submit_aid_request_for(info)
 
-
-    # signing_in_as(driver_volunteer) do
-    #   click_on "Fulfillments"
-    #   check "Holt, Steve"
-    #   check "Bluth, Lindsay"
-    #   click_on "Deliver now"
-
-    #   expect(current_path).to eql(delivery_path(Delivery.last))
-    # end
-
-    # volunteer C checks off items
-    # volunteer C creates delivery
-    # volunteer D ships and marks complete
+    expect(find(".ShowAidRequest-callBack")).to be_visible
+    click_on "Back"
+    expect(all('tbody tr').first.matches_css?(".bg-success")).to be true
   end
 end
