@@ -207,7 +207,7 @@ html lang="en"
                   - if volunteer_signed_in?
                     a#userDropdown.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" data-disabled="true")
                       = fa_icon 'head-side-mask', class: "fa-2x text-gray-600"
-                      span.ml-1.mr-2.d-md-block.d-none.d-lg-inline.text-gray-600.Navbar-volunteerName= current_volunteer.full_name
+                      span.ml-1.mr-3.d-md-block.d-none.d-lg-inline.text-gray-600.Navbar-volunteerName= current_volunteer.full_name
                       / img.img-profile.rounded-circle src="https://source.unsplash.com/QAB-WJcbgJk/60x60" /
                     /! Dropdown - User Informationz
                     .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby="userDropdown")
