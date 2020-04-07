@@ -20,4 +20,10 @@ RSpec.describe Fulfillment, type: :model do
     expect(subject).not_to be_valid
     expect(subject.errors[:base]).to include("Either a contents list or an image are required")
   end
+
+  it "notifies the delivery when it's cancelled" do
+    delivery = FactoryBot.create :delivery, fulfillments: [subject]
+    subject.cancel!
+    expect(delivery).to be_cancelled
+  end
 end

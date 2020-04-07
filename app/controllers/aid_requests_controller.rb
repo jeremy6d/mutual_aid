@@ -1,6 +1,6 @@
 class AidRequestsController < ApplicationController
   before_action :authenticate_volunteer!
-  before_action :set_aid_request, only: [:show, :edit, :update, :destroy]
+  before_action :set_aid_request, only: [:show, :edit, :update, :destroy, :dismiss]
 
   # GET /aid_requests
   # GET /aid_requests.json
@@ -68,6 +68,18 @@ class AidRequestsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to aid_requests_url, notice: 'Aid request was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def dismiss
+    respond_to do |format|
+      if @aid_request.dismiss!
+        format.html { redirect_to @aid_request, notice: 'Aid request was successfully dismissed.' }
+        format.json { render :show, status: :ok, location: @aid_request }
+      else
+        format.html { render :edit }
+        format.json { render json: @aid_request.errors, status: :unprocessable_entity }
+      end
     end
   end
 

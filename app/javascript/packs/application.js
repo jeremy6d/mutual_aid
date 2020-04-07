@@ -20,8 +20,9 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 library.add(fas, far, fab)
 dom.watch()
 import 'jquery-easing';
-import Chart from 'chartjs';
-import 'bootstrap-switch-button';
+// import Chart from 'chartjs';
+// import 'bootstrap-switch-button';
+import 'bootstrap-toggle';
 
 // Add all icons to the library so you can use it in your page
 
@@ -37,6 +38,22 @@ $(document).on('turbolinks:load', function() {
     container: 'body',
     html: true,
     trigger: 'hover',
+  });
+
+  $(document).find("#aid_request_call_back").bootstrapToggle({
+    on: "CALLBACK",
+    off: "Callback",
+    onstyle: "success",
+    offstyle: "light",
+    width: 100
+  });
+
+  $(document).find("#aid_request_urgent").bootstrapToggle({
+    on: "URGENT",
+    off: "Urgent",
+    onstyle: "danger",
+    offstyle: "light",
+    width: 100
   });
 
 

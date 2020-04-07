@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Intake of aid request", type: :system, headless: false do
+RSpec.feature "Aid request full lifecycle", type: :system, headless: false do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
@@ -19,8 +19,8 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
                                              caller_address: "100 E Main St, Richmond VA"
   end
 
-  it "handles the happy path", js: true do
-    # User HOTLINE enters request 1 information and submits
+  before do
+        # User HOTLINE enters request 1 information and submits
     # - information is persisted to the database
     # - request is marked "unfulfilled"
     # - redirects to the new request form
@@ -59,8 +59,7 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
       click_on "Holt, Steve"
 
       click_on "Fulfill"
-
-      # expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
+      expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
       expect(find(".FulfillAidRequest-callerPhone")).to have_content("(555) 555-5555")
@@ -76,6 +75,7 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
 
       expect(current_path).to eql(aid_request_path(AidRequest.last))
       expect(the_flash(:notice)).to have_content("success")
+      
       expect(find(".ShowAidRequest-status")).to have_content("In Progress")
       expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Packed")
     end
@@ -95,7 +95,9 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
 
       click_on "Start delivery now"
     end
+  end
 
+  it "handles the happy path" do
     signing_in_as(driver_volunteer) do
       click_on "My deliveries"
       expect(current_path).to eql(my_deliveries_path)
@@ -119,24 +121,39 @@ RSpec.feature "Intake of aid request", type: :system, headless: false do
     end
   end
 
-  it "marks a request as urgent" do
-    sign_in! FactoryBot.create(:volunteer)
-    click_on "New"
-    info = FactoryBot.attributes_for(:random_aid_request, urgent: true)
-    submit_aid_request_for(info)
-    expect(find(".ShowAidRequest-urgent")).to be_visible
-    click_on "Back"
-    expect(all('tbody tr').first.matches_css?(".bg-danger")).to be true
-  end
+  it 'cancels a fulfillment with a delivery in progress' do
+    signing_in_as(driver_volunteer) do
+      click_on "My deliveries"
+      expect(current_path).to eql(my_deliveries_path)
 
-  it "marks a request as requiring a callback" do
-    sign_in! FactoryBot.create(:volunteer)
-    click_on "New"
-    info = FactoryBot.attributes_for(:random_aid_request, call_back: true)
-    submit_aid_request_for(info)
+      click_on "2 fulfillments started less than a minute ago"
 
-    expect(find(".ShowAidRequest-callBack")).to be_visible
-    click_on "Back"
-    expect(all('tbody tr').first.matches_css?(".bg-success")).to be true
+      expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
+    end
+
+    signing_in_as(hotline_volunteer) do
+      click_on "Holt, Steve"
+      page.accept_confirm { click_on "Dismiss" }
+
+      click_on ""
+    end
+
+    signing_in_as(driver_volunteer) do
+      # should send a text!
+
+      click_on "My deliveries"
+
+      expect(current_path).to eql(my_deliveries_path)
+
+      click_on "2 fulfillments started less than a minute ago"
+
+      expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
+
+      click_on "Mark delivered"
+      sleep 1
+      
+      expect(all(".ViewDelivery-fulfillmentCard").first).to have_content("Delivered!")
+      expect(all(".ViewDelivery-fulfillmentCard").last).to have_content("CANCELLED") 
+    end
   end
 end

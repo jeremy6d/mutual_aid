@@ -20,11 +20,13 @@ module AidRequestsHelper
   end
 
   def header_class_for(obj)
-    if obj.urgent?
+    if obj.urgent? && !obj.terminal?
       'bg-danger text-white'
-    elsif obj.call_back?
+    elsif obj.call_back? && obj.unfulfilled?
       'bg-success text-white'
-    else
+    elsif obj.call_back? && obj.in_progress? 
+       'bg-warning text-dark'
+    else  
       'bg-light text-black'
     end
   end

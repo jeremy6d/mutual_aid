@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   end
   devise_for :volunteers
   resources :aid_requests do
+    member { patch 'dismiss' }
     resources :fulfillments do
       member do
         patch 'delivered'

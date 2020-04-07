@@ -1,6 +1,6 @@
 class Delivery < ApplicationRecord
   class Status 
-    ALL = %w(empty delivered on_the_way)
+    ALL = %w(empty delivered on_the_way cancelled)
     ALL.each do |s|
       const_set s.upcase, s
     end
@@ -40,11 +40,17 @@ class Delivery < ApplicationRecord
     self.status == Delivery::Status::EMPTY
   end
 
+  def cancelled?
+    self.status == Delivery::Status::CANCELLED
+  end
+
 private
   def update_status
     self.status = case 
     when fulfillments.empty?
       Status::EMPTY
+    when fulfillments.all?(&:cancelled?)
+      Status::CANCELLED
     when fulfillments.all?(&:delivered?)
       Status::DELIVERED
     else

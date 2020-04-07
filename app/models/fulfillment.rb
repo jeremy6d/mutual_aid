@@ -6,6 +6,7 @@ class Fulfillment < ApplicationRecord
     state :packed, initial: true
     state :on_the_way
     state :delivered
+    state :cancelled
 
     event :pickup do
       transitions from: :packed, to: :on_the_way
@@ -17,6 +18,10 @@ class Fulfillment < ApplicationRecord
 
     event :return do
       transitions from: :on_the_way, to: :packed
+    end
+
+    event :cancel do
+      transitions to: :cancelled
     end
   end
 
