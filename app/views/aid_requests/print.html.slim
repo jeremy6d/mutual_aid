@@ -1,0 +1,51 @@
+doctype html
+html lang="en" 
+  head
+    meta charset="utf-8" /
+    meta content="IE=edge" http-equiv="X-UA-Compatible" /
+    meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
+    meta name="description" content="Management Application for Richmond Mutual Aid"
+    meta name="author" content="Jeremy Weiland"
+    meta name="turbolinks-cache-control" content="no-cache"
+    title
+      - unless Rails.env.production?
+        = Rails.env
+      | Richmond Mutual Aid
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
+  body(style="color: black;")
+    .display-1
+      - if @aid_request.urgent?
+        .w-100.text-center.badge= fa_icon 'exclamation-triangle', text: "URGENT"
+      span.mr-5 ##{@aid_request.id}
+      span= @aid_request.caller_name     
+    .container.m-0
+      .row
+        .col-6
+          ul.display-4.list-unstyled
+            li.my-5 = fa_icon 'phone-alt', text: number_to_phone(@aid_request.caller_phone_number, area_code: true)
+            li.my-5.border.rounded.border-dark.p-1= raw @aid_request.caller_address&.gsub(/\n/, '<br />')
+          .row
+            .col-6
+              .h2 Persons
+              = @aid_request.persons
+              .dl
+                dt Original call taken 
+                dd= @aid_request.created_at.to_s :human
+                dt Last updated 
+                dd= @aid_request.updated_at.to_s :human
+            .col-6
+              .h2 Needs
+              = @aid_request.supplies_needed
+          .footer= image_tag 'flyer.png', class: 'w-100'
+        .col-6
+          .border.border-dark.rounded.p-2.ml-5.text-justified
+            - if @aid_request.indications.any?
+                ul.list-unstyled.h4(color='black')
+                  - @aid_request.indications.compact.each do |i|
+                    li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
+            = @aid_request.notes
+          .display-4.text-right(style="color: black; text-decoration: underline;") Contents Packed
+javascript:
+  window.print();
+  window.history.back();

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Aid request full lifecycle", type: :system, headless: false do
+RSpec.feature "Aid request full lifecycle", type: :system, js: true do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),

@@ -18,6 +18,11 @@ class AidRequestsController < ApplicationController
   # GET /aid_requests/1
   # GET /aid_requests/1.json
   def show
+    if params[:print]
+      render :print, layout: false 
+    else
+      render :show
+    end
   end
 
   # GET /aid_requests/new

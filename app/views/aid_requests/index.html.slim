@@ -33,16 +33,23 @@ h1
             = req.created_at.to_s(:time_only)
           - else 
             = req.created_at.strftime("%A")
-        h5.card-title= link_to(req.caller_name, req, class: "text-dark")
+        h5.card-title
+          .badge.badge-dark.badge-pill.mr-3 ##{req.id}
+          = link_to(req.caller_name, req, class: "text-dark")
       .card-body
-        .mt-3 
-          ul.list-group.list-group-flush.list-unstyled
-            li.list-group-item
-              = link_to "tel:#{req.caller_phone_number}" do
-                = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
-            li.list-group-item= raw req.caller_address&.gsub(/\n/, '<br />')
-            li.list-group-item Needs: #{req.supplies_needed}
-            li.list-group-item= req.persons
+        ul.list-unstyled
+          li
+            = link_to "tel:#{req.caller_phone_number}" do
+              = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
+          li
+            em= raw req.caller_address&.gsub(/\n/, '<br />')
+            = "(#{req.neighborhood})" unless req.neighborhood.blank?
+          li
+            strong Persons: 
+            = req.persons
+          li 
+            strong Needs: 
+            = req.supplies_needed
       .card-footer updated #{time_ago_in_words req.updated_at} ago
 
 table.table.d-none.d-sm-block(style="text-size: 12pt;")
