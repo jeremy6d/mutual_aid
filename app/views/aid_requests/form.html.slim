@@ -11,10 +11,11 @@
     .col-md-4= f.input :caller_phone_number, label: "Phone number"
   .row
     .col-md-4= f.input :caller_address, as: :text
-    .col-md-4= f.input :supplies_needed, as: :text
+    .col-md-4= f.input :neighborhood, as: :text
     .col-md-4= f.input :persons, as: :text, hint: "List all adults, children, and seniors with ages if important"
   .row
-    .col-md-12= f.input :notes, as: :text
+    .col-md-6= f.input :supplies_needed, as: :text
+    .col-md-6= f.input :notes, as: :text
   .row
     .col-md-6
       = f.input :indications, as: :check_boxes, collection: AidRequest::INDICATIONS

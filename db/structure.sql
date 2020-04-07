@@ -350,7 +350,8 @@ CREATE TABLE public.aid_requests (
     original_taker_id bigint,
     log_data jsonb,
     urgent boolean DEFAULT false,
-    call_back boolean DEFAULT false
+    call_back boolean DEFAULT false,
+    neighborhood character varying
 );
 
 
@@ -740,6 +741,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200403171215'),
 ('20200403212439'),
 ('20200405172219'),
-('20200406020029');
+('20200406020029'),
+('20200407052848');
 
 
