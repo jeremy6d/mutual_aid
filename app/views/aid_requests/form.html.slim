@@ -1,21 +1,20 @@
 = simple_form_for @aid_request do |f|
   .row
-    .col-md-8  
+    .col-md-6  
       h1 Aid request details
-    .col-sm-4
+    .col-md-6
       .float-left= f.input :call_back, as: :boolean, label: false
       .float-right= f.input :urgent, as: :boolean, label: false
   .row
-    .col-md-4= f.input :caller_first_name, label: "First name"
-    .col-md-4= f.input :caller_last_name, label: "Last name"
-    .col-md-4= f.input :caller_phone_number, label: "Phone number"
+    .col-md-3= f.input :caller_first_name, label: "First name"
+    .col-md-3= f.input :caller_last_name, label: "Last name"
+    .col-md-3= f.input :caller_phone_number, label: "Phone number"
+    .col-md-3= f.input :neighborhood
   .row
-    .col-md-4= f.input :caller_address, as: :text
-    .col-md-4= f.input :neighborhood, as: :text
-    .col-md-4= f.input :persons, as: :text, hint: "List all adults, children, and seniors with ages if important"
-  .row
-    .col-md-6= f.input :supplies_needed, as: :text
-    .col-md-6= f.input :notes, as: :text
+    .col-md-3= f.input :caller_address, as: :text, input_html: { rows: 6 }
+    .col-md-3= f.input :persons, as: :text, hint: "List all adults, children, and seniors with ages if important", input_html: { rows: 6 }
+    .col-md-3= f.input :supplies_needed, as: :text, input_html: { rows: 6 }
+    .col-md-3= f.input :notes, as: :text, input_html: { rows: 6 }
   .row
     .col-md-6
       = f.input :indications, as: :check_boxes, collection: AidRequest::INDICATIONS
