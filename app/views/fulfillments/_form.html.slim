@@ -21,8 +21,9 @@
         .card-footer
           - if @aid_request.supplies_needed
             h5 Needs
-            .list-item-group
+            ul
               - @aid_request.supplies_needed.split(",").each do |need|
+                li= need
           - else
             .jumbotron.text-center.lead No recorded needs            
 
