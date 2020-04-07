@@ -45,7 +45,7 @@ h1 View delivery
 
             .ml-3
               - unless Rails.env.test?
-                img src="https://maps.googleapis.com/maps/api/streetview?location=#{@aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
+                img src="https://maps.googleapis.com/maps/api/streetview?location=#{f.aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
                 /max-width='100%'        
 = link_to :back, class: "btn btn-outline-dark" do
   = fa_icon 'arrow-left', text: "Back"
