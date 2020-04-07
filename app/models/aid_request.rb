@@ -39,7 +39,7 @@
   end
 
   def caller_name
-    [caller_last_name, caller_first_name].join(", ")
+    [caller_last_name, caller_first_name].reject(&:blank?).join(", ")
   end
 
   def indications=(set)
