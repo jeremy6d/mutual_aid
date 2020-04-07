@@ -37,7 +37,7 @@ html lang="en"
             .col-6
               .h2 Needs
               = @aid_request.supplies_needed
-          footer= image_tag 'flyer.png', class: 'w-100'
+          footer= image_tag asset_path('flyer.png'), class: 'w-100'
         .col-6
           .border.border-dark.rounded.p-2.ml-5.text-justified
             - if @aid_request.indications.any?
