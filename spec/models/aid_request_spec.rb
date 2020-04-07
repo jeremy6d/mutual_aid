@@ -23,6 +23,17 @@ RSpec.describe AidRequest, type: :model do
     expect(subject).not_to be_urgent
   end
 
+  context "upon dismissal" do
+    subject! { FactoryBot.create :aid_request, :packed }
+    let!(:fulfillment) { FactoryBot.create :fulfillment }
+    let!(:delivery) { FactoryBot.create :delivery, fulfillments: Fulfillment.all }
+
+    it "marks all fulfillments cancelled" do
+      subject.dismiss!
+      expect(subject.fulfillments.pluck(:status).uniq).to contain_exactly("cancelled")
+    end
+  end
+
   context "priority queue" do
     let!(:oldest_request) do
       FactoryBot.create :random_aid_request, created_at: 2.days.ago

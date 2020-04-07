@@ -1,6 +1,6 @@
 @import '~bootstrap/scss/bootstrap';
 @import './sb_admin';
-@import '~bootstrap-switch-button/css/bootstrap-switch-button.min';
+@import '~bootstrap-toggle/css/bootstrap-toggle.min';
 
 .fa5-text {
   @extend .ml-2;
@@ -20,4 +20,8 @@
   &-alert {
     @extend .alert-danger;
   }
+}
+
+.bg-dark > a {
+  color: white;
 }

@@ -38,34 +38,22 @@
       dd.col-9.ShowAidRequest-notes= @aid_request.notes
     .list-group.FulfillmentList-listParent
       - @aid_request.fulfillments.each do |f|
-        .list-group-item.FulfillmentList-fulfillmentItem
+        .list-group-item.FulfillmentList-fulfillmentItem(class=('bg-dark' if f.cancelled?))
           .badge.badge-pill.badge-dark.mr-3 #{@aid_request.id}F#{'%03d' % f.id}
           - if f.contents_sheet_image.attached?
             = link_to url_for(f.contents_sheet_image) do
               = fa_icon 'file-signature', title: "Open attached contents sheet"
           = link_to raw("<strong>#{f.status.titleize}</strong> fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"
-    .row.d-print-none
-      .col-3.text-center
-        = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark m-1" do
-          = fa_icon 'arrow-left', text: "Back"
-      .col-3.text-center
-        - unless @aid_request.fulfilled?
-          = link_to new_aid_request_fulfillment_path(@aid_request), class: "btn btn-lg btn-success m-1" do
-            = fa_icon 'box-open', text: "Fulfill"
-        /- if @aid_request.in_progress?
-          = link_to aid_requests_path, class: "btn btn-lg btn-success m-1", method: :patch do
-            = fa_icon 'check', text: "Complete"
-      .col-3.text-center
-        = link_to dismiss_aid_request_path(@aid_request), class: "btn btn-lg btn-dark m-1", method: :patch, data: { confirm: 'Are you sure?' }  do
-            = fa_icon status_icon_for("dismiss"), text: "Dismiss"
-      .col-3.text-center
-        = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary m-1" do
+    .btn-group.w-100.mt-5.d-print-none(role='group')
+      = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark" do
+        = fa_icon 'arrow-left', text: "Back"
+      - unless @aid_request.terminal?
+        = link_to new_aid_request_fulfillment_path(@aid_request), class: "btn btn-lg btn-success" do
+          = fa_icon 'box-open', text: "Fulfill"
+        = link_to dismiss_aid_request_path(@aid_request), class: "btn btn-lg btn-dark", method: :patch, data: { confirm: 'Are you sure?' }  do
+          = fas_icon 'ban', text: "Dismiss"
+        = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary" do
           = fa_icon 'edit', text: 'Edit'
   .col-sm-6
     - unless Rails.env.test?
-      .list-group
-        .list-group-item(name="gmap-top")
-          iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")
-        .list-group-item.text-center
-          img src="https://maps.googleapis.com/maps/api/streetview?location=#{@aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" max-width='100%'
-  
+      iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")

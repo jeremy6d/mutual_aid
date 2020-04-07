@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Hotline operations", type: :system, js: true, headless: false do
+RSpec.feature "Hotline operations", type: :system, headless: false do
   let(:attributes) { FactoryBot.attributes_for(:random_aid_request) }
   before do
     sign_in! FactoryBot.create(:volunteer)

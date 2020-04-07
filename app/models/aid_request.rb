@@ -8,7 +8,7 @@
     state :unfulfilled, initial: true
     state :in_progress
     state :fulfilled
-    state :dismissed
+    state :dismissed, before_enter: :cancel_fulfillments!
 
     event :start do
       transitions from: :unfulfilled, to: :in_progress
@@ -25,7 +25,8 @@
 
   before_create :detect_indications_in_notes!
 
-  has_many :fulfillments, inverse_of: :fulfiller
+  has_many :fulfillments, inverse_of: :aid_request
+  has_many :deliveries, through: :fulfillments
   belongs_to :original_taker, class_name: "Volunteer", 
                               inverse_of: :requests_taken
 
@@ -71,9 +72,12 @@
     complete! if fulfillments.all?(&:delivered?)
   end
 
-  # def needed_items=(items)
-  #   items.each do |i|
-  #     needed_items.find_or_build_by(name: i)
-  #   end
-  # end
+  def terminal?
+    dismissed? || fulfilled?
+  end
+
+private
+  def cancel_fulfillments!
+    fulfillments.each &:cancel!
+  end
 end

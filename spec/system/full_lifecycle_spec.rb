@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Aid request full lifecycle", type: :system, js: true do
+RSpec.feature "Aid request full lifecycle", type: :system, headless: false do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
@@ -19,8 +19,8 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
                                              caller_address: "100 E Main St, Richmond VA"
   end
 
-  it "handles the happy path" do
-    # User HOTLINE enters request 1 information and submits
+  before do
+        # User HOTLINE enters request 1 information and submits
     # - information is persisted to the database
     # - request is marked "unfulfilled"
     # - redirects to the new request form
@@ -95,7 +95,9 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
       click_on "Start delivery now"
     end
+  end
 
+  it "handles the happy path" do
     signing_in_as(driver_volunteer) do
       click_on "My deliveries"
       expect(current_path).to eql(my_deliveries_path)
@@ -116,6 +118,42 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       click_on "Mark delivered"
       sleep 1
       all(".card-header").each { |e| expect(e).to have_content("Delivered!") }
+    end
+  end
+
+  it 'cancels a fulfillment with a delivery in progress' do
+    signing_in_as(driver_volunteer) do
+      click_on "My deliveries"
+      expect(current_path).to eql(my_deliveries_path)
+
+      click_on "2 fulfillments started less than a minute ago"
+
+      expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
+    end
+
+    signing_in_as(hotline_volunteer) do
+      click_on "Holt, Steve"
+      page.accept_confirm { click_on "Dismiss" }
+
+      click_on ""
+    end
+
+    signing_in_as(driver_volunteer) do
+      # should send a text!
+
+      click_on "My deliveries"
+
+      expect(current_path).to eql(my_deliveries_path)
+
+      click_on "2 fulfillments started less than a minute ago"
+
+      expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
+
+      click_on "Mark delivered"
+      sleep 1
+      
+      expect(all(".ViewDelivery-fulfillmentCard").first).to have_content("Delivered!")
+      expect(all(".ViewDelivery-fulfillmentCard").last).to have_content("CANCELLED") 
     end
   end
 end
