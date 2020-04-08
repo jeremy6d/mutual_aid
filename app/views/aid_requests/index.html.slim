@@ -55,6 +55,7 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
     tr
       th(scope="col") Status
       th(scope="col") Name
+      th(scope="col") Phone
       th(scope="col" width="20%") Needs
       th(scope="col" width="20%") Address
       th(scope="col") 
@@ -69,6 +70,8 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
           = link_to aid_request do
             .badge.badge-dark.badge-pill.mr-3 ##{aid_request.id}
             span(class=(header_class_for(aid_request).split(" ").last))= aid_request.caller_name
+          br/
+        td= link_to_google_voice aid_request.caller_phone_number  
         td = truncate aid_request.supplies_needed, length: 50
         td = aid_request.caller_address
         td 
