@@ -55,5 +55,5 @@
           = fas_icon 'ban', text: "Dismiss"
         = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary" do
           = fa_icon 'edit', text: 'Edit'
-        = link_to aid_request_path(print: true), class: "btn btn-lg btn-info", data: { turbolinks: false } do
+        = link_to aid_request_path(print: true), class: "btn btn-lg btn-info", target: "_blank", data: { turbolinks: false } do
           = fa_icon 'print', text: 'Print'
