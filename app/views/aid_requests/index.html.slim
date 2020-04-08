@@ -38,9 +38,7 @@ h1
           = link_to(req.caller_name, req, class: "text-dark")
       .card-body
         ul.list-unstyled
-          li
-            = link_to "tel:#{req.caller_phone_number}" do
-              = fa_icon "phone", text: number_to_phone(req.caller_phone_number, area_code: true)
+          li= link_to_google_voice(req.caller_phone_number) 
           li
             em= raw req.caller_address&.gsub(/\n/, '<br />')
             = "(#{req.neighborhood})" unless req.neighborhood.blank?

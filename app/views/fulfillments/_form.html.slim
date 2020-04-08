@@ -16,7 +16,7 @@
             .float-right.ml-2= status_badge_for(@aid_request)
             .FulfillAidRequest-callerName= @aid_request.caller_name
           p.lead.FulfillAidRequest-persons= @aid_request.persons
-          .FulfillAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
+          .FulfillAidRequest-callerPhone= link_to_google_voice(@aid_request.caller_phone_number)
           p.FulfillAidRequest-notes= @aid_request.notes
         .card-footer
           - if @aid_request.supplies_needed

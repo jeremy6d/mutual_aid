@@ -12,7 +12,7 @@
   .col-sm-6
     dl.row
       dt.col-3 Phone
-      dd.col-9.ShowAidRequest-callerPhone= link_to number_to_phone(@aid_request.caller_phone_number, area_code: true), "tel:#{@aid_request.caller_phone_number}"
+      dd.col-9.ShowAidRequest-callerPhone= link_to_google_voice(@aid_request.caller_phone_number)
       dt.col-3 Address
       dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address&.gsub(/\n/, '<br />')), "#gmap-top"
       dt.col-3 Needs
@@ -55,5 +55,5 @@
           = fas_icon 'ban', text: "Dismiss"
         = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary" do
           = fa_icon 'edit', text: 'Edit'
-        = link_to aid_request_path(print: true), class: "btn btn-lg btn-info" do
+        = link_to aid_request_path(print: true), class: "btn btn-lg btn-info", data: { turbolinks: false } do
           = fa_icon 'print', text: 'Print'
