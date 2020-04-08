@@ -6,7 +6,9 @@ html lang="en"
     meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
     meta name="description" content="Management Application for Richmond Mutual Aid"
     meta name="author" content="Jeremy Weiland"
-    meta name="turbolinks-cache-control" content="no-cache"
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"
+    script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" defer
+    link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" crossorigin="anonymous"
     title
       - unless Rails.env.production?
         = Rails.env
@@ -38,12 +40,12 @@ html lang="en"
               = @aid_request.supplies_needed
           footer= image_tag asset_path('flyer.png'), class: 'w-100'
         .col-6
-          .border.border-dark.rounded.p-2.ml-5.text-justified
-            - if @aid_request.indications.any?
-                ul.list-unstyled.h4(color='black')
-                  - @aid_request.indications.compact.each do |i|
-                    li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
-            = @aid_request.notes
+          - if @aid_request.indications.any?
+            .border.border-dark.rounded.p-2.ml-5.text-justified
+              ul.list-unstyled.h4(color='black')
+                - @aid_request.indications.compact.each do |i|
+                  li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
+              = @aid_request.notes
           .display-4.text-right(style="color: black; text-decoration: underline;") Contents Packed
 javascript:
   window.print();
