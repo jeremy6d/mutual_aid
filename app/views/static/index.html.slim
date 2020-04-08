@@ -1,0 +1,12 @@
+.container.text-center.p-0
+  h1 Welcome to Mutual Aid Disaster Relief Richmond
+  .btn-group.mt-5.d-none.d-md-block
+    = link_to new_volunteer_session_path, class: "btn btn-lg btn-success" do
+      = fa_icon 'sign-in-alt', text: 'Volunteer sign in'
+    = link_to new_volunteer_registration_path, class: "btn btn-lg btn-outline-info" do
+      = fa_icon 'user-plus', text: 'Volunteer sign up'
+  .btn-group.w-100.mt-5.d-xs-block.d-md-none
+    = link_to new_volunteer_session_path, class: "btn btn-lg btn-success" do
+      = fa_icon 'sign-in-alt', text: 'Volunteer sign in'
+    = link_to new_volunteer_registration_path, class: "btn btn-lg btn-outline-info" do
+      = fa_icon 'user-plus', text: 'Volunteer sign up'

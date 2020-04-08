@@ -1,5 +1,4 @@
-class AidRequestsController < ApplicationController
-  before_action :authenticate_volunteer!
+class AidRequestsController < AuthorizedOnlyController
   before_action :set_aid_request, only: [:show, :edit, :update, :destroy, :dismiss]
 
   # GET /aid_requests

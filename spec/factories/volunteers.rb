@@ -20,13 +20,16 @@ NAMES = [ 'Oscar Bluth', 'Barry Zuckerkorn',
 
 FactoryBot.define do
   factory :volunteer do
+    # approved_by { create :another_volunteer }
     first_name { "GOB" }
     last_name { "Bluth" }
     sequence(:email) { |i| "#{first_name}.#{last_name}-#{rand(99999)}#{i}@bluth.co" }
     password { "password" }
     password_confirmation { "password" }
+    after(:create) { |v| v.approved_by = v; v.save }
     
     factory :another_volunteer do
+      approved_by { create :volunteer }
       transient do
         names do
           NAMES.map { |n| n.split(" ") }

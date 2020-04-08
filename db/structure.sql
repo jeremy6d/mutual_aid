@@ -484,7 +484,9 @@ CREATE TABLE public.volunteers (
     current_sign_in_at timestamp without time zone,
     last_sign_in_at timestamp without time zone,
     current_sign_in_ip inet,
-    last_sign_in_ip inet
+    last_sign_in_ip inet,
+    approved_by_id bigint,
+    phone_number character varying
 );
 
 
@@ -670,6 +672,13 @@ CREATE INDEX index_fulfillments_on_fulfiller_id ON public.fulfillments USING btr
 
 
 --
+-- Name: index_volunteers_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_volunteers_on_approved_by_id ON public.volunteers USING btree (approved_by_id);
+
+
+--
 -- Name: index_volunteers_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -696,6 +705,14 @@ CREATE TRIGGER logidze_on_aid_requests BEFORE INSERT OR UPDATE ON public.aid_req
 
 ALTER TABLE ONLY public.aid_requests
     ADD CONSTRAINT fk_rails_4566916b7c FOREIGN KEY (original_taker_id) REFERENCES public.volunteers(id);
+
+
+--
+-- Name: volunteers fk_rails_53111441b8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.volunteers
+    ADD CONSTRAINT fk_rails_53111441b8 FOREIGN KEY (approved_by_id) REFERENCES public.volunteers(id);
 
 
 --
@@ -742,6 +759,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200403212439'),
 ('20200405172219'),
 ('20200406020029'),
-('20200407052848');
+('20200407052848'),
+('20200408194004');
 
 

@@ -5,16 +5,18 @@ module AcceptanceHelpers
 
   def sign_in!(volunteer)
     visit new_volunteer_session_path
-    fill_in "Email", with: volunteer.email
-    fill_in "Password", with: "password"
-    click_on "Sign in"
+    within("form#new_volunteer") do
+      fill_in "Email", with: volunteer.email
+      fill_in "Password", with: "password"
+      click_on "Sign in"
+    end
     expect(find(".Navbar-volunteerName")).to have_content(volunteer.full_name)
   end
 
   def sign_out!
     find(".Navbar-volunteerName").click
     click_on "Sign out"
-    expect(current_path).to eql(new_volunteer_session_path)
+    expect(current_path).to eql(root_path)
   end
 
   def signing_in_as(volunteer)

@@ -27,15 +27,24 @@ html lang="en"
         /! Divider
         hr.sidebar-divider.my-0/
         / ! Nav Item - Dashboard
-        li(class="nav-item #{'active' if @controller == 'aid_requests'}")
-          = link_to aid_requests_path, class: "nav-link" do
-            = fa_icon 'phone-alt', text: "Requests"
-        li(class="nav-item #{'active' if @controller == 'deliveries'}")
-          = link_to new_delivery_path, class: "nav-link" do
-            = fa_icon 'box', text: "Make a delivery"
-        li(class="nav-item #{'active' if @controller == 'deliveries'}")
-          = link_to my_deliveries_path, class: "nav-link" do
-            = fa_icon 'shipping-fast', text: "My deliveries"
+        - if volunteer_signed_in?
+          li(class="nav-item #{'active' if @controller == 'aid_requests'}")
+            = link_to aid_requests_path, class: "nav-link" do
+              = fa_icon 'phone-alt', text: "Requests"
+          li(class="nav-item #{'active' if @controller == 'deliveries'}")
+            = link_to new_delivery_path, class: "nav-link" do
+              = fa_icon 'box', text: "Make a delivery"
+          li(class="nav-item #{'active' if @controller == 'deliveries'}")
+            = link_to my_deliveries_path, class: "nav-link" do
+              = fa_icon 'shipping-fast', text: "My deliveries"
+        - else
+          li.nav-item
+            = link_to new_volunteer_session_path, class: "nav-link" do
+              = fa_icon 'sign-in-alt', text: 'Sign in'
+          li.nav-item
+            = link_to new_volunteer_registration_path, class: "nav-link" do
+              = fa_icon 'user-plus', text: 'Sign up'
+          /! End of Topbar
         /! Divider
         /hr.sidebar-divider/
         /! Heading
@@ -203,11 +212,12 @@ html lang="en"
                 /       a.dropdown-item.text-center.small.text-gray-500 href="#"  Read More Messages
                 / .topbar-divider.d-none.d-sm-block
                   /! Nav Item - User Information
-                li.nav-item.dropdown.no-arrow
-                  - if volunteer_signed_in?
+                - if volunteer_signed_in?
+                  li.nav-item.dropdown.no-arrow
                     a#userDropdown.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" data-disabled="true")
                       = fa_icon 'head-side-mask', class: "fa-2x text-gray-600"
-                      span.ml-1.mr-3.d-md-block.d-none.d-lg-inline.text-gray-600.Navbar-volunteerName= current_volunteer.full_name
+                      span.ml-1.mr-3.d-md-block.d-none.d-lg-inline.text-gray-600.Navbar-volunteerName
+                        = current_volunteer.full_name
                       / img.img-profile.rounded-circle src="https://source.unsplash.com/QAB-WJcbgJk/60x60" /
                     /! Dropdown - User Informationz
                     .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby="userDropdown")
@@ -226,10 +236,13 @@ html lang="en"
                       = link_to destroy_volunteer_session_url, method: :delete, data: { target: "#logoutModal", toggle: "modal"}, class: "dropdown-item" do
                         i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
                         | Sign out
-                  - else
-                    - unless devise_controller?
-                        = link_to, new_volunteer_session_path do
-                          = fa_icon 'sign-in-alt', text: 'Sign in'
+                - else
+                  li.nav-item.mr-5.d-md-block.d-none
+                    = link_to new_volunteer_session_path do
+                      = fa_icon 'sign-in-alt', text: 'Sign in'
+                  li.nav-item.d-md-block.d-none
+                    = link_to new_volunteer_registration_path do
+                      = fa_icon 'user-plus', text: 'Sign up'
           /! End of Topbar
           /! Begin Page Content
           .container-fluid

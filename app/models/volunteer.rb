@@ -12,6 +12,15 @@ class Volunteer < ApplicationRecord
                                  class_name: "Fulfillment"
   has_many :deliveries, inverse_of: :driver, 
                         foreign_key: 'driver_id'
+  has_many :approving_volunteers, inverse_of: :approved_by,
+                           foreign_key: 'approved_by_id',
+                           class_name: "Volunteer"
+
+
+  belongs_to :approved_by, inverse_of: :approving_volunteers,
+                           class_name: "Volunteer",
+                           optional: true
+
 
   validates_presence_of :first_name, :last_name
 
@@ -19,4 +28,15 @@ class Volunteer < ApplicationRecord
     [first_name, last_name].join(" ")
   end
 
+  def active_for_authentication? 
+    super && approved? 
+  end 
+  
+  def inactive_message 
+    approved? ? super : :not_approved
+  end
+
+  def approved?
+    approved_by.present?
+  end
 end
