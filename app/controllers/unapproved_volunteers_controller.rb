@@ -4,7 +4,8 @@ class UnapprovedVolunteersController < AuthorizedOnlyController
   end
 
   def update
-    if Volunteer.where(id: params[:volunteer_ids]).update(approved_by: current_volunteer)
+    Rails.logger.info params[:volunteer_ids]
+    if Volunteer.where(id: params[:volunteer_ids]).update(approved_by_id: current_volunteer.id)
       redirect_to aid_requests_path, notice: "Approvals complete"
     else
       flash[:error] = "There was a problem approving volunteers"

@@ -7,10 +7,13 @@ class AidRequestsController < AuthorizedOnlyController
     @aid_requests = case params[:status]
     when "", nil, "all"
       AidRequest.order(created_at: :desc)
-    when "call_back"
-      AidRequest.where(call_back: true).order(created_at: :asc)
+    when "call_back_hotline"
+      AidRequest.where(call_back: true, 
+                       status: "unfulfilled").
+                 order(created_at: :asc)
     else
-      AidRequest.where(status: params[:status]).order(updated_at: :desc)
+      AidRequest.where(status: params[:status]).
+                 order(updated_at: :desc)
     end
   end
 

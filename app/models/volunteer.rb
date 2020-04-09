@@ -24,6 +24,8 @@ class Volunteer < ApplicationRecord
 
   validates_presence_of :first_name, :last_name
 
+  before_save :send_approval_notification, if: Proc.new { |v| v.just_approved? }
+
   def full_name
     [first_name, last_name].join(" ")
   end
@@ -38,5 +40,14 @@ class Volunteer < ApplicationRecord
 
   def approved?
     approved_by.present?
+  end
+
+  def just_approved?
+    old_id, new_id = changes["approved_by_id"]
+    old_id.nil? && new_id.present?
+  end
+
+  def send_approval_notification
+    ApprovalMailer.approval_notification(self).deliver
   end
 end
