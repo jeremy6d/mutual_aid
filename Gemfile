@@ -44,7 +44,6 @@ group :development, :test do
       gem lib, git: "https://github.com/rspec/#{lib}.git", branch: 'master'
   end
   gem 'launchy'
-  gem 'pry-rails'
   gem 'timecop'
   gem 'seed_dump'
   gem 'factory_bot_rails'
