@@ -14,7 +14,7 @@
     .col-md-3= f.input :caller_address, as: :text, input_html: { rows: 6 }
     .col-md-3= f.input :persons, as: :text, hint: "List all adults, children, and seniors with ages if important", input_html: { rows: 6 }
     .col-md-3= f.input :supplies_needed, as: :text, input_html: { rows: 6 }
-    .col-md-3= f.input :notes, as: :text, input_html: { rows: 6 }
+    .col-md-3= f.input :notes, as: :text, input_html: { rows: 6 }, hint: "Notes only get printed out on the delivery if the \"See notes\" indication checkbox is checked" 
   .row
     .col-md-6
       = f.input :indications, as: :check_boxes, collection: AidRequest::INDICATIONS
