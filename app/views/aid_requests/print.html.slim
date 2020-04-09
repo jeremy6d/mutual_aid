@@ -12,40 +12,50 @@ html lang="en"
     title
       - unless Rails.env.production?
         = Rails.env
+        |  - 
       | Richmond Mutual Aid
     = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
-  body(style="color: black;")
-    .display-1
+  body(style="color: black; background-attachment: fixed; background-image: url(#{asset_path('circle-a.svg')}); background-repeat: no-repeat; background-size: 375vw;")
+    .display-1.mb-5.text-right
       - if @aid_request.urgent?
         .w-100.text-center.badge= fa_icon 'exclamation-triangle', text: "URGENT"
-      span.mr-5 ##{@aid_request.id}
-      span= @aid_request.caller_name     
-    .container.m-0
+      .float-left.mr-3 ##{@aid_request.id}
+      div(style="height: 1.1em; text-overflow: ellipsis; overflow: hidden;")
+        - lg_name = @aid_request.caller_last_name.empty? ? @aid_request.caller_first_name : @aid_request.caller_last_name
+        - sm_name = @aid_request.caller_first_name unless lg_name == @aid_request.caller_first_name
+        - if sm_name.present?
+          span.h1= sm_name
+        = lg_name
+    .container.m-0(style="")
       .row
         .col-6
-          ul.display-4.list-unstyled
-            li.my-5 = fa_icon 'phone-alt', text: number_to_phone(@aid_request.caller_phone_number, area_code: true)
-            li.my-5.border.rounded.border-dark.p-1= raw @aid_request.caller_address&.gsub(/\n/, '<br />')
-          .row
-            .col-6
-              .h2 Persons
-              = @aid_request.persons
-              .dl
-                dt Original call taken 
-                dd= @aid_request.created_at.to_s :human
-                dt Last updated 
-                dd= @aid_request.updated_at.to_s :human
-            .col-6
-              .h2 Needs
-              = @aid_request.supplies_needed
-          footer= image_tag asset_path('flyer.png'), class: 'w-100'
+          .h1
+            = fa_icon 'phone-alt', text: number_to_phone(@aid_request.caller_phone_number, area_code: true)  
+          .dl.row.h4
+            dt.col-4 Persons
+            dd.col-8= @aid_request.persons
+            dt.col-4 Started 
+            dd.col-8= @aid_request.created_at.to_s :human
+            dt.col-4 Updated 
+            dd.col-8= @aid_request.updated_at.to_s :human
+          .h2 Needs
+          - column_ct = (@aid_request.supplies_needed.size / 500) + 1
+          - font_size = (column_ct > 2) ? 1 : 2
+          .PrintAidRequest-needsColumns(style="column-count: #{column_ct}; font-size: #{font_size}em;")= @aid_request.supplies_needed
+          .fixed-bottom= image_tag asset_path('flyer.png'), style: "max-height: 400px; width: 50%;"
         .col-6
           - if @aid_request.indications.any?
-            .border.border-dark.rounded.p-2.ml-5.text-justified
+            .border.border-dark.rounded.p-2.ml-5.text-justified.mb-5
               ul.list-unstyled.h4(color='black')
                 - @aid_request.indications.compact.each do |i|
                   li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
               = @aid_request.notes
+          ul.display-4.list-unstyled
+            li.border.rounded.border-dark.p-1
+              - unless @aid_request.neighborhood.blank?
+                .text-center.display-1
+                  .badge.badge-pill.badge-light= @aid_request.neighborhood
+              = raw @aid_request.caller_address&.gsub(/\n/, '<br />')
           .display-4.text-right(style="color: black; text-decoration: underline;") Contents Packed
 javascript:
   window.print();

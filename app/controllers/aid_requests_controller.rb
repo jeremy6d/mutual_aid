@@ -108,6 +108,7 @@ class AidRequestsController < AuthorizedOnlyController
                                           :status,
                                           :urgent,
                                           :call_back,
+                                          :neighborhood,
                                           indications: [])
     end
 end

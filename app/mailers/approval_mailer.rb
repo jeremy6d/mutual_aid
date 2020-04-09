@@ -1,5 +1,5 @@
 class ApprovalMailer < ApplicationMailer
-  default from: 'richmondmutualaid@protonmail.com'
+  default from: 'do-not-reply@madrva.org'
   layout 'mailer'
 
   def approval_notification(volunteer)
