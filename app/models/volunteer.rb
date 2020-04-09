@@ -24,7 +24,7 @@ class Volunteer < ApplicationRecord
 
   validates_presence_of :first_name, :last_name
 
-  before_save :send_approval_notification, if: Proc.new { |v| v.just_approved? }
+  # before_save :send_approval_notification, if: Proc.new { |v| v.just_approved? }
 
   def full_name
     [first_name, last_name].join(" ")
