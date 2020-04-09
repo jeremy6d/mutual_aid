@@ -1,0 +1,10 @@
+.text-center
+  h1 Pending volunteers  
+  = form_tag approve_volunteers_path do
+    ul.list-unstyled
+      - @volunteers.each do |v|
+        li
+          = check_box_tag "volunteer_ids[]", v.id
+          span.ml-2= label_tag v.full_name
+          small= "  (#{v.created_at.to_s(:date_and_time)})"
+    button.btn.btn-primary.btn-lg Approve these volunteers
