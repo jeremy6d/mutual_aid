@@ -45,7 +45,10 @@ class Fulfillment < ApplicationRecord
   end
 
   def to_s
-    [public_id, aid_request.caller_address&.gsub('\n', ', ')].reject(&:blank?).join(": ")
+    [ public_id, 
+      aid_request.caller_address&.gsub('\n', ', '), 
+      (aid_request.neighborhood unless aid_request.neighborhood.blank?)
+    ].reject(&:blank?).join(" - ")
   end
 
 private
