@@ -1,5 +1,4 @@
-class DeliveriesController < ApplicationController
-  before_action :authenticate_volunteer!
+class DeliveriesController < AuthorizedOnlyController
   before_action :set_delivery, only: [:show, :edit, :update, :destroy]
 
   # GET /deliveries
