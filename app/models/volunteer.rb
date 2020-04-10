@@ -16,7 +16,6 @@ class Volunteer < ApplicationRecord
                            foreign_key: 'approved_by_id',
                            class_name: "Volunteer"
 
-
   belongs_to :approved_by, inverse_of: :approving_volunteers,
                            class_name: "Volunteer",
                            optional: true

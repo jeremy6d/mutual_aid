@@ -21,9 +21,23 @@ RSpec.describe Fulfillment, type: :model do
     expect(subject.errors[:base]).to include("Either a contents list or an image are required")
   end
 
-  it "notifies the delivery when it's cancelled" do
-    delivery = FactoryBot.create :delivery, fulfillments: [subject]
-    subject.cancel!
-    expect(delivery).to be_cancelled
+  context "when part of a delivery" do
+    let!(:delivery) { FactoryBot.create :delivery, fulfillments: [subject] }
+    
+    it "notifies the delivery when it's cancelled" do  
+      subject.cancel!
+      expect(delivery).to be_cancelled
+    end
+
+    context "and fulfillment is returned from a delivery attempt" do
+      before do
+        subject.delivery_notes.create note: "Couldn't deliver", author: delivery.driver
+        subject.return!
+      end
+      
+      it { expect(subject).to be_returned? }
+      it { expect(subject).to be_packed? }
+      it { expect(subject.delivery_notes).to contain_exactly("Couldn't deliver") }
+    end
   end
 end

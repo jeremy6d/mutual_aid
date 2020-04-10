@@ -15,6 +15,10 @@ h1 View delivery
               .badge.badge-success
                 i.fas.fa-check-square
                 span.ml-2 Delivered!
+            .ViewDelivery-returnHeader.float-left.mr-3(class="#{'d-none' unless f.returned?}")
+              .badge.badge-danger
+                i.fas.fa-exclamation-circle
+                span.ml-2 Returned
       .collapse(class="#{'show' unless f.delivered?}" aria-labelledby="header-f#{f.id}" data-parent="#accordion" id="collapse-f#{f.id}")
         .card-body
           .media
@@ -42,7 +46,9 @@ h1 View delivery
                 .ViewDelivery-markDeliveredArea.float-right
                   = button_to delivered_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch, class: "btn btn-success ViewDelivery-deliverFulfillmentButton" do
                     = fa_icon 'truck-loading', text: "Mark delivered"  
-
+                .ViewDelivery-markReturnedArea.float-right
+                  = button_to returned_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch, class: "btn btn-danger ViewDelivery-returnFulfillmentButton" do
+                    = fa_icon 'exclamation-circle', text: "Mark returned"  
             .ml-3
               - unless Rails.env.test?
                 img src="https://maps.googleapis.com/maps/api/streetview?location=#{f.aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
