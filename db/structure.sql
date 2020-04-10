@@ -420,6 +420,39 @@ ALTER SEQUENCE public.deliveries_id_seq OWNED BY public.deliveries.id;
 
 
 --
+-- Name: delivery_notes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_notes (
+    id bigint NOT NULL,
+    fulfillment_id bigint,
+    delivery_id bigint,
+    note text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: delivery_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.delivery_notes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: delivery_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.delivery_notes_id_seq OWNED BY public.delivery_notes.id;
+
+
+--
 -- Name: fulfillments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -538,6 +571,13 @@ ALTER TABLE ONLY public.deliveries ALTER COLUMN id SET DEFAULT nextval('public.d
 
 
 --
+-- Name: delivery_notes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_notes ALTER COLUMN id SET DEFAULT nextval('public.delivery_notes_id_seq'::regclass);
+
+
+--
 -- Name: fulfillments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -589,6 +629,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.deliveries
     ADD CONSTRAINT deliveries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_notes delivery_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_notes
+    ADD CONSTRAINT delivery_notes_pkey PRIMARY KEY (id);
 
 
 --
@@ -648,6 +696,20 @@ CREATE INDEX index_aid_requests_on_original_taker_id ON public.aid_requests USIN
 --
 
 CREATE INDEX index_deliveries_on_driver_id ON public.deliveries USING btree (driver_id);
+
+
+--
+-- Name: index_delivery_notes_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_notes_on_delivery_id ON public.delivery_notes USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_notes_on_fulfillment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_notes_on_fulfillment_id ON public.delivery_notes USING btree (fulfillment_id);
 
 
 --
@@ -760,6 +822,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200405172219'),
 ('20200406020029'),
 ('20200407052848'),
-('20200408194004');
+('20200408194004'),
+('20200410160210');
 
 

@@ -54,7 +54,7 @@ class Fulfillment < ApplicationRecord
   end
 
   def returned?
-    in_progress? && delivery_notes.any?
+    packed? && delivery_notes.any?
   end
 private
 
