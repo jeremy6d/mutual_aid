@@ -7,4 +7,6 @@
           = check_box_tag "volunteer_ids[]", v.id
           span.ml-2= label_tag v.full_name
           small= "  (#{v.created_at.to_s(:date_and_time)})"
-    button.btn.btn-primary.btn-lg Approve these volunteers
+    .alert.alert-warning.lead By clicking the button below, I, #{current_volunteer.full_name}, personally vouch for the character and intentions of the volunteers with checkmarks next to their names
+    button.display-1.btn.btn-danger.btn-lg Approve these volunteers
+
