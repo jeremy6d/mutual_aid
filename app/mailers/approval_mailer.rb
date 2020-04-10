@@ -11,7 +11,7 @@ class ApprovalMailer < ApplicationMailer
     @email.subject = "Your account at app.madrva.org has been approved"
     
     # Send your email
-    api.send_transac_email(@email)
+    api.send_transac_email(@email) if Rails.env.production?
   end
 private
   def text(volunteer)
