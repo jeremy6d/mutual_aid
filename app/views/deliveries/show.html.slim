@@ -10,22 +10,21 @@ h1 View delivery
         h4.mb-0
           button.btn.btn-link(class="#{'collapsed' if f.delivered?}" data-toggle="collapse" data-target="#collapse-f#{f.id}" aria-expanded="true" aria-controls="collapse-f#{f.id}")
             = "CANCELLED " if f.cancelled?
-            | fulfillment #{f.public_id} to #{f.aid_request.caller_address}
+            | fulfillment #{[ f.public_id, f.aid_request.neighborhood ].reject(&:blank?).join(" to ")}
             .ViewDelivery-successHeader.float-left.mr-3(class="#{'d-none' unless f.delivered?}")
-              .badge.badge-success
+              .badge.badge-success.badge-pill
                 i.fas.fa-check-square
                 span.ml-2 Delivered!
             .ViewDelivery-returnHeader.float-left.mr-3(class="#{'d-none' unless f.returned?}")
-              .badge.badge-danger
+              .badge.badge-danger.badge-pill
                 i.fas.fa-exclamation-circle
-                span.ml-2 Returned
+                span.ml-2 RETURNED
       .collapse(class="#{'show' unless f.delivered?}" aria-labelledby="header-f#{f.id}" data-parent="#accordion" id="collapse-f#{f.id}")
-        .card-body
-          .media
-            .mr-3 
-              - unless Rails.env.test?
-                iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{f.aid_request.caller_address}" allowfullscreen="true")
-            .media-body
+        .card-body.mr-3.ml-3.container
+          
+                
+          .row
+            .col-md-4
               h5.mt-0
                 .ViewDelivery-callerName= f.aid_request.caller_name
                 .ViewDelivery-callerPhone= link_to_google_voice(f.aid_request.caller_phone_number)
@@ -38,20 +37,45 @@ h1 View delivery
                 dd
                   p= f.notes
                   p= f.aid_request.notes
-              - if f.delivered?
-                .h2.badge.badge-success
-                  i.fas.fa-check-square
-                  span.mr-2 Delivered!
-              - elsif f.on_the_way?
-                .ViewDelivery-markDeliveredArea.float-right
-                  = button_to delivered_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch, class: "btn btn-success ViewDelivery-deliverFulfillmentButton" do
-                    = fa_icon 'truck-loading', text: "Mark delivered"  
-                .ViewDelivery-markReturnedArea.float-right
-                  = button_to returned_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch, class: "btn btn-danger ViewDelivery-returnFulfillmentButton" do
-                    = fa_icon 'exclamation-circle', text: "Mark returned"  
-            .ml-3
-              - unless Rails.env.test?
-                img src="https://maps.googleapis.com/maps/api/streetview?location=#{f.aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
-                /max-width='100%'        
+            .col-md-8
+              ul.nav.nav-tabs(id="myTab" role="tablist")
+                li.nav-item
+                  a.nav-link.active#form-tab(data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true")
+                    = fa_icon 'info-circle', text: 'Status'
+                li.nav-item 
+                  a.nav-link#map-tab(data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true")
+                    = fas_icon 'map-marker', text: 'Map'
+                li.nav-item
+                  a.nav-link#streetview-tab(data-toggle="tab" href="#streetview" role="tab" aria-controls="streetview" aria-selected="true")
+                    = fa_icon 'street-view', text: "Streetview"
+              .tab-content.text-center
+                .tab-pane.active(id="form" role="tabpanel" aria-labelledby="form-tab")
+                  - if f.delivered?
+                    .h2.badge.badge-success
+                      i.fas.fa-check-square
+                      span.mr-2 Delivered!
+                  - elsif f.returned?
+                    .h2.badge.badge-danger
+                      i.fas.fa-times-square
+                      span.mr-2 RETURNED
+                  - elsif f.on_the_way?
+                    .border.p-4.rounded.ViewDelivery-reportStatusArea
+                      = form_with url: mutate_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch do
+                        .row
+                          .h4 Delivery notes
+                        .row
+                           = text_area_tag :message, '', class: "col-12", rows: 5
+                        .row.mt-3
+                          button.btn.btn-success.ViewDelivery-deliverFulfillmentButton.col-6
+                            = fa_icon 'truck-loading', text: "Mark delivered"  
+                          button.btn.btn-danger.ViewDelivery-returnFulfillmentButton.col-6
+                            = fa_icon 'exclamation-circle', text: "Mark returned" 
+                .tab-pane(id="map" role="tabpanel" aria-labelledby="map-tab")
+                  - unless Rails.env.test?
+                    iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{f.aid_request.caller_address}" allowfullscreen="true")
+                .tab-pane(id="streetview" role="tabpanel" aria-labelledby="streetview-tab")
+                  - unless Rails.env.test?
+                    img src="https://maps.googleapis.com/maps/api/streetview?location=#{f.aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
+                
 = link_to :back, class: "btn btn-outline-dark" do
   = fa_icon 'arrow-left', text: "Back"

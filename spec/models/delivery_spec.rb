@@ -10,7 +10,7 @@ RSpec.describe Delivery, type: :model do
   end
 
   it "disallows creation without at least one fulfillment" do
-    delivery = FactoryBot.build(:delivery)
+    delivery = FactoryBot.build(:delivery, fulfillments: [])
     expect(delivery).not_to be_valid
     expect(delivery.errors[:fulfillments]).not_to be_empty
   end

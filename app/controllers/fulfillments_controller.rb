@@ -1,5 +1,5 @@
 class FulfillmentsController < AuthorizedOnlyController
-  before_action :set_fulfillment, only: [:show, :edit, :update, :destroy, :delivered]
+  before_action :set_fulfillment, only: %i(show edit update destroy mutate)
 
   # GET /fulfillments
   # GET /fulfillments.json
@@ -51,8 +51,14 @@ class FulfillmentsController < AuthorizedOnlyController
     end
   end
 
-  def delivered
-    use_logidze_responsible { @fulfillment.deliver! }
+  def mutate
+    use_logidze_responsible do
+      if params[:message]
+        @fulfillment.delivery_notes.create delivery: @fulfillment.delivery,
+                                           note: params[:message]
+      end 
+      @fulfillment.deliver!
+    end
     head :no_content
   end
 
@@ -77,6 +83,9 @@ class FulfillmentsController < AuthorizedOnlyController
 
     # Only allow a list of trusted parameters through.
     def fulfillment_params
-      params.require(:fulfillment).permit(:notes, :contents, :contents_sheet_image, :num_bags)
+      params.require(:fulfillment).permit(:notes, 
+                                          :contents, 
+                                          :contents_sheet_image, 
+                                          :num_bags)
     end
 end

@@ -6,13 +6,9 @@ RSpec.feature "Delivery operations", type: :system, headless: false do
     sign_in! delivery.driver
     click_on "My deliveries"
     click_on "3 fulfillments started less than a minute ago"
-    within(".ViewDelivery-markReturnedArea button") do
-      click_on "Return"
+    within(all(".ViewDelivery-reportStatusArea").first) do
+      fill_in "Message", with: "Nobody home"
+      click_on "Mark returned"
     end
-    within(".ViewDelivery-returnNotes") do
-      fill_in "Notes", with: "Nobody home"
-      click_on "Submit"
-    end
-
   end
 end
