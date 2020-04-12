@@ -34,6 +34,18 @@ $(document).on('turbolinks:load', function() {
     container: 'body',
   });
 
+  $('.ViewDelivery-reportStatusForm').on('ajax:success', function(event) {
+    $(event.target).parents('.collapse').collapse('toggle');
+    console.log(event.detail[0]['status']);
+    if (event.detail[0]['status'] == 'delivered') {
+      $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-successHeader').removeClass('d-none')
+      $(event.target).parent().html("<div class='h2'><div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div></div>");
+    } else {
+      $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-returnHeader').removeClass('d-none')
+      $(event.target).parent().html("<div class='h2'><div class='badge badge-danger'><i class='fas fa-times-square'></i> RETURNED</div></div>");
+    }
+  });
+
   $('body').popover({
     selector: '[data-toggle="popover"]',
     container: 'body',
@@ -124,17 +136,7 @@ $(document).on('turbolinks:load', function() {
     })(jQuery); // End of use strict
 });
 
-$(document).on('ajax:success', '.ViewDelivery-deliverFulfillmentButton', function(event) {
-  $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-successHeader').removeClass('d-none')
-  $(event.target).parents('.collapse').collapse('toggle');
-  $(event.target).parent().html("<div class='h2'><div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div></div>");
-});
 
-$(document).on('ajax:success', '.ViewDelivery-returnFulfillmentButton', function(event) {
-  $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-returnHeader').removeClass('d-none')
-  $(event.target).parents('.collapse').collapse('toggle');
-  $(event.target).parent().html("<div class='h2'><div class='badge badge-warning'><i class='fas fa-times-square'></i> RETURN</div></div>");
-});
 
   // $(document).on('ajax:success', '.ViewDelivery-deliverFulfillmentButton', function(e, data) { 
   //   console.log("here");

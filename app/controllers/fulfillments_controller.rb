@@ -1,5 +1,6 @@
 class FulfillmentsController < AuthorizedOnlyController
   before_action :set_fulfillment, only: %i(show edit update destroy mutate)
+  respond_to :html, :json
 
   # GET /fulfillments
   # GET /fulfillments.json
@@ -52,14 +53,23 @@ class FulfillmentsController < AuthorizedOnlyController
   end
 
   def mutate
+    Rails.logger.info "Fulfillments#mutuate #{params.fetch :delivered, 'returned'}}"
     use_logidze_responsible do
       if params[:message]
         @fulfillment.delivery_notes.create delivery: @fulfillment.delivery,
                                            note: params[:message]
       end 
-      @fulfillment.deliver!
+      if params.key? :delivered
+        @fulfillment.deliver!
+      elsif params.key? :returned
+        @fulfillment.return!
+      else
+        raise "Unknown submission '#{params[:name]}' to fulfillments#mutate"
+      end
     end
-    head :no_content
+    respond_to do |format| 
+      format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
+    end 
   end
 
   # DELETE /fulfillments/1

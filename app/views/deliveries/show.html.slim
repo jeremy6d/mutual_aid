@@ -8,7 +8,7 @@ h1 View delivery
     .card.ViewDelivery-fulfillmentCard(id="fulfillment-#{f}")
       .card-header(id="header-f#{f.id}" class=('bg-dark text-white' if f.cancelled?))
         h4.mb-0
-          button.btn.btn-link(class="#{'collapsed' if f.delivered?}" data-toggle="collapse" data-target="#collapse-f#{f.id}" aria-expanded="true" aria-controls="collapse-f#{f.id}")
+          button.btn.btn-link.ViewDelivery-collapseToggle(class="#{'collapsed' if f.delivered?}" data-toggle="collapse" data-target="#collapse-f#{f.id}" aria-expanded="true" aria-controls="collapse-f#{f.id}")
             = "CANCELLED " if f.cancelled?
             | fulfillment #{[ f.public_id, f.aid_request.neighborhood ].reject(&:blank?).join(" to ")}
             .ViewDelivery-successHeader.float-left.mr-3(class="#{'d-none' unless f.delivered?}")
@@ -26,7 +26,7 @@ h1 View delivery
           .row
             .col-md-4
               h5.mt-0
-                .ViewDelivery-callerName= f.aid_request.caller_name
+                .ViewDelivery-callerName= link_to f.aid_request.caller_name, f.aid_request
                 .ViewDelivery-callerPhone= link_to_google_voice(f.aid_request.caller_phone_number)
               dl
                 dt Address
@@ -60,15 +60,15 @@ h1 View delivery
                       span.mr-2 RETURNED
                   - elsif f.on_the_way?
                     .border.p-4.rounded.ViewDelivery-reportStatusArea
-                      = form_with url: mutate_aid_request_fulfillment_path(f.aid_request, f), remote: true, method: :patch do
+                      = form_with url: mutate_aid_request_fulfillment_url(f.aid_request, f, format: :json), remote: true, method: :patch, class: "ViewDelivery-reportStatusForm" do
                         .row
                           .h4 Delivery notes
                         .row
                            = text_area_tag :message, '', class: "col-12", rows: 5
                         .row.mt-3
-                          button.btn.btn-success.ViewDelivery-deliverFulfillmentButton.col-6
+                          button.btn.btn-success.ViewDelivery-deliverFulfillmentButton.col-6[name="delivered"]
                             = fa_icon 'truck-loading', text: "Mark delivered"  
-                          button.btn.btn-danger.ViewDelivery-returnFulfillmentButton.col-6
+                          button.btn.btn-danger.ViewDelivery-returnFulfillmentButton.col-6[name="returned"]
                             = fa_icon 'exclamation-circle', text: "Mark returned" 
                 .tab-pane(id="map" role="tabpanel" aria-labelledby="map-tab")
                   - unless Rails.env.test?
