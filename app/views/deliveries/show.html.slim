@@ -66,7 +66,6 @@ h1 View delivery
                             p= n.note
                             footer.blockquote-footer.text-right= n.author.full_name
                             .small.text-right= n.created_at.to_s(:human)
-
                   - elsif f.on_the_way?
                     .border.p-4.rounded.ViewDelivery-reportStatusArea
                       = form_with url: mutate_aid_request_fulfillment_url(f.aid_request, f, format: :json), remote: true, method: :patch, class: "ViewDelivery-reportStatusForm" do
@@ -85,6 +84,5 @@ h1 View delivery
                 .tab-pane(id="streetview" role="tabpanel" aria-labelledby="streetview-tab")
                   - unless Rails.env.test?
                     img src="https://maps.googleapis.com/maps/api/streetview?location=#{f.aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
-                
 = link_to :back, class: "btn btn-outline-dark" do
   = fa_icon 'arrow-left', text: "Back"

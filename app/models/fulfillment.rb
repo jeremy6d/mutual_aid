@@ -43,7 +43,9 @@ class Fulfillment < ApplicationRecord
   end
 
   def public_id
-    "##{aid_request.id}F#{'%03d' % id}"
+    req_id = "##{aid_request.id}"
+    f_id = ('A'..'Z').to_a.at(aid_request.fulfillments.index(self) % 26)
+    [req_id, f_id].join("-")
   end
 
   def to_s
