@@ -2,19 +2,19 @@ h1
   .badge.badge-pill.badge-dark.mr-3= @fulfillment.public_id 
   | Fulfillment for #{@aid_request.caller_name}
 .row
-  .col-md-6
+  .col-md-4
     dt Phone
     dd
     dd= @fulfillment.updated_at.to_s(:date_and_time)
     dt Status
     dd= @fulfillment.status
-    dt Notes
-    dd= @fulfillment.notes
+    dt Packing Notes
+    dd= @fulfillment.packing_notes
     dt Created
     dd= @fulfillment.created_at.to_s(:date_and_time)
     dt Updated
     
-  .col-md-6
+  .col-md-4
     dt Contents
     dd
       - if @fulfillment.contents.present?
@@ -25,7 +25,14 @@ h1
         .text-center
           = link_to url_for(@fulfillment.contents_sheet_image) do
             = image_tag @fulfillment.contents_sheet_image.variant(resize_to_limit: [300, 300])
-
+  .col-md-4
+    ul.list-group.list-unstyled
+      - @fulfillment.notes.each do |n|
+        li.list-group-item
+          .blockquote
+            p= n.body
+            footer.blockquote-footer.text-right= n.author.full_name
+            .small.text-right= n.created_at.to_s(:human)
 .btn-group.d-print-none
   = link_to edit_aid_request_fulfillment_path(@aid_request, @fulfillment), class: "btn btn-primary" do
     = fa_icon 'edit', text: "Edit"

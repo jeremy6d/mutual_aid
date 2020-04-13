@@ -420,39 +420,6 @@ ALTER SEQUENCE public.deliveries_id_seq OWNED BY public.deliveries.id;
 
 
 --
--- Name: delivery_notes; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.delivery_notes (
-    id bigint NOT NULL,
-    fulfillment_id bigint,
-    delivery_id bigint,
-    note text,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: delivery_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.delivery_notes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: delivery_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.delivery_notes_id_seq OWNED BY public.delivery_notes.id;
-
-
---
 -- Name: fulfillments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -461,7 +428,7 @@ CREATE TABLE public.fulfillments (
     fulfiller_id bigint,
     aid_request_id bigint,
     contents text,
-    notes text,
+    packing_notes text,
     status character varying,
     num_bags integer DEFAULT 1,
     created_at timestamp(6) without time zone NOT NULL,
@@ -487,6 +454,40 @@ CREATE SEQUENCE public.fulfillments_id_seq
 --
 
 ALTER SEQUENCE public.fulfillments_id_seq OWNED BY public.fulfillments.id;
+
+
+--
+-- Name: notes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notes (
+    id bigint NOT NULL,
+    noteable_id bigint,
+    noteable_type character varying,
+    author_id bigint,
+    body text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notes_id_seq OWNED BY public.notes.id;
 
 
 --
@@ -571,17 +572,17 @@ ALTER TABLE ONLY public.deliveries ALTER COLUMN id SET DEFAULT nextval('public.d
 
 
 --
--- Name: delivery_notes id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delivery_notes ALTER COLUMN id SET DEFAULT nextval('public.delivery_notes_id_seq'::regclass);
-
-
---
 -- Name: fulfillments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fulfillments ALTER COLUMN id SET DEFAULT nextval('public.fulfillments_id_seq'::regclass);
+
+
+--
+-- Name: notes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes ALTER COLUMN id SET DEFAULT nextval('public.notes_id_seq'::regclass);
 
 
 --
@@ -632,19 +633,19 @@ ALTER TABLE ONLY public.deliveries
 
 
 --
--- Name: delivery_notes delivery_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delivery_notes
-    ADD CONSTRAINT delivery_notes_pkey PRIMARY KEY (id);
-
-
---
 -- Name: fulfillments fulfillments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fulfillments
     ADD CONSTRAINT fulfillments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notes notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
 
 
 --
@@ -699,20 +700,6 @@ CREATE INDEX index_deliveries_on_driver_id ON public.deliveries USING btree (dri
 
 
 --
--- Name: index_delivery_notes_on_delivery_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_delivery_notes_on_delivery_id ON public.delivery_notes USING btree (delivery_id);
-
-
---
--- Name: index_delivery_notes_on_fulfillment_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_delivery_notes_on_fulfillment_id ON public.delivery_notes USING btree (fulfillment_id);
-
-
---
 -- Name: index_fulfillments_on_aid_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -731,6 +718,20 @@ CREATE INDEX index_fulfillments_on_delivery_id ON public.fulfillments USING btre
 --
 
 CREATE INDEX index_fulfillments_on_fulfiller_id ON public.fulfillments USING btree (fulfiller_id);
+
+
+--
+-- Name: index_notes_on_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notes_on_author_id ON public.notes USING btree (author_id);
+
+
+--
+-- Name: index_notes_on_noteable_type_and_noteable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notes_on_noteable_type_and_noteable_id ON public.notes USING btree (noteable_type, noteable_id);
 
 
 --
@@ -759,6 +760,14 @@ CREATE UNIQUE INDEX index_volunteers_on_reset_password_token ON public.volunteer
 --
 
 CREATE TRIGGER logidze_on_aid_requests BEFORE INSERT OR UPDATE ON public.aid_requests FOR EACH ROW WHEN ((COALESCE(current_setting('logidze.disabled'::text, true), ''::text) <> 'on'::text)) EXECUTE FUNCTION public.logidze_logger('null', 'updated_at');
+
+
+--
+-- Name: notes fk_rails_36c9deba43; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT fk_rails_36c9deba43 FOREIGN KEY (author_id) REFERENCES public.volunteers(id);
 
 
 --

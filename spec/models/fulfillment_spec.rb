@@ -31,14 +31,14 @@ RSpec.describe Fulfillment, type: :model do
 
     context "and fulfillment is returned from a delivery attempt" do
       before do
-        subject.delivery_notes.create note: "Couldn't deliver", delivery: delivery
+        subject.notes.create body: "Couldn't deliver"
         subject.return!
       end
       
       it { expect(subject).to be_returned }
       it { expect(subject).to be_packed }
-      it { expect(subject.delivery_notes.pluck :note).to contain_exactly("Couldn't deliver") }
-      it { expect(subject.delivery_notes.first.author).to eql(delivery.driver) }
+      it { expect(subject.notes.pluck :body).to contain_exactly("Couldn't deliver") }
+      it { expect(subject.notes.first.author).to eql(delivery.driver) }
     end
   end
 end

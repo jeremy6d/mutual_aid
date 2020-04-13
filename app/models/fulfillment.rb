@@ -25,7 +25,7 @@ class Fulfillment < ApplicationRecord
     end
   end
 
-  has_many :delivery_notes
+  has_many :notes, as: :noteable
 
   belongs_to :delivery, optional: true, inverse_of: :driver
   belongs_to :aid_request
@@ -54,7 +54,7 @@ class Fulfillment < ApplicationRecord
   end
 
   def returned?
-    packed? && delivery_notes.any?
+    packed? && notes.any?
   end
 private
 

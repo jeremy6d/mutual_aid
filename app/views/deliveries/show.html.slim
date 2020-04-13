@@ -50,14 +50,23 @@ h1 View delivery
                     = fa_icon 'street-view', text: "Streetview"
               .tab-content.text-center
                 .tab-pane.active(id="form" role="tabpanel" aria-labelledby="form-tab")
-                  - if f.delivered?
-                    .h2.badge.badge-success
-                      i.fas.fa-check-square
-                      span.mr-2 Delivered!
-                  - elsif f.returned?
-                    .h2.badge.badge-danger
-                      i.fas.fa-times-square
-                      span.mr-2 RETURNED
+                  - if f.delivered? || f.returned?
+                    - if f.delivered?
+                      .h2.badge.badge-success
+                        i.fas.fa-check-square
+                        span.ml-2 Delivered!
+                    - if f.returned?
+                      .h2.badge.badge-danger
+                        i.fas.fa-exclamation-circle
+                        span.ml-2 RETURNED
+                    ul.list-group.list-unstyled
+                      - f.delivery_notes.each do |n|
+                        li.list-group-item
+                          .blockquote
+                            p= n.note
+                            footer.blockquote-footer.text-right= n.author.full_name
+                            .small.text-right= n.created_at.to_s(:human)
+
                   - elsif f.on_the_way?
                     .border.p-4.rounded.ViewDelivery-reportStatusArea
                       = form_with url: mutate_aid_request_fulfillment_url(f.aid_request, f, format: :json), remote: true, method: :patch, class: "ViewDelivery-reportStatusForm" do

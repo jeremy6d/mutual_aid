@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :delivery_note do
+  factory :note do
     
   end
 end

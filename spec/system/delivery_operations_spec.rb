@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Delivery operations", type: :system, headless: false do
+RSpec.feature "Delivery operations", type: :system, js: true do
   it "allows a fulfillment in a delivery to be returned with a note" do
     delivery = FactoryBot.create :delivery, fulfillment_ct: 3
     sign_in! delivery.driver

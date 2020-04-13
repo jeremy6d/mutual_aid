@@ -53,20 +53,14 @@ class FulfillmentsController < AuthorizedOnlyController
   end
 
   def mutate
-    Rails.logger.info "Fulfillments#mutuate #{params.fetch :delivered, 'returned'}}"
     use_logidze_responsible do
-      if params[:message]
-        @fulfillment.delivery_notes.create delivery: @fulfillment.delivery,
-                                           note: params[:message]
+      unless params[:message].blank?
+        @fulfillment.notes.create body: params[:message], author: current_volunteer
       end 
-      if params.key? :delivered
-        @fulfillment.deliver!
-      elsif params.key? :returned
-        @fulfillment.return!
-      else
-        raise "Unknown submission '#{params[:name]}' to fulfillments#mutate"
-      end
+      @fulfillment.deliver! if params.key? :delivered
+      @fulfillment.return! if params.key? :returned
     end
+
     respond_to do |format| 
       format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
     end 
@@ -93,7 +87,7 @@ class FulfillmentsController < AuthorizedOnlyController
 
     # Only allow a list of trusted parameters through.
     def fulfillment_params
-      params.require(:fulfillment).permit(:notes, 
+      params.require(:fulfillment).permit(:packing_notes, 
                                           :contents, 
                                           :contents_sheet_image, 
                                           :num_bags)
