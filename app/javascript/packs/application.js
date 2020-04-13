@@ -12,6 +12,7 @@ require("channels")
 
 import $ from 'jquery';
 import 'bootstrap/dist/js/bootstrap';
+// import 'bootstrap/js/dist/util'
 // import './bootstrap_custom.js' needed to click twice on dropdowns
 import { library, dom  } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -31,6 +32,18 @@ $(document).on('turbolinks:load', function() {
   $('body').tooltip({
     selector: '[data-toggle="tooltip"]',
     container: 'body',
+  });
+
+  $('.ViewDelivery-reportStatusForm').on('ajax:success', function(event) {
+    $(event.target).parents('.collapse').collapse('toggle');
+    console.log(event.detail[0]['status']);
+    if (event.detail[0]['status'] == 'delivered') {
+      $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-successHeader').removeClass('d-none')
+      $(event.target).parent().html("<div class='h2'><div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div></div>");
+    } else {
+      $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-returnHeader').removeClass('d-none')
+      $(event.target).parent().html("<div class='h2'><div class='badge badge-danger'><i class='fas fa-times-square'></i> RETURNED</div></div>");
+    }
   });
 
   $('body').popover({
@@ -123,11 +136,7 @@ $(document).on('turbolinks:load', function() {
     })(jQuery); // End of use strict
 });
 
-$(document).on('ajax:success', function(event) {
-  $(event.target).parents('.ViewDelivery-fulfillmentCard').find('.ViewDelivery-successHeader').removeClass('d-none')
-  $(event.target).parents('.collapse').collapse('toggle');
-  $(event.target).parent().html("<div class='h2'><div class='badge badge-success'><i class='fas fa-check-square'></i> Delivered!</div></div>");
-});
+
 
   // $(document).on('ajax:success', '.ViewDelivery-deliverFulfillmentButton', function(e, data) { 
   //   console.log("here");

@@ -2,14 +2,10 @@ FactoryBot.define do
   factory :delivery do
     driver { create :another_volunteer }
     notes { "I don't know what I was expecting." }
-    trait :packed do
-      transient do
-        fulfillment_ct { 1 }
-      end
+    fulfillments { create_list :fulfillment, fulfillment_ct }
 
-      after(:create) do |d, evaluator|
-        create_list :fulfillment, evaluator.fulfillment_ct, delivery: d
-      end
+    transient do
+      fulfillment_ct { 1 }
     end
   end
 end

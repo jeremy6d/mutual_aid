@@ -69,7 +69,7 @@
   end
 
   def check_deliveries!
-    complete! if fulfillments.all?(&:delivered?)
+    complete! if fulfillments.all? { |f| f.cancelled? || f.delivered? }
   end
 
   def terminal?

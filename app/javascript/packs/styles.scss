@@ -1,4 +1,41 @@
-@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/_functions.scss';
+@import '~bootstrap/scss/_variables.scss';
+@import 'node_modules/bootstrap/scss/_mixins.scss';
+@import '~bootstrap/scss/_root.scss';
+@import '~bootstrap/scss/_reboot.scss';
+@import '~bootstrap/scss/_type.scss';
+@import '~bootstrap/scss/_alert.scss';
+@import '~bootstrap/scss/_badge';
+@import '~bootstrap/scss/_breadcrumb';
+@import '~bootstrap/scss/_button-group';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_buttons.scss';
+@import '~bootstrap/scss/_card.scss';
+@import '~bootstrap/scss/_carousel.scss';
+@import '~bootstrap/scss/_close.scss';
+@import '~bootstrap/scss/_code.scss';
+@import '~bootstrap/scss/_custom-forms.scss';
+@import '~bootstrap/scss/_dropdown.scss';
+@import '~bootstrap/scss/_forms.scss';
+@import '~bootstrap/scss/_grid.scss';
+@import '~bootstrap/scss/_images.scss';
+@import '~bootstrap/scss/_input-group.scss';
+@import '~bootstrap/scss/_jumbotron.scss';
+@import '~bootstrap/scss/_list-group.scss';
+@import '~bootstrap/scss/_media.scss';
+@import '~bootstrap/scss/_modal.scss';
+@import '~bootstrap/scss/_nav.scss';
+@import '~bootstrap/scss/_navbar.scss';
+@import '~bootstrap/scss/_pagination.scss';
+@import '~bootstrap/scss/_popover.scss';
+@import '~bootstrap/scss/_print.scss';
+@import '~bootstrap/scss/_progress.scss';
+@import '~bootstrap/scss/_spinners.scss';
+@import '~bootstrap/scss/_tables.scss';
+@import '~bootstrap/scss/_toasts.scss';
+@import '~bootstrap/scss/_tooltip.scss';
+@import '~bootstrap/scss/_transitions.scss';
+@import '~bootstrap/scss/_utilities.scss';
 @import './sb_admin';
 @import '~bootstrap-toggle/css/bootstrap-toggle.min';
 
@@ -7,7 +44,6 @@
 }
 
 .Flash {
-
   &-message {
     @extend .alert;
     @extend .fade; 
@@ -25,3 +61,29 @@
 .bg-dark > a {
   color: white;
 }
+
+
+.MainPanel {
+  @extend .border;
+  @extend .rounded;
+  @extend .p-3;
+  @extend .mx-auto;
+  max-width: 80%;
+  @include media-breakpoint-down(sm) {
+    border: 0 !important;
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  &-columnAdd {
+    column-count: 1;
+    @include media-breakpoint-up(md) {
+      column-count: 2;
+    }
+  }
+}
+
+
+
+

@@ -1,5 +1,6 @@
 class FulfillmentsController < AuthorizedOnlyController
-  before_action :set_fulfillment, only: [:show, :edit, :update, :destroy, :delivered]
+  before_action :set_fulfillment, only: %i(show edit update destroy mutate)
+  respond_to :html, :json
 
   # GET /fulfillments
   # GET /fulfillments.json
@@ -51,9 +52,18 @@ class FulfillmentsController < AuthorizedOnlyController
     end
   end
 
-  def delivered
-    use_logidze_responsible { @fulfillment.deliver! }
-    head :no_content
+  def mutate
+    use_logidze_responsible do
+      unless params[:message].blank?
+        @fulfillment.notes.create body: params[:message], author: current_volunteer
+      end 
+      @fulfillment.deliver! if params.key? :delivered
+      @fulfillment.return! if params.key? :returned
+    end
+
+    respond_to do |format| 
+      format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
+    end 
   end
 
   # DELETE /fulfillments/1
@@ -77,6 +87,9 @@ class FulfillmentsController < AuthorizedOnlyController
 
     # Only allow a list of trusted parameters through.
     def fulfillment_params
-      params.require(:fulfillment).permit(:notes, :contents, :contents_sheet_image, :num_bags)
+      params.require(:fulfillment).permit(:packing_notes, 
+                                          :contents, 
+                                          :contents_sheet_image, 
+                                          :num_bags)
     end
 end

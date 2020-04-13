@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Aid request full lifecycle", type: :system, js: true do
+RSpec.feature "Aid request full lifecycle", type: :system, headless: false do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
@@ -28,7 +28,6 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
     signing_in_as(hotline_volunteer) do
       click_on "New"
-
       submit_aid_request_for caller_first_name: "Steve",
                              caller_last_name: "Holt",
                              caller_phone_number: "1-555-555-5555",
@@ -59,6 +58,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       click_on "Holt, Steve"
 
       click_on "Fulfill"
+      sleep 1
       expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
@@ -68,11 +68,10 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
       attach_file "fulfillment[contents_sheet_image]", 
                   "spec/contents_sheet.jpg"
-      fill_in "Notes", with: "Packed eggs separately"
+      fill_in "Packing notes", with: "Packed eggs separately"
       fill_in "Number of bags", with: "2"
 
       click_on "Ready for pickup"
-
       expect(current_path).to eql(aid_request_path(AidRequest.last))
       expect(the_flash(:notice)).to have_content("success")
       
@@ -98,27 +97,23 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
   end
 
   it "handles the happy path" do
-    signing_in_as(driver_volunteer) do
-      click_on "My deliveries"
-      expect(current_path).to eql(my_deliveries_path)
+    sign_in! driver_volunteer
+    click_on "My deliveries"
+    expect(current_path).to eql(my_deliveries_path)
 
-      click_on "2 fulfillments started less than a minute ago"
+    click_on "2 fulfillments started less than a minute ago"
 
-      expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
+    expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
 
-      within(all(".ViewDelivery-fulfillmentCard").first) do
-        click_on "Mark delivered"
-        sleep 1
-      end
-
-      expect(all(".card-header").first).to have_content("Delivered!")
-      expect(all(".card-header").last).not_to have_content("Delivered!")
-
-
+    within(".ViewDelivery-fulfillmentCard:first-child") do
       click_on "Mark delivered"
       sleep 1
-      all(".card-header").each { |e| expect(e).to have_content("Delivered!") }
+      expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
     end
+
+    click_on "Mark delivered"
+    sleep 1
+    all(".ViewDelivery-successHeader").each { |e| expect(e).to have_content("Delivered!") }
   end
 
   it 'cancels a fulfillment with a delivery in progress' do
@@ -134,8 +129,6 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
     signing_in_as(hotline_volunteer) do
       click_on "Holt, Steve"
       page.accept_confirm { click_on "Dismiss" }
-
-      click_on ""
     end
 
     signing_in_as(driver_volunteer) do

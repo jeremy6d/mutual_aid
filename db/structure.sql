@@ -428,7 +428,7 @@ CREATE TABLE public.fulfillments (
     fulfiller_id bigint,
     aid_request_id bigint,
     contents text,
-    notes text,
+    packing_notes text,
     status character varying,
     num_bags integer DEFAULT 1,
     created_at timestamp(6) without time zone NOT NULL,
@@ -454,6 +454,40 @@ CREATE SEQUENCE public.fulfillments_id_seq
 --
 
 ALTER SEQUENCE public.fulfillments_id_seq OWNED BY public.fulfillments.id;
+
+
+--
+-- Name: notes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notes (
+    id bigint NOT NULL,
+    noteable_id bigint,
+    noteable_type character varying,
+    author_id bigint,
+    body text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notes_id_seq OWNED BY public.notes.id;
 
 
 --
@@ -545,6 +579,13 @@ ALTER TABLE ONLY public.fulfillments ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: notes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes ALTER COLUMN id SET DEFAULT nextval('public.notes_id_seq'::regclass);
+
+
+--
 -- Name: volunteers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -597,6 +638,14 @@ ALTER TABLE ONLY public.deliveries
 
 ALTER TABLE ONLY public.fulfillments
     ADD CONSTRAINT fulfillments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notes notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
 
 
 --
@@ -672,6 +721,20 @@ CREATE INDEX index_fulfillments_on_fulfiller_id ON public.fulfillments USING btr
 
 
 --
+-- Name: index_notes_on_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notes_on_author_id ON public.notes USING btree (author_id);
+
+
+--
+-- Name: index_notes_on_noteable_type_and_noteable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notes_on_noteable_type_and_noteable_id ON public.notes USING btree (noteable_type, noteable_id);
+
+
+--
 -- Name: index_volunteers_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -697,6 +760,14 @@ CREATE UNIQUE INDEX index_volunteers_on_reset_password_token ON public.volunteer
 --
 
 CREATE TRIGGER logidze_on_aid_requests BEFORE INSERT OR UPDATE ON public.aid_requests FOR EACH ROW WHEN ((COALESCE(current_setting('logidze.disabled'::text, true), ''::text) <> 'on'::text)) EXECUTE FUNCTION public.logidze_logger('null', 'updated_at');
+
+
+--
+-- Name: notes fk_rails_36c9deba43; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT fk_rails_36c9deba43 FOREIGN KEY (author_id) REFERENCES public.volunteers(id);
 
 
 --
@@ -760,6 +831,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200405172219'),
 ('20200406020029'),
 ('20200407052848'),
-('20200408194004');
+('20200408194004'),
+('20200410160210');
 
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Authorization", type: :system, headless: false do
+RSpec.feature "Authorization", type: :system do
   before do
     visit new_volunteer_registration_path
     within find('form#new_volunteer') do

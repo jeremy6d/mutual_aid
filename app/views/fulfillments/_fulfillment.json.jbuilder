@@ -1,2 +1,2 @@
-json.extract! fulfillment, :id, :created_at, :updated_at
-json.url fulfillment_url(fulfillment, format: :json)
+json.extract! fulfillment, :id, :status
+json.url aid_request_fulfillment_url(fulfillment.aid_request, fulfillment, format: :json)

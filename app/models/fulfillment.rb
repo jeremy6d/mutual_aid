@@ -25,6 +25,8 @@ class Fulfillment < ApplicationRecord
     end
   end
 
+  has_many :notes, as: :noteable
+
   belongs_to :delivery, optional: true, inverse_of: :driver
   belongs_to :aid_request
   belongs_to :fulfiller, class_name: "Volunteer", 
@@ -51,6 +53,9 @@ class Fulfillment < ApplicationRecord
     ].reject(&:blank?).join(" - ")
   end
 
+  def returned?
+    packed? && notes.any?
+  end
 private
 
   def contents_provided

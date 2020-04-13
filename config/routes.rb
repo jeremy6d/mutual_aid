@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     member { patch 'dismiss' }
     resources :fulfillments do
       member do
-        patch 'delivered'
+        patch 'mutate', constraints: { format: 'json' }
       end
     end
   end

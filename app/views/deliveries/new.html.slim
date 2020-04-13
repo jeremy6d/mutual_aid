@@ -1,5 +1,16 @@
-h1 Make a delivery
+h1.text-center Make a delivery
 
-== render 'form'
+= simple_form_for(@delivery) do |f|
+  = f.error_notification
 
-= link_to 'Back', deliveries_path
+  .MainPanel.text-center
+    .form-inputs.text-left(class=('MainPanel-columnAdd' if (@fulfillments.count > 10)))
+      = f.association :fulfillments, collection: @fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes, label: "Check all fulfillments to deliver now"
+    .form-inputs.text-left.mt-3
+      = f.input :notes, as: :text
+
+    .form-actions.btn-group
+      button.btn.btn-large.btn-success
+        = fa_icon 'truck-loading', text: "Start delivery now"
+      = link_to :back, class: 'btn btn-outline-dark' do
+        = fa_icon 'arrow-left', text: 'Back'
