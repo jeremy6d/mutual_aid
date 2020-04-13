@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Aid request full lifecycle", type: :system, headless: false do
+RSpec.feature "Aid request full lifecycle", type: :system, js: true do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
@@ -28,6 +28,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, headless: false do
 
     signing_in_as(hotline_volunteer) do
       click_on "New"
+      sleep 1
       submit_aid_request_for caller_first_name: "Steve",
                              caller_last_name: "Holt",
                              caller_phone_number: "1-555-555-5555",
