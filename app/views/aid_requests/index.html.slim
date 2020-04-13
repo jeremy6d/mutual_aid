@@ -41,7 +41,7 @@ h1
           = link_to(req.caller_name, req, class: "text-dark")
       .card-body
         ul.list-unstyled
-          li= link_to_google_voice(req.caller_phone_number) 
+          li= link_to_phone(req.caller_phone_number) 
           li
             em= raw req.caller_address&.gsub(/\n/, '<br />')
             = "(#{req.neighborhood})" unless req.neighborhood.blank?
@@ -74,7 +74,7 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
             .badge.badge-dark.badge-pill.mr-3 ##{aid_request.id}
             span(class=(header_class_for(aid_request).split(" ").last))= aid_request.caller_name
           br/
-        td= link_to_google_voice aid_request.caller_phone_number  
+        td= link_to_phone aid_request.caller_phone_number  
         td = truncate aid_request.supplies_needed, length: 50
         td = aid_request.caller_address
         td 

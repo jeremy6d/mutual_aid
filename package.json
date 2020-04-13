@@ -18,6 +18,7 @@
     "jquery": "^3.4.1",
     "jquery-easing": "^0.0.1",
     "popper.js": "^1.16.1",
+    "rails-erb-loader": "^5.5.2",
     "turbolinks": "^5.2.0"
   },
   "license": "CC-BY-NC-SA-4.0",

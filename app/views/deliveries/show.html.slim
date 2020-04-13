@@ -27,7 +27,7 @@ h1 View delivery
             .col-md-4
               h5.mt-0
                 .ViewDelivery-callerName= link_to f.aid_request.caller_name, f.aid_request
-                .ViewDelivery-callerPhone= link_to_google_voice(f.aid_request.caller_phone_number)
+                .ViewDelivery-callerPhone= link_to_phone(f.aid_request.caller_phone_number)
               dl
                 dt Address
                 dd= raw f.aid_request.caller_address&.gsub(/\n/, '<br />')

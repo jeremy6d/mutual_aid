@@ -49,4 +49,8 @@ class Volunteer < ApplicationRecord
   def send_approval_notification
     ApprovalMailer.approval_notification(self).deliver
   end
+
+  def settings
+    OpenStruct.new({ use_google_voice: false })
+  end
 end

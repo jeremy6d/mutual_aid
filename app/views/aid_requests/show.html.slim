@@ -12,7 +12,7 @@
   .col-sm-6
     dl.row
       dt.col-3 Phone
-      dd.col-9.ShowAidRequest-callerPhone= link_to_google_voice(@aid_request.caller_phone_number)
+      dd.col-9.ShowAidRequest-callerPhone= link_to_phone(@aid_request.caller_phone_number)
       dt.col-3 Address
       dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address&.gsub(/\n/, '<br />')), "#gmap-top"
       dt.col-3 Neighborhood

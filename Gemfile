@@ -63,6 +63,7 @@ group :development do
   gem 'ruby_gntp'
   gem 'guard-rails', require: false
   gem 'guard-migrate'
+  gem 'rails_real_favicon'
 end
 
 group :test do
