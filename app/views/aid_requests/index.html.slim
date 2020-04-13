@@ -14,8 +14,11 @@ ul.nav.nav-tabs
       .d-xs-block.d-md-none= fa_icon "phone"
 h1
   .d-none.d-md-block
-    .float-right= link_to new_aid_request_path, class: "btn btn-primary" do
-      = fa_icon "plus", text: "New"
+    .float-right.btn-group.mt-2
+      = link_to new_aid_request_path, class: "btn btn-primary" do
+        = fa_icon "plus", text: "New"
+      = link_to aid_requests_path(format: :csv), class: "btn btn-outline-primary" do
+        = fa_icon 'file-csv', text: 'Export'
     = [status_filter.humanize.titleize, "Requests"].join(" ")
   .d-xs-block.d-md-none.h3
     .float-right= link_to new_aid_request_path, class: "btn btn-primary btn-sm" do

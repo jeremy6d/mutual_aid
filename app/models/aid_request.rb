@@ -76,6 +76,18 @@
     dismissed? || fulfilled?
   end
 
+  def self.to_csv
+    attributes = %w{id status created_at caller_name caller_address supplies_needed persons}
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.find_each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
 private
   def cancel_fulfillments!
     fulfillments.each &:cancel!

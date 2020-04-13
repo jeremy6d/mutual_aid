@@ -1,3 +1,5 @@
+require 'csv' 
+
 class AidRequestsController < AuthorizedOnlyController
   before_action :set_aid_request, only: [:show, :edit, :update, :destroy, :dismiss]
 
@@ -14,6 +16,10 @@ class AidRequestsController < AuthorizedOnlyController
     else
       AidRequest.where(status: params[:status]).
                  order(updated_at: :desc)
+    end
+    respond_to do |format|
+      format.html
+      format.csv { send_data @aid_requests.to_csv, filename: "aid_requests-#{Date.today}.csv" }
     end
   end
 
