@@ -6,16 +6,20 @@ class AidRequestsController < AuthorizedOnlyController
   # GET /aid_requests
   # GET /aid_requests.json
   def index
-    @aid_requests = case params[:status]
-    when "", nil, "all"
-      AidRequest.order(created_at: :desc)
-    when "call_back_hotline"
-      AidRequest.where(call_back: true, 
-                       status: "unfulfilled").
-                 order(created_at: :asc)
+    if params[:search_by]
+      @aid_requests = AidRequest.basic_search(params[:search_by])
     else
-      AidRequest.where(status: params[:status]).
-                 order(updated_at: :desc)
+      @aid_requests = case params[:status]
+      when "", nil, "all"
+        AidRequest.order(created_at: :desc)
+      when "call_back_hotline"
+        AidRequest.where(call_back: true, 
+                         status: "unfulfilled").
+                   order(created_at: :asc)
+      else
+        AidRequest.where(status: params[:status]).
+                   order(updated_at: :desc)
+      end
     end
     respond_to do |format|
       format.html

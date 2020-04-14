@@ -126,9 +126,9 @@ html lang="en"
               i.fa.fa-bars
             h1.h5.d-sm-block.d-md-none Richmond Mutual Aid
             /! Topbar Search
-            form.d-none.d-sm-inline-block.form-inline.mr-auto.ml-md-3.my-2.my-md-0.mw-100.navbar-search
+            form.d-none.d-sm-inline-block.form-inline.mr-auto.ml-md-3.my-2.my-md-0.mw-100.navbar-search(action="#{aid_requests_path}" method="GET")
               .input-group
-                input.form-control.bg-light.border-0.small aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" /
+                input.form-control.bg-light.border-0.small(aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" name="search_by") /
                 .input-group-append
                   button.btn.btn-primary type="button" 
                     i.fas.fa-search.fa-sm
@@ -140,9 +140,9 @@ html lang="en"
                   i.fas.fa-search.fa-fw.fa-2x
                 /! Dropdown - Messages
                 .dropdown-menu.dropdown-menu-right.p-3.shadow.animated--grow-in aria-labelledby="searchDropdown" 
-                  form.form-inline.mr-auto.w-100.navbar-search
+                  form.form-inline.mr-auto.w-100.navbar-search(action="#{aid_requests_path}" method="GET")
                     .input-group
-                      input.form-control.bg-light.border-0.small aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for...") type="text" /
+                      input.form-control.bg-light.border-0.small(type="text" name="search_by" aria-describedby="basic-addon2" aria-label="Search" placeholder=("Search for..."))/
                       .input-group-append
                         button.btn.btn-primary type="button" 
                           i.fas.fa-search.fa-sm
