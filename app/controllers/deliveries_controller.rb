@@ -25,6 +25,7 @@ class DeliveriesController < AuthorizedOnlyController
 
   # GET /deliveries/1/edit
   def edit
+    @fulfillments = Fulfillment.packed.order(created_at: :asc)
   end
 
   # POST /deliveries
