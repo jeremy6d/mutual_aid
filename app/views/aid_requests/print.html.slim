@@ -15,7 +15,7 @@ html lang="en"
         |  - 
       | Richmond Mutual Aid
     = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
-  body(style="color: black; background-attachment: fixed; background-image: url(#{asset_path('circle-a.svg')}); background-repeat: no-repeat; background-size: 375vw;")
+  body(style="color: blue; background-attachment: fixed; background-image: url(#{asset_path('circle-a.svg')}); background-repeat: no-repeat; background-size: 375vw;")
     .display-1.mb-5.text-right
       - if @aid_request.urgent?
         .w-100.text-center.badge= fa_icon 'exclamation-triangle', text: "URGENT"
@@ -42,7 +42,7 @@ html lang="en"
           - column_ct = (@aid_request.supplies_needed.size / 500) + 1
           - font_size = (column_ct > 2) ? 1 : 2
           .PrintAidRequest-needsColumns(style="column-count: #{column_ct}; font-size: #{font_size}em;")= @aid_request.supplies_needed
-          .fixed-bottom= image_tag asset_path('flyer.png'), style: "max-height: 400px; width: 50%;"
+          /.fixed-bottom= image_tag asset_path('flyer.png'), style: "max-height: 400px; width: 50%;"
         .col-6
           - if @aid_request.indications.any?
             .border.border-dark.rounded.p-2.ml-5.text-justified.mb-5
