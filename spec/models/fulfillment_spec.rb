@@ -23,6 +23,8 @@ RSpec.describe Fulfillment, type: :model do
 
   context "when part of a delivery" do
     let!(:delivery) { FactoryBot.create :delivery, fulfillments: [subject] }
+
+    it { expect(subject.reload).to be_on_the_way }
     
     it "notifies the delivery when it's cancelled" do  
       subject.cancel!
@@ -32,7 +34,7 @@ RSpec.describe Fulfillment, type: :model do
     context "and fulfillment is returned from a delivery attempt" do
       before do
         subject.notes.create body: "Couldn't deliver"
-        subject.return!
+        subject.reload.return!
       end
       
       it { expect(subject).to be_returned }

@@ -1,8 +1,19 @@
-h1 Editing delivery
+h1.text-center Modify an ongoing delivery
 
-== render 'form'
+= simple_form_for(@delivery) do |f|
+  = f.error_notification
 
-=> link_to 'Show', @delivery
-'|
-=< link_to 'Back', deliveries_path
-
+  .MainPanel.text-center
+    h2 Current fulfillments in this delivery
+    .form-inputs.text-left.ModifyDelivery-currentFulfillments(class=('MainPanel-columnAdd' if (@fulfillments.count > 10)))
+      = f.association :fulfillments, collection: @delivery.fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes, label: "Current fulfillments", disabled: true
+    h2 Unassigned fulfillments to add
+    .form-inputs.text-left.ModifyDelivery-newFulfillments(class=('MainPanel-columnAdd' if (@fulfillments.count > 10)))
+      = f.association :fulfillments, collection: @fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes, label: "Check all fulfillments to add to this delivery"
+    .form-inputs.text-left.mt-3
+      = f.input :notes, as: :text
+    .form-actions.btn-group
+      button.btn.btn-large.btn-success
+        = fa_icon 'truck-loading', text: "Add these fulfillments"
+      = link_to :back, class: 'btn btn-outline-dark' do
+        = fa_icon 'arrow-left', text: 'Back'
