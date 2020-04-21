@@ -26,7 +26,7 @@ html lang="en"
         - if sm_name.present?
           span.h1= sm_name
         = lg_name
-    .container.m-0(style="")
+    .container.m-0
       .row
         .col-6
           .h1
@@ -38,11 +38,6 @@ html lang="en"
             dd.col-8= @aid_request.created_at.to_s :human
             dt.col-4 Updated 
             dd.col-8= @aid_request.updated_at.to_s :human
-          .h2 Needs
-          - column_ct = (@aid_request.supplies_needed.size / 500) + 1
-          - font_size = (column_ct > 2) ? 1 : 2
-          .PrintAidRequest-needsColumns(style="column-count: #{column_ct}; font-size: #{font_size}em;")= @aid_request.supplies_needed
-          .fixed-bottom= image_tag asset_path('flyer.png'), style: "max-height: 400px; width: 50%;"
         .col-6
           - if @aid_request.indications.any?
             .border.border-dark.rounded.p-2.ml-5.text-justified.mb-5
@@ -56,6 +51,12 @@ html lang="en"
                 .text-center.display-1
                   .badge.badge-pill.badge-light(style='color: black;')= @aid_request.neighborhood
               = raw @aid_request.caller_address&.gsub(/\n/, '<br />')
-          .display-4.text-right(style="color: black; text-decoration: underline;") Contents Packed
+      .row.mb-5
+        .col-12
+          .h2.text-center Needs
+          - column_ct = (@aid_request.supplies_needed.size / 500) + 1
+          - font_size = (column_ct > 2) ? 1 : 2
+          .PrintAidRequest-needsColumns(style="column-count: #{column_ct}; font-size: #{font_size}em;")= @aid_request.supplies_needed
+      .fixed-bottom(style="max-height: 60%; height: 100vh;background-repeat: no-repeat;background-position: center; background-image: url('#{asset_path('flyer.png')}');")
 javascript:
   window.print();
