@@ -57,6 +57,6 @@ html lang="en"
           - column_ct = (@aid_request.supplies_needed.size / 500) + 1
           - font_size = (column_ct > 2) ? 1 : 2
           .PrintAidRequest-needsColumns(style="column-count: #{column_ct}; font-size: #{font_size}em;")= @aid_request.supplies_needed
-      .fixed-bottom(style="max-height: 60%; height: 100vh;background-repeat: no-repeat;background-position: center; background-image: url('#{asset_path('flyer.png')}');")
+      .fixed-bottom(style="max-height: 35%; height: 100vh;background-repeat: no-repeat;background-position: center; background-image: url('#{asset_path('flyer.png')}'); background-size: contain;")
 javascript:
   window.print();
