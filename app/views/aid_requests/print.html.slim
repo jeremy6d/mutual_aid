@@ -15,10 +15,10 @@ html lang="en"
         |  - 
       | Richmond Mutual Aid
     = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
-  body(style="color: black !important; background-attachment: fixed; background-image: url(#{asset_path('circle-a.svg')}); background-repeat: no-repeat; background-size: 375vw;")
+  body(style="color: black !important; background-attachment: fixed; background-image: url(#{asset_path('circle-a.svg')}); background-repeat: no-repeat; background-size: 375vw; height: 100%;")
     .display-1.mb-5.text-right
       - if @aid_request.urgent?
-        .w-100.text-center.badge= fa_icon 'exclamation-triangle', text: "URGENT"
+        .w-100.text-center.badge.display-4= fa_icon 'exclamation-triangle', text: "URGENT"
       .float-left.mr-3 ##{@aid_request.id}
       div(style="height: 1.1em; text-overflow: ellipsis; overflow: hidden;")
         - lg_name = @aid_request.caller_last_name.empty? ? @aid_request.caller_first_name : @aid_request.caller_last_name
@@ -29,34 +29,26 @@ html lang="en"
     .container.m-0
       .row
         .col-6
-          .h1
-            = fa_icon 'phone-alt', text: number_to_phone(@aid_request.caller_phone_number, area_code: true)  
-          .dl.row.h4
-            dt.col-4 Persons
-            dd.col-8= @aid_request.persons
-            dt.col-4 Started 
-            dd.col-8= @aid_request.created_at.to_s :human
-            dt.col-4 Updated 
-            dd.col-8= @aid_request.updated_at.to_s :human
-        .col-6
-          - if @aid_request.indications.any?
-            .border.border-dark.rounded.p-2.ml-5.text-justified.mb-5
-              ul.list-unstyled.h4(color='black')
-                - @aid_request.indications.compact.each do |i|
-                  li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
-              = @aid_request.notes
+          .h1= fa_icon 'phone-alt', text: number_to_phone(@aid_request.caller_phone_number, area_code: true) 
           ul.display-4.list-unstyled
             li.border.rounded.border-dark.p-1
               - unless @aid_request.neighborhood.blank?
                 .text-center.display-1
                   .badge.badge-pill.badge-light(style='color: black;')= @aid_request.neighborhood
-              = raw @aid_request.caller_address&.gsub(/\n/, '<br />')
-      .row.mb-5
-        .col-12
+              = raw @aid_request.caller_address&.gsub(/\n/, '<br />') 
+          .h1= @aid_request.persons
+          - if @aid_request.indications.any?
+            .border.border-dark.rounded.p-1.h4
+              ul.list-unstyled(color='black')
+                - @aid_request.indications.compact.each do |i|
+                  li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
+              = @aid_request.notes
+          .fixed-bottom(style="max-height: 30%; height: 100vh;background-repeat: no-repeat;background-position: left; background-image: url('#{asset_path('flyer.png')}'); background-size: contain; z-index: -1;")
+        .col-6
           .h2.text-center Needs
-          - column_ct = (@aid_request.supplies_needed.size / 500) + 1
-          - font_size = (column_ct > 2) ? 1 : 2
-          .PrintAidRequest-needsColumns(style="column-count: #{column_ct}; font-size: #{font_size}em;")= @aid_request.supplies_needed
-      .fixed-bottom(style="max-height: 35%; height: 100vh;background-repeat: no-repeat;background-position: center; background-image: url('#{asset_path('flyer.png')}'); background-size: contain;")
+          .PrintAidRequest-needsColumns(style="column-count: 2; font-size: 1.25rem")= raw @aid_request.supplies_needed.split(",").map { |n| "<i class='far fa-square mr-2'></i>#{n.strip}" }.join("<br />")
+          .fixed-bottom.text-right.h1 Packed #{Time.now.to_s :date_and_time}
+      /.row
+        .col-12(style="min-height: 300px; height: auto !important; height: 300px;")= image_tag('flyer.png')
 javascript:
   window.print();
