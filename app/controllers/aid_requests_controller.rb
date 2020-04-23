@@ -7,7 +7,8 @@ class AidRequestsController < AuthorizedOnlyController
   # GET /aid_requests.json
   def index
     if params[:search_by]
-      @aid_requests = AidRequest.basic_search(params[:search_by])
+      terms = params[:search_by].gsub(/[\-\.\(\)]*/, "")
+      @aid_requests = AidRequest.basic_search(terms)
     else
       @aid_requests = case params[:status]
       when "", nil, "all"
