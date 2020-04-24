@@ -1,11 +1,10 @@
 .MainPanel
-  h1.row 
-    .col-md-6 View delivery
-    .col-md-6
-      - if @delivery.delivered?  
-        .badge.badge-success.float-right
-          i.fas.fa-check-square
-          span.mr-2 Delivered!
+  .float-right.h4
+    span.mr-5= delivery_badge_for(@delivery)  
+    i.fas.fa-truck-pickup
+    span.ml-1= @delivery.driver.full_name 
+  h1 View delivery
+  
   #accordion
     - @delivery.fulfillments.each do |f|
       .card.w-100.ViewDelivery-fulfillmentCard(id="fulfillment-#{f}")
