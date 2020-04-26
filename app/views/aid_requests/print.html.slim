@@ -34,7 +34,7 @@ html lang="en"
             li.border.rounded.border-dark.p-1
               - unless @aid_request.neighborhood.blank?
                 .text-center.display-1
-                  .badge.badge-pill.badge-light(style='color: black;')= @aid_request.neighborhood
+                  .badge.badge-pill.badge-light(style='color: black;')= truncate @aid_request.neighborhood, length: 25
               = raw @aid_request.caller_address&.gsub(/\n/, '<br />') 
           .h1= @aid_request.persons
           - if @aid_request.indications.any?
