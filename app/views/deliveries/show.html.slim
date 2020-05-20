@@ -64,7 +64,7 @@
                           li.list-group-item
                             .blockquote
                               p= n.body
-                              footer.blockquote-footer.text-right= n.author.full_name
+                              footer.blockquote-footer.text-right= n.author&.full_name || "Unknown"
                               .small.text-right= n.created_at.to_s(:human)
                     - elsif f.on_the_way?
                       .border.p-4.rounded.ViewDelivery-reportStatusArea

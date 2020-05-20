@@ -15,7 +15,9 @@ RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
   it "allows a fulfillment in a delivery to be returned with a note" do
     sign_in! delivery.driver
     click_on "My deliveries"
+sleep 1
     click_on "1 fulfillment started less than a minute ago"
+sleep 1
     within(".ViewDelivery-fulfillmentCard:first-child") do
       find("#message").set "Nobody home"
       click_on "Mark returned"
@@ -24,6 +26,7 @@ RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
       find(".ViewDelivery-collapseToggle").click
       click_on "Fuenke, Tobias"
     end
+sleep 1    
     find(".FulfillmentList-fulfillmentItem a").click
     expect(page).to have_content("packed")
   end
@@ -38,8 +41,9 @@ RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
       expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
       sleep 1
       find(".ViewDelivery-collapseToggle").click
-      click_on "Loblaw, Robert"
+      click_on "Fuenke, Tobias"
     end
+sleep 1
     find(".FulfillmentList-fulfillmentItem a").click
     expect(page).to have_content("delivered")
   end
@@ -60,7 +64,7 @@ RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
     expect(page).to have_content(f2.public_id)
     click_on "Requests"
     click_on f2.aid_request.caller_name
-    expect(find(".FulfillmentList-fulfillmentItem a")).to have_content("on the way")
+    expect(find(".FulfillmentList-fulfillmentItem a")).to have_content("On The Way")
   end
 
   scenario "disallow editing delivery after complete"
