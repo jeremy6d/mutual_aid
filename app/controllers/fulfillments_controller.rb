@@ -58,10 +58,9 @@ class FulfillmentsController < AuthorizedOnlyController
         @fulfillment.notes.create body: params[:message], author: current_volunteer
       end 
       @fulfillment.deliver! if params.key? :delivered
-      @fulfillment.return! if params.key? :returned
-      @fulfillment.cancel! if params.key? :cancelled
+      @fulfillment.return!  if params.key? :returned
+      @fulfillment.cancel!  if params.key? :cancelled
     end
-
     respond_to do |format| 
       format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
       format.html { redirect_to [@aid_request, @fulfillment], notice: "Fulfillment has been #{@fulfillment.status}." }

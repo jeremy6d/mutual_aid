@@ -5,8 +5,11 @@ class Delivery < ApplicationRecord
       const_set s.upcase, s
     end
   end
+  has_many :notes, as: :noteable
 
-  has_many :fulfillments, dependent: :nullify, after_remove: :return_fulfillment!
+  has_many :fulfillments, dependent: :nullify,
+                          after_remove: Proc.new { |_, obj| obj.reload.return! }
+
   belongs_to :driver, class_name: "Volunteer", 
                       inverse_of: :deliveries,
                       foreign_key: "driver_id"
@@ -55,9 +58,5 @@ private
     else
       Status::ON_THE_WAY
     end
-  end
-
-  def return_fulfillment!(_, fulfillment)
-    fulfillment.return!
   end
 end

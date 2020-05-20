@@ -9,6 +9,10 @@ RSpec.describe Delivery, type: :model do
     3.times.map { |n| FactoryBot.create(:fulfillment) }
   end
 
+  it "starts out as empty" do
+    expect(Delivery.new).to be_empty
+  end
+
   it "disallows creation without at least one fulfillment" do
     delivery = FactoryBot.build(:delivery, fulfillments: [])
     expect(delivery).not_to be_valid
@@ -16,8 +20,8 @@ RSpec.describe Delivery, type: :model do
   end
 
   context "determining status" do
-    it "starts out as empty" do
-      expect(Delivery.new).to be_empty
+    before do
+      subject.fulfillments.each &:reload
     end
 
     it "registers as on_the_way when at least one fulfillment is on_the_way" do

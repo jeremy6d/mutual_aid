@@ -59,7 +59,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       click_on "Holt, Steve"
 
       click_on "Fulfill"
-      sleep 1
+      # sleep 5
       expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
