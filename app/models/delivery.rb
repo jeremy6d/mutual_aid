@@ -5,18 +5,20 @@ class Delivery < ApplicationRecord
       const_set s.upcase, s
     end
   end
+  has_many :notes, as: :noteable
 
-  has_many :fulfillments
+  has_many :fulfillments, dependent: :nullify,
+                          after_remove: Proc.new { |_, obj| obj.reload.return! }
+
   belongs_to :driver, class_name: "Volunteer", 
                       inverse_of: :deliveries,
                       foreign_key: "driver_id"
 
   validates :fulfillments, length: { minimum: 1 }
 
-  after_create do 
-    fulfillments.each &:pickup!
+  after_save do
+    fulfillments.packed.each &:pickup!
   end
-
   before_save :update_status
   after_touch :update_status!
   after_initialize :update_status

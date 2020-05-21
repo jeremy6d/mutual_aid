@@ -2,8 +2,8 @@ class Fulfillment < ApplicationRecord
   has_logidze
   include AASM
 
-  aasm column: :status do
-    state :packed, initial: true
+  aasm column: :status, whiny_persistence: true do
+    state :packed, initial: true, enter: Proc.new { self.delivery = nil }
     state :on_the_way
     state :delivered
     state :cancelled
@@ -34,7 +34,7 @@ class Fulfillment < ApplicationRecord
 
   has_one_attached :contents_sheet_image
 
-  validate :contents_provided
+  # validate :contents_provided
 
   after_create { aid_request.start! unless aid_request.in_progress? }
   after_update do 
@@ -64,5 +64,9 @@ private
     unless contents_sheet_image.attached? || contents.present?
       errors.add :base, "Either a contents list or an image are required"
     end
+  end
+
+  def note_left?
+    errors.add(:base, "You have to leave a note") if notes.empty?
   end
 end

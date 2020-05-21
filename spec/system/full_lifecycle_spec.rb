@@ -59,7 +59,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       click_on "Holt, Steve"
 
       click_on "Fulfill"
-      sleep 1
+      # sleep 5
       expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
@@ -117,7 +117,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
     all(".ViewDelivery-successHeader").each { |e| expect(e).to have_content("Delivered!") }
   end
 
-  it 'cancels a fulfillment with a delivery in progress' do
+  scenario 'cancel a fulfillment with a delivery in progress' do
     signing_in_as(driver_volunteer) do
       click_on "My deliveries"
       expect(current_path).to eql(my_deliveries_path)
@@ -129,7 +129,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
     signing_in_as(hotline_volunteer) do
       click_on "Holt, Steve"
-      page.accept_confirm { click_on "Dismiss" }
+      click_and_confirm! "Dismiss"
     end
 
     signing_in_as(driver_volunteer) do
@@ -146,8 +146,8 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       click_on "Mark delivered"
       sleep 1
       
-      expect(all(".ViewDelivery-fulfillmentCard").first).to have_content("Delivered!")
-      expect(all(".ViewDelivery-fulfillmentCard").last).to have_content("CANCELLED") 
+      expect(find(".ViewDelivery-fulfillmentCard:first-child")).to have_content("Delivered!")
+      expect(find(".ViewDelivery-fulfillmentCard:last-child")).to have_content("CANCELLED") 
     end
   end
 end

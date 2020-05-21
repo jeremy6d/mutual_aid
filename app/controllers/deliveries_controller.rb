@@ -25,6 +25,7 @@ class DeliveriesController < AuthorizedOnlyController
 
   # GET /deliveries/1/edit
   def edit
+    @fulfillments = Fulfillment.packed.order(created_at: :asc)
   end
 
   # POST /deliveries
@@ -73,8 +74,18 @@ class DeliveriesController < AuthorizedOnlyController
       @delivery = Delivery.find(params[:id])
     end
 
+    def delivery
+      @delivery || set_delivery
+    end
+
     # Only allow a list of trusted parameters through.
     def delivery_params
-      params.require(:delivery).permit(:notes, fulfillment_ids: [])
+      params.require(:delivery).
+             permit(notes: [], fulfillment_ids: []).
+             tap do |dp|
+        ids = dp[:fulfillment_ids] + @delivery.try(:fulfillment_ids).to_a
+        dp[:fulfillment_ids] = ids.uniq.reject(&:blank?)
+        dp
+      end
     end
 end

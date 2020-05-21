@@ -40,6 +40,14 @@ module AcceptanceHelpers
     find('.aid_request_call_back .toggle-off').click if info[:call_back]
     click_on "Submit"
   end
+
+  def click_and_confirm!(button_title)
+    page.accept_confirm do
+      sleep 1
+      click_on(button_title)
+      sleep 1
+    end
+  end
 end
 
 RSpec.configure { |c| c.include AcceptanceHelpers, type: :system }
