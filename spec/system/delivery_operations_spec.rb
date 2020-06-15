@@ -15,9 +15,9 @@ RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
   it "allows a fulfillment in a delivery to be returned with a note" do
     sign_in! delivery.driver
     click_on "My deliveries"
-sleep 1
+sleep 2
     click_on "1 fulfillment started less than a minute ago"
-sleep 1
+sleep 2
     within(".ViewDelivery-fulfillmentCard:first-child") do
       find("#message").set "Nobody home"
       click_on "Mark returned"
@@ -54,7 +54,9 @@ sleep 1
     f3 = FactoryBot.create :fulfillment
     sign_in! delivery_2.driver
     click_on "My deliveries"
+sleep 2
     click_on "2 fulfillments started less than a minute ago"
+sleep 2
     click_on "Add fulfillments"
     # within(".ModifyDelivery-currentFulfillments") { uncheck f2.aid_request.id.to_s }
     within(".ModifyDelivery-newFulfillments") { check f3.aid_request.id.to_s }
