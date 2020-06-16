@@ -351,7 +351,8 @@ CREATE TABLE public.aid_requests (
     log_data jsonb,
     urgent boolean DEFAULT false,
     call_back boolean DEFAULT false,
-    neighborhood character varying
+    neighborhood character varying,
+    special_requests text
 );
 
 
@@ -832,6 +833,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200406020029'),
 ('20200407052848'),
 ('20200408194004'),
-('20200410160210');
+('20200410160210'),
+('20200616174851');
 
 

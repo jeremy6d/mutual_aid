@@ -17,8 +17,10 @@
       dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address&.gsub(/\n/, '<br />')), "#gmap-top"
       dt.col-3 Neighborhood
       dd.col-9.ShowAidRequest-neighborhood= @aid_request.neighborhood || "N/A"
-      dt.col-3 Needs
+      dt.col-3 Normal Needs
       dd.col-9.ShowAidRequest-suppliesNeeded= @aid_request.supplies_needed
+      dt.col-3 Special Requests
+      dd.col-9.ShowAidRequest-specialRequests= @aid_request.special_requests
       dt.col-3 Persons
       dd.col-9.ShowAidRequest-persons= @aid_request.persons
       dt.col-3 Logged
