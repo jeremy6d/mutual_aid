@@ -59,7 +59,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       click_on "Holt, Steve"
 
       click_on "Fulfill"
-sleep 6
+sleep 2
       expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
@@ -92,6 +92,7 @@ sleep 6
 
       page.find("div.form-check", text: /100 E Main St/i).check
       page.find("div.form-check", text: /517 W 20th St/i).check
+      fill_in "Notes", with: "I'm driving today"
 
       click_on "Start delivery now"
     end
@@ -121,7 +122,6 @@ sleep 6
     signing_in_as(driver_volunteer) do
       click_on "My deliveries"
       expect(current_path).to eql(my_deliveries_path)
-
       click_on "2 fulfillments started less than a minute ago"
 
       expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)

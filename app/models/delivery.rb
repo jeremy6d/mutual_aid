@@ -23,6 +23,8 @@ class Delivery < ApplicationRecord
   after_touch :update_status!
   after_initialize :update_status
 
+  accepts_nested_attributes_for :notes, reject_if: Proc.new { |attrs| attrs[:body].blank? }
+
   def update_status!
     update_status and save!
   end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
+RSpec.feature "Delivery operations", type: :system, js: true do
   let(:aid_request) do 
     FactoryBot.create :random_aid_request, caller_first_name: "Tobias",
                                            caller_last_name: "Fuenke"

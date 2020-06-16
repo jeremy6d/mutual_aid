@@ -7,7 +7,8 @@ h1.text-center Make a delivery
     .form-inputs.text-left(class=('MainPanel-columnAdd' if (@fulfillments.count > 10)))
       = f.association :fulfillments, collection: @fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes, label: "Check all fulfillments to deliver now"
     .form-inputs.text-left.mt-3
-      = f.input :notes, as: :text
+      = f.simple_fields_for(:notes) do |n|
+        = n.input :body, as: :text, label: "Notes"
 
     .form-actions.btn-group
       button.btn.btn-large.btn-success

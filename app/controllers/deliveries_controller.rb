@@ -21,11 +21,13 @@ class DeliveriesController < AuthorizedOnlyController
   def new
     @fulfillments = Fulfillment.packed.order(created_at: :asc)
     @delivery = Delivery.new
+    @delivery.notes.build
   end
 
   # GET /deliveries/1/edit
   def edit
     @fulfillments = Fulfillment.packed.order(created_at: :asc)
+    @delivery.notes.build
   end
 
   # POST /deliveries
@@ -38,6 +40,7 @@ class DeliveriesController < AuthorizedOnlyController
         format.html { redirect_to @delivery, notice: 'Delivery was successfully created.' }
         format.json { render :show, status: :created, location: @delivery }
       else
+            @fulfillments = Fulfillment.packed.order(created_at: :asc)
         format.html { render :new }
         format.json { render json: @delivery.errors, status: :unprocessable_entity }
       end
@@ -52,6 +55,8 @@ class DeliveriesController < AuthorizedOnlyController
         format.html { redirect_to @delivery, notice: 'Delivery was successfully updated.' }
         format.json { render :show, status: :ok, location: @delivery }
       else
+            @fulfillments = Fulfillment.packed.order(created_at: :asc)
+    # @delivery.notes.build
         format.html { render :edit }
         format.json { render json: @delivery.errors, status: :unprocessable_entity }
       end
@@ -81,10 +86,11 @@ class DeliveriesController < AuthorizedOnlyController
     # Only allow a list of trusted parameters through.
     def delivery_params
       params.require(:delivery).
-             permit(notes: [], fulfillment_ids: []).
+             permit(notes_attributes: [ :body ], fulfillment_ids: []).
              tap do |dp|
         ids = dp[:fulfillment_ids] + @delivery.try(:fulfillment_ids).to_a
         dp[:fulfillment_ids] = ids.uniq.reject(&:blank?)
+        dp[:notes_attributes].each { |n, attrs| attrs[:author] = current_volunteer }
         dp
       end
     end
