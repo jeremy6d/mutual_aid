@@ -44,6 +44,11 @@ html lang="en"
                 i.fas.fa-user-check.mr-2
                 span.fa-text Approvals pending
                 .ml-2.badge.badge-pill.badge-primary= pending_ct
+          li(class="nav-item #{'active' if @controller == 'special_requests'}")
+            = link_to special_requests_path, class: "nav-link" do
+              i.fas.fa-hat-wizard.mr-2
+              span.fa-text Special requests
+              .ml-2.badge.badge-pill.badge-primary= AidRequest.outstanding.special_requests.pluck(:special_requests).map { |r| r.split(",") }.flatten.size
         - else
           li.nav-item
             = link_to new_volunteer_session_path, class: "nav-link" do

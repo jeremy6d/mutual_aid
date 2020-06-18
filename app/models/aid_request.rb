@@ -34,6 +34,14 @@
     order(urgent: :desc, created_at: :asc)
   }
 
+  scope :outstanding, -> {
+    where.not(status: %i(dismissed fulfilled))
+  }
+
+  scope :special_requests, -> {
+    where.not(special_requests: ["", nil])
+  }
+
   def volunteer_name
     original_taker&.full_name
   end
