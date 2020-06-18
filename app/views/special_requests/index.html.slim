@@ -1,0 +1,17 @@
+h1 Special Requests
+
+table.table
+  thead
+    th Item
+    th Requests
+    th 
+  tbody
+    - @item_map.each do |item, requests|
+      tr
+        td= item
+        td= requests.size
+        td
+          ul 
+            - requests.each do |r| 
+              li= link_to [r.caller_name, r.neighborhood].reject(&:blank?).join(", "), r 
+           

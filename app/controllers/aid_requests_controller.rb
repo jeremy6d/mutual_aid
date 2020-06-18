@@ -114,6 +114,7 @@ class AidRequestsController < AuthorizedOnlyController
                                           :caller_phone_number, 
                                           :caller_address, 
                                           :supplies_needed, 
+                                          :special_requests,
                                           :persons, 
                                           :notes, 
                                           :status,

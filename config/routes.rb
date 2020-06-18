@@ -16,5 +16,6 @@ Rails.application.routes.draw do
   get "/r/:id" => "aid_requests#show", as: :shortlink
   get "/volunteers/unapproved" => "unapproved_volunteers#index", as: :unapproved_volunteers
   post "/volunteers/approve" => "unapproved_volunteers#update", as: :approve_volunteers
+  get "/special-requests" => "special_requests#index", as: :special_requests
   root to: 'static#index'
 end

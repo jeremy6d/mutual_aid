@@ -28,15 +28,15 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
     signing_in_as(hotline_volunteer) do
       click_on "New"
-      sleep 1
+sleep 1
       submit_aid_request_for caller_first_name: "Steve",
                              caller_last_name: "Holt",
                              caller_phone_number: "1-555-555-5555",
                              caller_address: "517 W 20th St\nRichmond VA 23225", 
                              supplies_needed: "bread, soup, bleach, paper towels",
+                             special_requests: "A/C unit, microwave",
                              persons: "2 adults, 1 child",
                              notes: "1 adult is diabetic"
-
       expect(current_path).to eql(aid_request_path(AidRequest.last))
       expect(find(".ShowAidRequest-indicationsArea")).to have_content("DIABET")
       expect(find(".ShowAidRequest-callerName")).to have_content("Holt, Steve")
@@ -45,6 +45,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
       expect(find(".ShowAidRequest-callerAddress")).to have_content("Richmond VA 23225")
       expect(find(".ShowAidRequest-persons")).to have_content("2 adults, 1 child")
       expect(find(".ShowAidRequest-notes")).to have_content("1 adult is diabetic")
+      expect(find(".ShowAidRequest-specialRequests")).to have_content("A/C unit, microwave")
     end
 
     # User PACKER creates a fulfillment 1
