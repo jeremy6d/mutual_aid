@@ -3,10 +3,19 @@ class Fulfillment < ApplicationRecord
   include AASM
 
   aasm column: :status, whiny_persistence: true do
-    state :packed, initial: true, enter: Proc.new { self.delivery = nil }
+    state :ready_to_start, initial: true
+    state :packed, enter: Proc.new { self.delivery = nil }
     state :on_the_way
     state :delivered
     state :cancelled
+
+    event :pack do
+      transitions from: :ready_to_start, to: :packed
+    end
+
+    event :unpack do
+      transitions from: :packed, to: :ready_to_start
+    end
 
     event :pickup do
       transitions from: :packed, to: :on_the_way
@@ -44,7 +53,7 @@ class Fulfillment < ApplicationRecord
 
   def public_id
     req_id = "##{aid_request.id}"
-    f_id = ('A'..'Z').to_a.at(aid_request.fulfillments.index(self) % 26)
+    f_id = ('A'..'Z').to_a.at(aid_request.fulfillment_ids.index(id) % 26)
     [req_id, f_id].join("-")
   end
 

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       get "mine" => "deliveries#mine", as: :my
     end
   end
+  resources :fulfillments, only: %i(index)
   resources :aid_requests do
     member { patch 'dismiss' }
     resources :fulfillments do

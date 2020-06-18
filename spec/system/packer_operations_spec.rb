@@ -11,4 +11,13 @@ RSpec.feature "Packer operations", type: :system, js: true do
 
     expect(page).to have_content("cancelled")
   end
+
+  it "allows packer to fulfill a list of basic fulfillments" do
+    # click on "Packing Dashboard"
+    # sort by neighborhood
+    # choose 
+
+  end
+
+  it "allows packer to fulfill a list of special requests fulfillments"
 end

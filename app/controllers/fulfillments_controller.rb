@@ -5,7 +5,7 @@ class FulfillmentsController < AuthorizedOnlyController
   # GET /fulfillments
   # GET /fulfillments.json
   def index
-    @fulfillments = aid_request.fulfillments
+    @fulfillments = Fulfillment.all
   end
 
   # GET /fulfillments/1
@@ -80,10 +80,20 @@ class FulfillmentsController < AuthorizedOnlyController
   private
     def aid_request
       @aid_request ||= AidRequest.find(params[:aid_request_id])
+    rescue ActiveRecord::RecordNotFound
+      nil
+    end
+
+    def fulfillments_set
+      if aid_request&.persisted?
+        aid_request.fulfillments
+      else
+        Fulfillment
+      end
     end
 
     def set_fulfillment
-      @fulfillment = aid_request.fulfillments.find(params[:id])
+      @fulfillment = fulfillments_set.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
