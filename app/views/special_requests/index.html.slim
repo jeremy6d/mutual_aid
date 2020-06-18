@@ -13,5 +13,5 @@ table.table
         td
           ul 
             - requests.each do |r| 
-              li= link_to [r.caller_name, r.neighborhood].reject(&:blank?).join(", "), r 
+              li= link_to "##{r.id} (#{r.caller_name})", r 
            
