@@ -49,13 +49,17 @@ class Delivery < ApplicationRecord
   end
 
 private
+  def deliveries_complete?
+    fulfillments.all? { |f| %w(cancelled delivered).include? f.status }
+  end
+
   def update_status
     self.status = case 
     when fulfillments.empty?
       Status::EMPTY
     when fulfillments.all?(&:cancelled?)
       Status::CANCELLED
-    when fulfillments.all?(&:delivered?)
+    when deliveries_complete?
       Status::DELIVERED
     else
       Status::ON_THE_WAY

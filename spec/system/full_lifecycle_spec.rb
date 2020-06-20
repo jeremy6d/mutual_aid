@@ -60,7 +60,7 @@ sleep 1
       click_on "Holt, Steve"
 
       click_on "Fulfill"
-sleep 2
+sleep 3
       expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
       expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
       expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")

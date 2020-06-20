@@ -2,16 +2,26 @@ h1 Special Requests
 
 table.table
   thead
-    th Item
-    th Requests
-    th 
+    th Request No.
+    th Requested at
+    th Name
+    th Neighborhood
+    th Item(s)
   tbody
-    - @item_map.each do |item, requests|
+    / - @item_map.each do |item, requests|
+    /   tr
+    /     td= item
+    /     td= requests.size
+    /     td
+    /       ul 
+    /         - requests.each do |r| 
+    /           li= link_to "##{r.id} (#{r.caller_name})", r 
+    - @requests.each do |r|
       tr
-        td= item
-        td= requests.size
-        td
-          ul 
-            - requests.each do |r| 
-              li= link_to "##{r.id} (#{r.caller_name})", r 
+        td= link_to "##{r.id}", r
+        td= r.created_at.to_s(:human)
+        td= r.caller_name
+        td= r.neighborhood
+        td= r.special_requests
+
            
