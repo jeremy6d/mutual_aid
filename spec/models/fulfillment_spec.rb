@@ -21,8 +21,8 @@ RSpec.describe Fulfillment, type: :model do
   #   expect(subject.errors[:base]).to include("Either a contents list or an image are required")
   # end
 
-  it "starts out as ready_to_start" do
-    expect(subject).to be_ready_to_start
+  it "starts out as pending" do
+    expect(subject).to be_pending
   end
 
   context "when part of a delivery" do

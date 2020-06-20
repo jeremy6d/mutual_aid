@@ -6,7 +6,7 @@ RSpec.describe Delivery, type: :model do
   end
 
   let(:fulfillments) do
-    3.times.map { |n| FactoryBot.create(:fulfillment) }
+    3.times.map { |n| FactoryBot.create(:fulfillment).tap { |f| f.pack! } }
   end
 
   it "starts out as empty" do

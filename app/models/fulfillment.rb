@@ -3,18 +3,18 @@ class Fulfillment < ApplicationRecord
   include AASM
 
   aasm column: :status, whiny_persistence: true do
-    state :ready_to_start, initial: true
+    state :pending, initial: true
     state :packed, enter: Proc.new { self.delivery = nil }
     state :on_the_way
     state :delivered
     state :cancelled
 
     event :pack do
-      transitions from: :ready_to_start, to: :packed
+      transitions from: :pending, to: :packed
     end
 
     event :unpack do
-      transitions from: :packed, to: :ready_to_start
+      transitions from: :packed, to: :pending
     end
 
     event :pickup do
