@@ -3,7 +3,7 @@
     .col-md-6  
       h1 Aid request details
     .col-md-6
-      .float-left= f.input :call_back, as: :boolean, label: false
+      .float-left= f.input :needs_call_back, as: :boolean, label: false
       .float-right= f.input :urgent, as: :boolean, label: false
   .row
     .col-md-3= f.input :caller_first_name, label: "First name"

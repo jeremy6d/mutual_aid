@@ -8,7 +8,7 @@ class AidRequest < ApplicationRecord
 
   aasm column: :status do
     state :call_back, initial: true
-    state :in_progress #, after_enter: :create_fulfillments!
+    state :in_progress, after_enter: :create_fulfillments!
     state :complete
     state :dismissed, before_enter: :cancel_fulfillments!
 
@@ -114,6 +114,14 @@ class AidRequest < ApplicationRecord
 private
   def cancel_fulfillments!
     fulfillments.each &:cancel!
+  end
+
+  def create_fulfillments!
+    return if fulfillments.any?
+    fulfillments.build(contents: supplies_needed) unless supplies_needed.blank?
+    special_requests.split(",").each do |sr|
+      fulfillments.build(contents: sr.strip.downcase) #needs to be special
+    end
   end
 
   def perform_transitions

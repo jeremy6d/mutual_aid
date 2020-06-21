@@ -12,7 +12,7 @@ module AidRequestsHelper
       "danger"
     when "in_progress"
       "warning"
-    when "fulfilled"
+    when "complete"
       "success"
     when "dismissed"
       "dark"
@@ -22,9 +22,9 @@ module AidRequestsHelper
   def header_class_for(obj)
     if obj.urgent? && !obj.terminal?
       'bg-danger text-white'
-    elsif obj.call_back? && obj.unfulfilled?
+    elsif obj.call_back?
       'bg-success text-white'
-    elsif obj.call_back? && obj.in_progress? 
+    elsif obj.in_progress? 
        'bg-warning text-dark'
     else  
       'bg-light text-black'
@@ -34,11 +34,11 @@ module AidRequestsHelper
   def status_icon_for(obj)
     status = obj.is_a?(AidRequest) ? obj.status : obj
     icon = case status.to_s
-    when "unfulfilled"
+    when "call_back"
       "inbox"
     when "in_progress"
       "tasks"
-    when "fulfilled"
+    when "complete"
       "check-square"
     when "dismissed"
       "ban"

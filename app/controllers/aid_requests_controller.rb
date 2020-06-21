@@ -119,7 +119,7 @@ class AidRequestsController < AuthorizedOnlyController
                                           :notes, 
                                           :status,
                                           :urgent,
-                                          :call_back,
+                                          :needs_call_back,
                                           :neighborhood,
                                           indications: [])
     end
