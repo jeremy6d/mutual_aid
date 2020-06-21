@@ -1,29 +1,36 @@
-  class AidRequest < ApplicationRecord
+class AidRequest < ApplicationRecord
   has_logidze
   include AASM
+
+  attr_accessor :needs_call_back
 
   INDICATIONS = %w(diabetes immunocompromised see_notes)
 
   aasm column: :status do
-    state :unfulfilled, initial: true
-    state :in_progress
-    state :fulfilled
+    state :call_back, initial: true
+    state :in_progress #, after_enter: :create_fulfillments!
+    state :complete
     state :dismissed, before_enter: :cancel_fulfillments!
 
     event :start do
-      transitions from: :unfulfilled, to: :in_progress
+      transitions from: :call_back, to: :in_progress
+    end
+
+    event :hold do
+      transitions from: :in_progress, to: :call_back
     end
 
     event :complete do
-      transitions from: :in_progress, to: :fulfilled
+      transitions from: :in_progress, to: :complete
     end
 
     event :dismiss do
-      transitions from: [:unfulfilled, :in_progress], to: :dismissed
+      transitions from: [:call_back, :in_progress], to: :dismissed
     end
   end
 
   before_create :detect_indications_in_notes!
+  before_save :perform_transitions, unless: :terminal?
 
   has_many :fulfillments, inverse_of: :aid_request
   has_many :deliveries, through: :fulfillments
@@ -96,8 +103,21 @@
     end
   end
 
+  def terminal?
+    complete? || dismissed?
+  end
+
+  def needs_call_back?
+    !!@needs_call_back
+  end
+
 private
   def cancel_fulfillments!
     fulfillments.each &:cancel!
+  end
+
+  def perform_transitions
+    hold if needs_call_back? && in_progress?
+    start unless needs_call_back? && call_back?
   end
 end

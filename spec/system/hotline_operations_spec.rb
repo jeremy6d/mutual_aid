@@ -4,7 +4,7 @@ RSpec.feature "Hotline operations", type: :system, js: true do
   let(:attributes) { FactoryBot.attributes_for(:random_aid_request) }
   before do
     sign_in! FactoryBot.create(:volunteer)
-    click_on "New"
+    click_on "Hotline"
   end
 
   it "marks a request as urgent" do
