@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe AidRequest, type: :model do
   subject { FactoryBot.build :aid_request }
 
-  it "starts as a call_back" do
-    expect(subject).to be_call_back
+  it "starts as a fresh" do
+    expect(subject).to be_fresh
   end
 
   it "saves as in_progress if call back not toggled" do

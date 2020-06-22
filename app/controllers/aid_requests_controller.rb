@@ -121,6 +121,8 @@ class AidRequestsController < AuthorizedOnlyController
                                           :urgent,
                                           :needs_call_back,
                                           :neighborhood,
-                                          indications: [])
+                                          indications: []).tap do |arp|
+        arp[:needs_call_back] = ( arp[:needs_call_back] == "1")
+      end
     end
 end

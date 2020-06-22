@@ -2,22 +2,21 @@ class AidRequest < ApplicationRecord
   has_logidze
   include AASM
 
-  attr_accessor :needs_call_back
-
   INDICATIONS = %w(diabetes immunocompromised see_notes)
 
   aasm column: :status do
-    state :call_back, initial: true
+    state :fresh, initial: true
+    state :call_back
     state :in_progress, after_enter: :create_fulfillments!
     state :complete
     state :dismissed, before_enter: :cancel_fulfillments!
 
     event :start do
-      transitions from: :call_back, to: :in_progress
+      transitions from: [:call_back, :fresh], to: :in_progress
     end
 
     event :hold do
-      transitions from: :in_progress, to: :call_back
+      transitions from: [:in_progress, :fresh], to: :call_back
     end
 
     event :complete do
@@ -107,9 +106,15 @@ class AidRequest < ApplicationRecord
     complete? || dismissed?
   end
 
-  def needs_call_back?
-    !!@needs_call_back
+  def needs_call_back=(val)
+    @needs_call_back = val
   end
+
+  def needs_call_back?
+    defined?(@needs_call_back) ? @needs_call_back : call_back?
+  end
+
+  alias_method :needs_call_back, :needs_call_back?
 
 private
   def cancel_fulfillments!
@@ -119,13 +124,16 @@ private
   def create_fulfillments!
     return if fulfillments.any?
     fulfillments.build(contents: supplies_needed) unless supplies_needed.blank?
-    special_requests.split(",").each do |sr|
+    special_requests.to_s.split(",").each do |sr|
       fulfillments.build(contents: sr.strip.downcase) #needs to be special
     end
   end
 
   def perform_transitions
-    hold if needs_call_back? && in_progress?
-    start unless needs_call_back? && call_back?
+    if needs_call_back?
+      hold if in_progress? || fresh?
+    else
+      start if call_back? || fresh?
+    end
   end
 end

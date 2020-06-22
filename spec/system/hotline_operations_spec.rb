@@ -7,19 +7,22 @@ RSpec.feature "Hotline operations", type: :system, js: true, headless: false do
     click_on "New"
   end
 
-  it "marks a request as urgent" do
+  it "marks a request as urgent but not a call back" do
     submit_aid_request_for(attributes.merge(urgent: true))
 
     expect(find(".ShowAidRequest-urgent")).to be_visible
+    expect(find(".ShowAidRequest-status")).to have_content("In Progress")
+    expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Pending")
     click_on "Back"
 
     expect(all('tbody tr').first.matches_css?(".bg-danger")).to be true
   end
 
-  it "marks a request as requiring a callback" do
+  it "marks a request as requiring a call back" do
     submit_aid_request_for(attributes.merge(needs_call_back: true))
 
-    expect(find(".ShowAidRequest-callBack")).to be_visible
+    expect(find(".ShowAidRequest-status")).to have_content("Call Back")
+    expect(page).not_to have_selector(".ShowAidRequest-urgent")
     click_on "Back"
 
     expect(all('tbody tr').first.matches_css?(".bg-success")).to be true

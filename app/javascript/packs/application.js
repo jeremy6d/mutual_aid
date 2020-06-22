@@ -53,7 +53,7 @@ $(document).on('turbolinks:load', function() {
     trigger: 'hover',
   });
 
-  $(document).find("#aid_request_call_back").bootstrapToggle({
+  $(document).find("#aid_request_needs_call_back").bootstrapToggle({
     on: "CALLBACK",
     off: "Callback",
     onstyle: "success",

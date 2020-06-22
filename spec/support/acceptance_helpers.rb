@@ -38,7 +38,7 @@ module AcceptanceHelpers
       check i
     end
     find('.aid_request_urgent .toggle-off').click if info[:urgent]
-    find('.aid_request_call_back .toggle-off').click if info[:call_back]
+    find('.aid_request_needs_call_back').click if info[:needs_call_back]
     click_on "Submit"
   end
 

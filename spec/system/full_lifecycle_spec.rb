@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Aid request full lifecycle", type: :system, js: true do
+RSpec.feature "Aid request full lifecycle", type: :system, js: true, headless: false do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
@@ -20,7 +20,7 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
   end
 
   before do
-        # User HOTLINE enters request 1 information and submits
+    # User HOTLINE enters request 1 information and submits
     # - information is persisted to the database
     # - request is marked "unfulfilled"
     # - redirects to the new request form
@@ -28,7 +28,6 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
     signing_in_as(hotline_volunteer) do
       click_on "New"
-sleep 1
       submit_aid_request_for caller_first_name: "Steve",
                              caller_last_name: "Holt",
                              caller_phone_number: "1-555-555-5555",
@@ -46,6 +45,9 @@ sleep 1
       expect(find(".ShowAidRequest-persons")).to have_content("2 adults, 1 child")
       expect(find(".ShowAidRequest-notes")).to have_content("1 adult is diabetic")
       expect(find(".ShowAidRequest-specialRequests")).to have_content("A/C unit, microwave")
+binding.pry
+      expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Packed")
+      expect(all(".FulfillmentList-fulfillmentItem").last_name).to have_content("Packed")
     end
 
     # User PACKER creates a fulfillment 1
@@ -72,11 +74,9 @@ sleep 3
                   "spec/contents_sheet.jpg"
       fill_in "Packing notes", with: "Packed eggs separately"
       fill_in "Number of bags", with: "2"
-
       click_on "Ready for pickup"
       expect(current_path).to eql(aid_request_path(AidRequest.last))
       expect(the_flash(:notice)).to have_content("success")
-      
       expect(find(".ShowAidRequest-status")).to have_content("In Progress")
       expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Packed")
     end

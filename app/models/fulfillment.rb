@@ -39,7 +39,8 @@ class Fulfillment < ApplicationRecord
   belongs_to :delivery, optional: true, inverse_of: :driver
   belongs_to :aid_request
   belongs_to :fulfiller, class_name: "Volunteer", 
-                         inverse_of: :fulfillments_packed
+                         inverse_of: :fulfillments_packed,
+                         optional: true
 
   has_one_attached :contents_sheet_image
 
