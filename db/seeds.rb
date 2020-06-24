@@ -12,11 +12,10 @@ if Volunteer.count.zero?
                             password: "password",
                             password_confirmation: "password",
                             email: "jeremy@jeremyweiland.com"
+  admin.approved_by = admin
+  admin.save
 end
 
-# 10.times do 
-#   puts Volunteer.pluck(:email).join(", ")
-#   FactoryBot.create :random_aid_request, :packed
-#   puts Volunteer.pluck(:email).join(", ")
-#   FactoryBot.create :random_aid_request
-# end
+20.times do 
+  FactoryBot.create :random_aid_request
+end

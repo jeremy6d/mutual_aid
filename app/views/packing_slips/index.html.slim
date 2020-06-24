@@ -1,0 +1,23 @@
+.mx-auto.w-75
+  .row
+    .col
+      h1.mb-5 Packing Slips
+    .col.text-right
+      = link_to new_packing_slip_path, class: "btn btn-primary" do 
+        = fa_icon 'boxes', text: "New packing slip"
+  .row
+    .col-12
+      ul.list-group
+        - @packing_slips.each do |slip|
+          li.list-group-item
+            = link_to slip do
+
+              .d-flex.w-100.justify-content-between
+                h5= slip.created_at.to_s(:human)
+                small= slip.fulfillments.count
+              p.mb-1
+                .progress(style="height: 30px;")
+                  .progress-bar(role="progressbar" style="width: #{slip.percentage_complete}%;" aria-valuenow="#{slip.percentage_complete}" aria-valuemin="0" aria-valuemax="100")
+              small Started by #{slip.creator_name}
+      
+

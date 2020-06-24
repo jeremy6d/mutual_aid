@@ -31,11 +31,11 @@
                 dl
                   dt Address
                   dd= raw f.aid_request.caller_address&.gsub(/\n/, '<br />')
-                  dt Number of bags
-                  dd= f.num_bags
+                  dt Contents
+                  dd= f.contents
                   dt Notes
                   dd
-                    p= f.packing_notes
+                    / p= f.packing_notes
                     p= f.aid_request.notes
               .col-md-8
                 ul.nav.nav-tabs(id="myTab" role="tablist")
@@ -72,7 +72,7 @@
                           .row
                             .h4 Delivery notes
                           .row
-                             = text_area_tag :message, '', class: "col-12", rows: 5
+                             = text_area_tag :message, '', class: "ViewDelivery-deliveryNote col-12", rows: 5
                           .row.mt-3
                             button.btn.btn-success.ViewDelivery-deliverFulfillmentButton.col-6[name="delivered"]
                               = fa_icon 'truck-loading', text: "Mark delivered"  

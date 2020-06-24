@@ -36,4 +36,15 @@ RSpec.feature "Hotline operations", type: :system, js: true, headless: false do
 
     expect(find(".ShowAidRequest-status")).to have_content("Dismissed")
   end
+
+  it "adds an ad hoc fulfillment" do
+    submit_aid_request_for(attributes)
+    click_on "Add fulfillment"
+    fill_in "Contents", with: "TV"
+    check "Special"
+    click_on "Save"
+
+    expect(all(".FulfillmentList-fulfillmentItem").last).to have_content("special")
+    expect(all(".FulfillmentList-fulfillmentItem").size).to eq(2)
+  end
 end

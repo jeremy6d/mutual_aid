@@ -12,11 +12,11 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true, headless: f
     end
   end
 
-  # Provision an existing request with a packed fulfillment
+  # Provision an existing request with a pending fulfillment
   let!(:older_request) do
-    FactoryBot.create :aid_request, :packed, caller_first_name: "Lindsay",
-                                             caller_last_name:  "Bluth",
-                                             caller_address: "100 E Main St, Richmond VA"
+    FactoryBot.create :aid_request, caller_first_name: "Lindsay",
+                                    caller_last_name:  "Bluth",
+                                    caller_address: "100 E Main St, Richmond VA"
   end
 
   before do
@@ -45,20 +45,19 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true, headless: f
       expect(find(".ShowAidRequest-persons")).to have_content("2 adults, 1 child")
       expect(find(".ShowAidRequest-notes")).to have_content("1 adult is diabetic")
       expect(find(".ShowAidRequest-specialRequests")).to have_content("A/C unit, microwave")
-binding.pry
-      expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Packed")
-      expect(all(".FulfillmentList-fulfillmentItem").last_name).to have_content("Packed")
+
+      expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Pending")
+      expect(all(".FulfillmentList-fulfillmentItem").last).to have_content("Pending")
     end
 
-    # User PACKER creates a fulfillment 1
-    # - system should print a fulfillment sheet
-    #   - sheet has map of location and streetview
-    #   - sheet has details of request and fulfillment 1
-    #   - sheet lists total number of bags
-    #   - sheet displays unique id of request and fulfillment 1
-    # - fufillment form should have all details for request available
+    # User PACKER selects all fulfillments to work
+    # - system prints fulfillment sheet for all 
+    # - system moves fulfillments selected to packed
+    # - system distinguishes between special fulfillments and basic fulfillments
 
     signing_in_as(packer_volunteer) do
+      click_on "Packing"
+
       click_on "Holt, Steve"
 
       click_on "Fulfill"

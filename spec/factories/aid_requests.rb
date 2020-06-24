@@ -10,6 +10,7 @@ FactoryBot.define do
     }
     caller_phone_number { "8042348765" }
     supplies_needed { "milk, bread, bleach, soap" }
+    special_requests { "tv, oven" }
     persons { "2 adults, 1 child" }
     notes { "Child suffers from diabetes" }
 
@@ -20,11 +21,16 @@ FactoryBot.define do
       caller_phone_number { Faker::PhoneNumber.cell_phone }
       indications { AidRequest::INDICATIONS.sample(rand(0..2)) }
       supplies_needed { rand(1..5).times.collect { Faker::Food.ingredient }.join(", ") }
+      special_requests { rand(0..2).times.collect { Faker::Commerce.product_name }.join(", ")}
       persons { "#{rand(1..3)} #{%w(adults children seniors).sample}" }
       notes { Faker::Lorem.sentences(number: rand(1..4)).join("\n") }
       transient do
         fulfillment_ct { rand(1..3) }
       end
+    end
+
+    trait :urgent do
+      urgent { true }
     end
 
     trait :packed do

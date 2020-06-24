@@ -1,5 +1,6 @@
 ul.nav.nav-tabs
   - AidRequest.aasm.states.map(&:name).map(&:to_s).each do |status|
+    - next if status == "Fresh"
     li.nav-item
       = link_to aid_requests_path(status: status), title: status, class: "nav-link #{'active' if status_filter == status}" do
         .d-none.d-md-block= fa_icon status_icon_for(status), text: status.humanize
@@ -8,10 +9,6 @@ ul.nav.nav-tabs
     = link_to aid_requests_path(status: "all"), class: "nav-link #{'active' if status_filter == "all"}" do
       .d-none.d-md-block= fa_icon "folder", text: "All"
       .d-xs-block.d-md-none= fa_icon "folder"
-  li.nav-item
-    = link_to aid_requests_path(status: "call_back_hotline"), class: "nav-link #{'active' if status_filter == "call_back"}" do
-      .d-none.d-md-block= fa_icon "phone", text: "Callback"
-      .d-xs-block.d-md-none= fa_icon "phone"
 h1
   .d-none.d-md-block
     .float-right.btn-group.mt-2
@@ -55,8 +52,11 @@ h1
             strong Persons: 
             = req.persons
           li 
-            strong Needs: 
+            strong Basic requests: 
             = req.supplies_needed
+          li
+            strong Special requests:
+            = req.special_requests
       .card-footer updated #{time_ago_in_words req.updated_at} ago
 
 table.table.d-none.d-sm-block(style="text-size: 12pt;")

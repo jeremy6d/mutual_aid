@@ -45,7 +45,9 @@ html lang="en"
               = @aid_request.notes
           .fixed-bottom(style="max-height: 30%; height: 100vh;background-repeat: no-repeat;background-position: left; background-image: url('#{asset_path('flyer.png')}'); background-size: contain; z-index: -1;")
         .col-6
-          .h2.text-center Needs
+          .h2.text-center Basic requests
+          .PrintAidRequest-needsColumns(style="column-count: 2; font-size: 1.25rem")= raw @aid_request.supplies_needed.split(",").map { |n| "<i class='far fa-square mr-2'></i>#{n.strip}" }.join("<br />")
+          .h2.text-center Special requests
           .PrintAidRequest-needsColumns(style="column-count: 2; font-size: 1.25rem")= raw @aid_request.supplies_needed.split(",").map { |n| "<i class='far fa-square mr-2'></i>#{n.strip}" }.join("<br />")
           .fixed-bottom.text-right.h1 Packed #{Time.now.to_s :date_and_time}
 javascript:

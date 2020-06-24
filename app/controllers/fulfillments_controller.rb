@@ -58,8 +58,14 @@ class FulfillmentsController < AuthorizedOnlyController
         @fulfillment.notes.create body: params[:message], author: current_volunteer
       end 
       @fulfillment.deliver! if params.key? :delivered
-      @fulfillment.return!  if params.key? :returned
       @fulfillment.cancel!  if params.key? :cancelled
+      if params.key? :returned
+        if params[:message].present?
+          @fulfillment.return!
+        else
+          head :bad_request
+        end
+      end
     end
     respond_to do |format| 
       format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
@@ -98,9 +104,7 @@ class FulfillmentsController < AuthorizedOnlyController
 
     # Only allow a list of trusted parameters through.
     def fulfillment_params
-      params.require(:fulfillment).permit(:packing_notes, 
-                                          :contents, 
-                                          :contents_sheet_image, 
-                                          :num_bags)
+      params.require(:fulfillment).permit(:special, 
+                                          :contents)
     end
 end

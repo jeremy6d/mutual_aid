@@ -1,0 +1,55 @@
+doctype html
+html lang="en" 
+  head
+    meta charset="utf-8" /
+    meta content="IE=edge" http-equiv="X-UA-Compatible" /
+    meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
+    meta name="description" content="Management Application for Richmond Mutual Aid"
+    meta name="author" content="Jeremy Weiland"
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"
+    script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" defer
+    link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" crossorigin="anonymous"
+    title
+      - unless Rails.env.production?
+        = Rails.env
+        |  - 
+      | Richmond Mutual Aid
+    = stylesheet_pack_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' 
+  body(style="color: black !important;")
+    - @fulfillments.each do |f|
+      .display-1.mb-5.text-right(style="page-break-before: always;")
+        - if f.aid_request.urgent?
+          .w-100.text-center.badge.display-4= fa_icon 'exclamation-triangle', text: "URGENT"
+        .float-left.mr-3 #{f.public_id}
+        div(style="height: 1.1em; text-overflow: ellipsis; overflow: hidden;")
+          - lg_name = f.aid_request.caller_last_name.empty? ? f.aid_request.caller_first_name : f.aid_request.caller_last_name
+          - sm_name = f.aid_request.caller_first_name unless lg_name == f.aid_request.caller_first_name
+          - if sm_name.present?
+            span.h1= sm_name
+          = lg_name
+      .container.m-0
+        .row
+          .col-6
+            .h1= fa_icon 'phone-alt', text: number_to_phone(f.aid_request.caller_phone_number, area_code: true) 
+            ul.display-4.list-unstyled
+              li.border.rounded.border-dark.p-1
+                - unless f.aid_request.neighborhood.blank?
+                  .text-center.display-1
+                    .badge.badge-pill.badge-light(style='color: black;')= truncate f.aid_request.neighborhood, length: 25
+                = raw f.aid_request.caller_address&.gsub(/\n/, '<br />') 
+            .h1= f.aid_request.persons
+            - if f.aid_request.indications.any?
+              .border.border-dark.rounded.p-1.h4
+                ul.list-unstyled(color='black')
+                  - f.aid_request.indications.compact.each do |i|
+                    li= fa_icon 'exclamation-triangle', text: i.humanize.upcase 
+                = f.aid_request.notes
+            .fixed-bottom.text-left(style="height: 35% !important")= image_tag asset_path('flyer.png'), height: "100%"
+            /.fixed-bottom(style="background-repeat: no-repeat;background-position: left; background-image: url('#{asset_path('flyer.png')}'); background-size: contain; z-index: -1;")
+          .col-6
+            .h2.text-center Contents
+            .PrintAidRequest-needsColumns(style="margin-left: 4rem; column-count: 2; font-size: 1.25rem")= raw f.contents.split(",").map { |n| "<i class='far fa-square mr-2'></i>#{n.strip}" }.join("<br />")
+            
+javascript:
+  window.print();
+  setTimeout(function () { window.close(); }, 100);

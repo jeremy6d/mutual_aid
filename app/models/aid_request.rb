@@ -125,7 +125,7 @@ private
     return if fulfillments.any?
     fulfillments.build(contents: supplies_needed) unless supplies_needed.blank?
     special_requests.to_s.split(",").each do |sr|
-      fulfillments.build(contents: sr.strip.downcase) #needs to be special
+      fulfillments.build(contents: sr.strip.downcase, special: true)
     end
   end
 

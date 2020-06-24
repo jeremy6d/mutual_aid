@@ -25,6 +25,13 @@ RSpec.describe Fulfillment, type: :model do
     expect(subject).to be_pending
   end
 
+  it "creates a unique public id" do
+    ar = FactoryBot.create :aid_request, supplies_needed: "food, bleach, baking soda",
+                                         special_requests: "tv, oven"
+    expected_ids = [ "##{ar.id}-A", "#S#{ar.id}-B", "#S#{ar.id}-C"]
+    expect(Fulfillment.pluck :public_id).to eql(expected_ids)
+  end
+
   context "when part of a delivery" do
     before { subject.pack! }
   

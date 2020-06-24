@@ -32,6 +32,9 @@ html lang="en"
           li(class="nav-item #{'active' if @controller == 'aid_requests'}")
             = link_to aid_requests_path, class: "nav-link" do
               = fa_icon 'phone-alt', text: "Requests"
+          li(class="nav-item #{'active' if @controller == 'aid_requests'}")
+            = link_to packing_slips_path, class: "nav-link" do
+              = fa_icon 'box-open', text: "Packing"
           li(class="nav-item #{'active' if @controller == 'deliveries'}")
             = link_to new_delivery_path, class: "nav-link" do
               = fa_icon 'box', text: "Make a delivery"

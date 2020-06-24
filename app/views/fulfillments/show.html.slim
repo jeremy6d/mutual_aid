@@ -1,5 +1,6 @@
 h1
   .badge.badge-pill.badge-dark.mr-3= @fulfillment.public_id 
+  = "Special " if @fulfillment.special?
   | Fulfillment for #{@aid_request.caller_name}
 .row
   .col-md-4
@@ -8,11 +9,10 @@ h1
     dd= @fulfillment.updated_at.to_s(:date_and_time)
     dt Status
     dd= @fulfillment.status
-    dt Packing Notes
-    dd= @fulfillment.packing_notes
     dt Created
     dd= @fulfillment.created_at.to_s(:date_and_time)
     dt Updated
+    dd= @fulfillment.updated_at.to_s(:date_and_time)
     
   .col-md-4
     dt Contents
@@ -21,10 +21,6 @@ h1
         .list-group
           - @fulfillment.contents.split(",").each do |item|
             .list-group-item= item.strip
-      - if @fulfillment.contents_sheet_image.attached?
-        .text-center
-          = link_to url_for(@fulfillment.contents_sheet_image) do
-            = image_tag @fulfillment.contents_sheet_image.variant(resize_to_limit: [300, 300])
   .col-md-4
     ul.list-group.list-unstyled
       - @fulfillment.notes.each do |n|

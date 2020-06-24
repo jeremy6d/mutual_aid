@@ -5,7 +5,9 @@ Rails.application.routes.draw do
       get "mine" => "deliveries#mine", as: :my
     end
   end
-  resources :fulfillments, only: %i(index)
+  resources :packing_slips, except: [:edit, :update, :destroy] do
+    get 'print', on: :member
+  end
   resources :aid_requests do
     member { patch 'dismiss' }
     resources :fulfillments do

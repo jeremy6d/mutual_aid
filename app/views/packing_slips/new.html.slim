@@ -1,0 +1,38 @@
+h1 Create new packing slip
+p.hint In order to pack fulfillments, select the fulfillments you'd like to include and click "Print and pack".
+ul.nav.nav-pills.nav-fill
+  li.nav-item.createPackingSlip-allToggle
+    a.nav-link.active#all-toggle(href="") All fulfillments
+  li.nav-item.createPackingSlip-basicToggle
+    a.nav-link#basic-toggle(href="") Basic fulfillments
+  li.nav-item.createPackingSlip-specialToggle
+    a.nav-link#special-toggle(href="") Special fulfillments
+= form_with(model: @packing_slip, url: packing_slips_path) do |psf|
+
+  table.table.table-sm.CreatePackingSlip-basicTable
+    thead
+      th 
+      th Requested
+      th Location
+      th Contents
+      th Notes
+    tbody
+      = psf.collection_check_boxes(:fulfillment_ids, @fulfillments, :id, :public_id) do |cb|
+        - type_class = ["CreatePackingSlip", (cb.object.special? ? "specialRow" : "basicRow")].join("-") 
+        - suffix_class = "table-danger" if cb.object.aid_request.urgent?
+        tr(class=["CreatePackingSlip-fulfillmentRow", type_class, suffix_class].compact.join(" "))
+          td(width="100")
+            = cb.check_box(class: "checkbox checkbox-primary")
+            span.pl-2= link_to cb.text, [cb.object.aid_request, cb.object]
+          td= link_to cb.object.created_at.to_s(:date_only), cb.object.aid_request
+          td= location_of cb.object
+          td= truncate cb.object.contents, length: 50
+          td= truncate cb.object.aid_request.notes, length: 50
+  .row
+    .col
+      = psf.label :remarks
+      = psf.text_area :remarks, class: "w-100"
+    .col.text-right.mt-5
+      button.btn.btn-primary.btn-lg
+        i.fas.fa-print
+        | Print and pack

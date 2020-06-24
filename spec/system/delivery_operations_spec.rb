@@ -19,7 +19,7 @@ sleep 2
     click_on "1 fulfillment started less than a minute ago"
 sleep 2
     within(".ViewDelivery-fulfillmentCard:first-child") do
-      find("#message").set "Nobody home"
+      find(".ViewDelivery-deliveryNote").set "Nobody home"
       click_on "Mark returned"
       expect(find(".ViewDelivery-returnHeader")).to have_content("RETURNED")
       sleep 1
@@ -36,7 +36,7 @@ sleep 1
     click_on "My deliveries"
     click_on "1 fulfillment started less than a minute ago"
     within(".ViewDelivery-fulfillmentCard:first-child") do
-      find("#message").set "She said thanks!"
+      find(".ViewDelivery-deliveryNote").set "She said thanks!"
       click_on "Mark delivered"
       expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
       sleep 1
@@ -59,7 +59,8 @@ sleep 2
 sleep 2
     click_on "Add fulfillments"
     # within(".ModifyDelivery-currentFulfillments") { uncheck f2.aid_request.id.to_s }
-    within(".ModifyDelivery-newFulfillments") { check f3.aid_request.id.to_s }
+binding.pry
+    within(".ModifyDelivery-newFulfillments") { check f3.public_id }
     click_on "Add these fulfillments"
     expect(page).to have_content(f1.public_id)
     expect(page).to have_content(f3.public_id)

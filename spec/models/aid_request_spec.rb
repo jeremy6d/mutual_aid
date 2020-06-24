@@ -7,11 +7,25 @@ RSpec.describe AidRequest, type: :model do
     expect(subject).to be_fresh
   end
 
-  it "saves as in_progress if call back not toggled" do
-    subject.needs_call_back = false
-    subject.save
+  describe "on save if call back not toggled" do
+    before do 
+      subject.needs_call_back = false
+      subject.save
+    end
 
-    expect(subject).to be_in_progress
+    it { expect(subject).to be_in_progress }
+    it { expect(subject.fulfillments.count).to eq(3) }
+  end
+
+  describe "creating special fulfillments" do
+    before do 
+      subject.special_requests = "one, two"
+      subject.supplies_needed = ""
+      subject.save
+    end
+
+    it { expect(subject.fulfillments.special.count).to eq(2) }
+    it { expect(subject.fulfillments.count).to eq(2) }
   end
 
   it "saves as call_back if call back toggled" do

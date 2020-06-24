@@ -30,7 +30,7 @@ module AcceptanceHelpers
     fill_in "Last name", with: info[:caller_last_name]
     fill_in "Phone number", with: info[:caller_phone_number]
     fill_in "address", with: info[:caller_address]
-    fill_in "Supplies needed", with: info[:supplies_needed]
+    fill_in "Basic requests", with: info[:supplies_needed]
     fill_in "Special requests", with: info[:special_requests]
     fill_in "Persons", with: info[:persons]
     fill_in "Notes", with: info[:notes]
