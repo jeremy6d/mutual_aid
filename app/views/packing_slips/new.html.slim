@@ -23,7 +23,7 @@ ul.nav.nav-pills.nav-fill
         tr(class=["CreatePackingSlip-fulfillmentRow", type_class, suffix_class].compact.join(" "))
           td(width="100")
             = cb.check_box(class: "checkbox checkbox-primary")
-            span.pl-2= link_to cb.text, [cb.object.aid_request, cb.object]
+            span.pl-2= link_to cb.object.public_id, [cb.object.aid_request, cb.object]
           td= link_to cb.object.created_at.to_s(:date_only), cb.object.aid_request
           td= location_of cb.object
           td= truncate cb.object.contents, length: 50

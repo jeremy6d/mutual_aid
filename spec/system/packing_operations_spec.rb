@@ -29,7 +29,7 @@ RSpec.feature "Packing operations", type: :system, js: true, headless: false do
     click_on "New packing slip"
   end
 
-  it "allows packer to fulfill a list of basic fulfillments" do
+  it "allows packer to fulfill a list of fulfillments" do
     expect(all(".CreatePackingSlip-basicTable tbody tr").size).to eq(7)
     expect(all(".CreatePackingSlip-fulfillmentRow.table-danger").size).to eq(2)
 
@@ -44,15 +44,14 @@ RSpec.feature "Packing operations", type: :system, js: true, headless: false do
 
     packed_ids = all(".CreatePackingSlip-basicTable tbody tr td:first-child").first(3).map do |e|
       e.check
+      puts e.find("input")[:id]
       e.text
     end
-puts packed_ids
     fill_in "Remarks", with: "Let's go get it!"
     click_on "Print and pack"
     unpacked_ids = Fulfillment.all.map do |f| 
       f.public_id unless packed_ids.include?(f.public_id)
     end.compact
-binding.pry
     within(find(".ViewPackingSlip-table tbody")) do
       expect(all("tr").size).to eq(3)
       packed_ids.each { |id| expect(page).to have_content(id) }
@@ -61,6 +60,4 @@ binding.pry
       expect(page).to have_content("PACKED")
     end
   end
-
-  it "allows packer to fulfill a list of special requests fulfillments"
 end

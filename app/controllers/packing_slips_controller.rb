@@ -29,7 +29,7 @@ class PackingSlipsController < AuthorizedOnlyController
 private
   def packing_slip_params
     params.require(:packing_slip).
-           permit(:packing_note, fulfillment_ids: []).
+           permit(:remarks, fulfillment_ids: []).
            merge(creator: current_volunteer)
   end
 end

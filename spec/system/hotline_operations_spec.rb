@@ -5,6 +5,7 @@ RSpec.feature "Hotline operations", type: :system, js: true, headless: false do
   before do
     sign_in! FactoryBot.create(:volunteer)
     click_on "New"
+    sleep 1
   end
 
   it "marks a request as urgent but not a call back" do

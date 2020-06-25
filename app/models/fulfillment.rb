@@ -55,7 +55,7 @@ class Fulfillment < ApplicationRecord
   scope :terminal, -> { where(status: %w(cancelled delivered)) }
   scope :special, -> { where(special: true) }
 
-  before_save :set_public_id
+  before_create :set_public_id
 
   def set_public_id
     req_id = "##{"S" if special?}#{aid_request.id}"
