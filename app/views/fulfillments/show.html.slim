@@ -34,5 +34,5 @@ h1
     = fa_icon 'edit', text: "Edit"
   = link_to :back, class: "btn btn-outline-dark" do
     = fa_icon 'arrow-left', text: "Back"
-  = link_to mutate_aid_request_fulfillment_path(@aid_request, @fulfillment, cancelled: true), class: "btn btn-danger", method: :patch, data: { confirm: "Are you sure?" } do
+  = link_to cancel_aid_request_fulfillment_path(@aid_request, @fulfillment), class: "btn btn-danger", method: :patch, data: { confirm: "Are you sure?" } do
     = fa_icon 'times', text: "Cancel"

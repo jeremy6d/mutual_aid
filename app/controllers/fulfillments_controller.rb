@@ -1,5 +1,5 @@
 class FulfillmentsController < AuthorizedOnlyController
-  before_action :set_fulfillment, only: %i(show edit update destroy)
+  before_action :set_fulfillment, only: %i(show edit update destroy cancel)
   respond_to :html, :json
 
   # GET /fulfillments
@@ -52,28 +52,9 @@ class FulfillmentsController < AuthorizedOnlyController
     end
   end
 
-  def mutate
-    @fulfillments = Fulfillment.find(params[:fulfillment_ids])
-    use_logidze_responsible do
-      unless params[:message].blank?
-        @fulfillments.each { |f| f.notes.create body: params[:message], author: current_volunteer }
-      end 
-      @fulfillments.each(&:deliver!) if params.key? :delivered
-      @fulfillments.each(&:cancel!)  if params.key? :cancelled
-      if params.key? :returned
-        if params[:message].present?
-          @fulfillments.each(&:return!)
-        else
-          head :bad_request
-          return
-        end
-      end
-    end
-    # respond_to do |format| 
-    #   format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
-    #   format.html { redirect_to [@aid_request, @fulfillment], notice: "Fulfillment has been #{@fulfillment.status}." }
-    # end 
-    head status: :ok
+  def cancel
+    @fulfillment.cancel!
+    redirect_to @aid_request, notice: 'Fulfillment was cancelled.'
   end
 
   # DELETE /fulfillments/1
