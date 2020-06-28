@@ -10,11 +10,14 @@ class CreatePackingSlips < ActiveRecord::Migration[6.0]
     add_column    :fulfillments, :special,  :boolean, default: false
     remove_column :fulfillments, :packing_notes,    :text
     remove_column :fulfillments, :num_bags, :integer
-
-    puts AidRequest.where(status: "unfulfilled").
-               update_all(status: 'fresh')
+    
     puts AidRequest.where(call_back: true).
                update_all(status: 'call_back')
+    puts AidRequest.where(status: "unfulfilled").
+                    update_all(status: 'fresh').
+                    each &:start!
+# should have run "create_fulfillments!" manually on fresh ones
+
     puts AidRequest.where(status: "in_progress").
                select { |ar| ar.fulfillments.empty? }.
                each { |ar| ar.send :create_fulfillments! }

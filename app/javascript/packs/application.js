@@ -75,7 +75,7 @@ $(document).on('turbolinks:load', function() {
 
   $(document).find("a#all-toggle").click(function() {
     console.log("all");
-    $(".CreatePackingSlip-fulfillmentRow").show();
+    $(".CreatePackingSlip-fulfillmentRow").addClass('d-flex').show();
     $(".nav-item .nav-link").removeClass("active");
     $("a#all-toggle").addClass("active");
     return false;
@@ -83,8 +83,8 @@ $(document).on('turbolinks:load', function() {
 
   $(document).find("a#basic-toggle").click(function() {
     console.log("Basic");
-    $(".CreatePackingSlip-basicRow").show();
-    $(".CreatePackingSlip-specialRow").hide();
+    $(".CreatePackingSlip-basicRow").addClass('d-flex').show();
+    $(".CreatePackingSlip-specialRow").removeClass('d-flex').hide();
     $(".nav-item .nav-link").removeClass("active");
     $("a#basic-toggle").addClass("active");
     return false;
@@ -92,8 +92,8 @@ $(document).on('turbolinks:load', function() {
 
   $(document).find("a#special-toggle").click(function() {
     console.log("special");
-    $(".CreatePackingSlip-basicRow").hide();
-    $(".CreatePackingSlip-specialRow").show();
+    $(".CreatePackingSlip-basicRow").removeClass('d-flex').hide();
+    $(".CreatePackingSlip-specialRow").addClass('d-flex').show();
     $(".nav-item .nav-link").removeClass("active");
     $("a#special-toggle").addClass("active");
     return false;
