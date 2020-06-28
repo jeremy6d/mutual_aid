@@ -1,7 +1,7 @@
 module DeliveriesHelper
   def delivery_badge_for(delivery)
-    content_tag :span, class: "badge badge-#{status_color_for(delivery)}" do
-      fa_icon status_icon_for(delivery), text: delivery.status.titleize
+    content_tag :span, class: "badge badge-#{delivery_color_for(delivery)}" do
+      fa_icon delivery_icon_for(delivery), text: delivery.status.titleize
     end
   end
 
