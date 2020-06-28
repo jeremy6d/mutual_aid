@@ -10,15 +10,12 @@ Rails.application.routes.draw do
   end
   resources :aid_requests do
     member { patch 'dismiss' }
-    resources :fulfillments do
-      member do
-        patch 'mutate', constraints: { format: 'json' }
-      end
-    end
+    resources :fulfillments
   end
   get "/r/:id" => "aid_requests#show", as: :shortlink
   get "/volunteers/unapproved" => "unapproved_volunteers#index", as: :unapproved_volunteers
   post "/volunteers/approve" => "unapproved_volunteers#update", as: :approve_volunteers
   get "/special-requests" => "special_requests#index", as: :special_requests
+  patch "/deliveries/:id/update" => "delivery_fulfillments#update", as: :update_delivery
   root to: 'static#index'
 end

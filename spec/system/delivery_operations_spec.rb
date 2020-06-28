@@ -1,73 +1,92 @@
 require 'rails_helper'
 
-RSpec.feature "Delivery operations", type: :system, js: true do
+RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
   let(:aid_request) do 
-    FactoryBot.create :random_aid_request, caller_first_name: "Tobias",
-                                           caller_last_name: "Fuenke"
+    FactoryBot.create :aid_request, caller_first_name: "Tobias",
+                                    caller_last_name: "Fuenke",
+                                    neighborhood: "Sudden Valley",
+                                    created_at: 1.hour.ago
   end
-  let(:fulfillment) do 
-    FactoryBot.create :fulfillment, aid_request: aid_request
+
+  let(:another_request) do
+    FactoryBot.create :aid_request, caller_first_name: "George-Michael",
+                                    caller_last_name: "Bluth",
+                                    neighborhood: "Sudden Valley",
+                                    caller_address: "10 Lancelot Ct",
+                                    created_at: 1.minute.ago
   end
-  let(:delivery) do 
-    FactoryBot.create :delivery, fulfillments: [fulfillment]
+
+  let(:one_more_request) do
+    FactoryBot.create :aid_request, caller_first_name: "Carl",
+                                    caller_last_name: "Weathers",
+                                    neighborhood: "Balboa Towers",
+                                    caller_address: "1 Balboa Ln"
+
+  end
+
+  let(:driver) { FactoryBot.create :volunteer }
+  let(:fulfillments) do
+    [ another_request.fulfillments.first,
+      one_more_request.fulfillments.last ] +
+    aid_request.fulfillments 
+  end
+
+  before do 
+    PackingSlip.create fulfillments: fulfillments, 
+                       creator: FactoryBot.create(:volunteer)
+    sign_in! driver
+    click_on "Make a delivery"
+    all(".delivery_fulfillments input").each { |c| c.check }
+    all(".delivery_fulfillments input").at(2).uncheck
+    click_on "Start delivery now"
   end
 
   it "allows a fulfillment in a delivery to be returned with a note" do
-    sign_in! delivery.driver
-    click_on "My deliveries"
-sleep 2
-    click_on "1 fulfillment started less than a minute ago"
-sleep 2
-    within(".ViewDelivery-fulfillmentCard:first-child") do
+    click_on "Sudden Valley / 1203 Main St, Richmond, VA"
+    
+      expect(all(".ViewDelivery-fulfillmentItem").first.text).to have_content("milk")
+      expect(all(".ViewDelivery-fulfillmentItem").last.text).to have_content("oven")
+      expect(all(".ViewDelivery-fulfillmentItem").size).to eq(2)
       find(".ViewDelivery-deliveryNote").set "Nobody home"
       click_on "Mark returned"
       expect(find(".ViewDelivery-returnHeader")).to have_content("RETURNED")
       sleep 1
-      find(".ViewDelivery-collapseToggle").click
+      click_on "Sudden Valley / 1203 Main St, Richmond, VA"
       click_on "Fuenke, Tobias"
+    within('.FulfillmentList-listParent') do
+      all('.FulfillmentList-fulfillmentItem').map(&:text).all? { |t| t.include? "Packed" }
     end
-sleep 1    
-    find(".FulfillmentList-fulfillmentItem a").click
-    expect(page).to have_content("packed")
   end
 
   it "allows a fulfillment in a delivery to be delivered with a note" do
-    sign_in! delivery.driver
     click_on "My deliveries"
-    click_on "1 fulfillment started less than a minute ago"
-    within(".ViewDelivery-fulfillmentCard:first-child") do
+    click_on "4 fulfillments started less than a minute ago"
+    click_on "Balboa Towers / 1 Balboa Ln"
+    within(".ViewDelivery-fulfillmentCard:last-child") do
       find(".ViewDelivery-deliveryNote").set "She said thanks!"
       click_on "Mark delivered"
       expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
       sleep 1
-      find(".ViewDelivery-collapseToggle").click
-      click_on "Fuenke, Tobias"
+      click_on "Balboa Towers / 1 Balboa Ln"
+      click_on "Weathers, Carl"
     end
-sleep 1
-    find(".FulfillmentList-fulfillmentItem a").click
-    expect(page).to have_content("delivered")
+    within('.FulfillmentList-listParent') do
+      all('.FulfillmentList-fulfillmentItem').map(&:text).all? { |t| t.include? "Delivered" }
+    end
+    # TODO: the fucking note
   end
 
   scenario "add fulfillments to an ongoing delivery" do
-    delivery_2 = FactoryBot.create :delivery, fulfillment_ct: 2
-    f1, f2 = delivery_2.fulfillments
-    f3 = FactoryBot.create :fulfillment
-    sign_in! delivery_2.driver
     click_on "My deliveries"
-sleep 2
-    click_on "2 fulfillments started less than a minute ago"
-sleep 2
+    click_on "4 fulfillments started less than a minute ago"
     click_on "Add fulfillments"
-    # within(".ModifyDelivery-currentFulfillments") { uncheck f2.aid_request.id.to_s }
-binding.pry
-    within(".ModifyDelivery-newFulfillments") { check f3.public_id }
+    find(".ModifyDelivery-newFulfillments input").check
     click_on "Add these fulfillments"
-    expect(page).to have_content(f1.public_id)
-    expect(page).to have_content(f3.public_id)
-    expect(page).to have_content(f2.public_id)
-    click_on "Requests"
-    click_on f2.aid_request.caller_name
-    expect(find(".FulfillmentList-fulfillmentItem a")).to have_content("On The Way")
+    click_on "Sudden Valley / 1203 Main St, Richmond, VA" 
+sleep 1
+    expect(all(".ViewDelivery-fulfillmentItem").size).to eq(3)
+    click_on "Fuenke, Tobias"
+    expect(all(".FulfillmentList-fulfillmentItem").all? { |i| i.text.include? "On The Way" }).to be true
   end
 
   scenario "disallow editing delivery after complete"

@@ -4,8 +4,15 @@ h1.text-center Make a delivery
   = f.error_notification
 
   .MainPanel.text-center
-    .form-inputs.text-left(class=('MainPanel-columnAdd' if (@fulfillments.count > 10)))
-      = f.association :fulfillments, collection: @fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes, label: "Check all fulfillments to deliver now"
+    - @fulfillments_by_request.each do |req, fulfillments|
+      h5
+        - if req.neighborhood.present?
+          .badge.badge-pill.badge-dark= truncate req.neighborhood, length: 25
+        strong.ml-2= req.caller_name
+        em.ml-2= req.caller_address
+        
+      .form-inputs.text-left
+        = f.association :fulfillments, collection: fulfillments, label_method: :to_s, value_method: :id, as: :check_boxes, label: "Check all fulfillments to deliver now"
     .form-inputs.text-left.mt-3
       = f.simple_fields_for(:notes) do |n|
         = n.input :body, as: :text, label: "Notes"

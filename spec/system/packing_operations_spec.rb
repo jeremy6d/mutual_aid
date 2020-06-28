@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Packing operations", type: :system, js: true, headless: false do
+RSpec.feature "Packing operations", type: :system, js: true do
   # it "allows a fulfillment to be cancelled" do
   #   fulfillment = FactoryBot.create :fulfillment
   #   volunteer = FactoryBot.create(:volunteer)

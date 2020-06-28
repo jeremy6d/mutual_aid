@@ -45,7 +45,8 @@
     - @aid_request.fulfillments.each do |f|
       .list-group-item.FulfillmentList-fulfillmentItem(class=('bg-dark' if f.cancelled?))
         .badge.badge-pill.badge-dark.mr-3 #{f.public_id}
-        = link_to raw("<strong>#{f.status.titleize}</strong> #{"special " if f.special?}fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"
+        - status = f.returned? ? "returned" : f.status
+        = link_to raw("<strong>#{status.titleize}</strong> #{"special " if f.special?}fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"
 .row
   .col.btn-group.w-100.mt-5.d-print-none(role='group')
       = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark" do

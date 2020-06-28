@@ -26,7 +26,7 @@ class Fulfillment < ApplicationRecord
     end
 
     event :return do
-      transitions from: :on_the_way, to: :packed, guard: Proc.new { notes.any? }
+      transitions from: :on_the_way, to: :packed
     end
 
     event :cancel do
@@ -65,8 +65,7 @@ class Fulfillment < ApplicationRecord
 
   def to_s
     [ public_id, 
-      aid_request.caller_address&.gsub('\n', ', '), 
-      (aid_request.neighborhood unless aid_request.neighborhood.blank?)
+      contents
     ].reject(&:blank?).join(" - ")
   end
 

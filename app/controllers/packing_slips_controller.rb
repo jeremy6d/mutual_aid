@@ -4,7 +4,9 @@ class PackingSlipsController < AuthorizedOnlyController
   end
 
   def new
-    @fulfillments = Fulfillment.pending
+    @fulfillments = Fulfillment.includes(:aid_request).
+                                pending.
+                                order('aid_requests.neighborhood desc')
     @packing_slip = PackingSlip.new
   end
 
@@ -22,7 +24,9 @@ class PackingSlipsController < AuthorizedOnlyController
   end
 
   def print
-    @fulfillments = Fulfillment.where(packing_slip_id: params[:id])
+    @fulfillments = Fulfillment.where(packing_slip_id: params[:id]).
+                                order(neighborhood: :desc, 
+                                      created_at: :asc)
     render :print, layout: false
   end
 
