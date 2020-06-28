@@ -1,29 +1,35 @@
-  class AidRequest < ApplicationRecord
+class AidRequest < ApplicationRecord
   has_logidze
   include AASM
 
   INDICATIONS = %w(diabetes immunocompromised see_notes)
 
   aasm column: :status do
-    state :unfulfilled, initial: true
-    state :in_progress
-    state :fulfilled
+    state :fresh, initial: true
+    state :call_back
+    state :in_progress, after_enter: :create_fulfillments!
+    state :complete
     state :dismissed, before_enter: :cancel_fulfillments!
 
     event :start do
-      transitions from: :unfulfilled, to: :in_progress
+      transitions from: [:call_back, :fresh], to: :in_progress
+    end
+
+    event :hold do
+      transitions from: [:in_progress, :fresh], to: :call_back
     end
 
     event :complete do
-      transitions from: :in_progress, to: :fulfilled
+      transitions from: :in_progress, to: :complete
     end
 
     event :dismiss do
-      transitions from: [:unfulfilled, :in_progress], to: :dismissed
+      transitions from: [:call_back, :in_progress], to: :dismissed
     end
   end
 
   before_create :detect_indications_in_notes!
+  before_save :perform_transitions, unless: :terminal?
 
   has_many :fulfillments, inverse_of: :aid_request
   has_many :deliveries, through: :fulfillments
@@ -96,8 +102,38 @@
     end
   end
 
+  def terminal?
+    complete? || dismissed?
+  end
+
+  def needs_call_back=(val)
+    @needs_call_back = val
+  end
+
+  def needs_call_back?
+    defined?(@needs_call_back) ? @needs_call_back : call_back?
+  end
+
+  alias_method :needs_call_back, :needs_call_back?
+
 private
   def cancel_fulfillments!
     fulfillments.each &:cancel!
+  end
+
+  def create_fulfillments!
+    return if fulfillments.any?
+    fulfillments.build(contents: supplies_needed) unless supplies_needed.blank?
+    special_requests.to_s.split(",").each do |sr|
+      fulfillments.build(contents: sr.strip.downcase, special: true)
+    end
+  end
+
+  def perform_transitions
+    if needs_call_back?
+      hold if in_progress? || fresh?
+    else
+      start if call_back? || fresh?
+    end
   end
 end

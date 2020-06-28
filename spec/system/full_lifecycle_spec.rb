@@ -4,23 +4,22 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
   # Provision users for our script
   { hotline_volunteer: %w(Buster Bluth),
     packer_volunteer: %w(Gene Parmesean),
-    driver_volunteer: %w(George Bluth),
-    inventory_volunteer: %w(Trisha Thoon) }.each do |role, names|
+    driver_volunteer: %w(George Bluth) }.each do |role, names|
     let!(role) do 
       FactoryBot.create :volunteer, first_name: names.first,
                                     last_name: names.last
     end
   end
 
-  # Provision an existing request with a packed fulfillment
+  # Provision an existing request with a pending fulfillment
   let!(:older_request) do
-    FactoryBot.create :aid_request, :packed, caller_first_name: "Lindsay",
-                                             caller_last_name:  "Bluth",
-                                             caller_address: "100 E Main St, Richmond VA"
+    FactoryBot.create :aid_request, caller_first_name: "Lindsay",
+                                    caller_last_name:  "Bluth",
+                                    caller_address: "100 E Main St, Richmond VA"
   end
 
   before do
-        # User HOTLINE enters request 1 information and submits
+    # User HOTLINE enters request 1 information and submits
     # - information is persisted to the database
     # - request is marked "unfulfilled"
     # - redirects to the new request form
@@ -28,7 +27,6 @@ RSpec.feature "Aid request full lifecycle", type: :system, js: true do
 
     signing_in_as(hotline_volunteer) do
       click_on "New"
-sleep 1
       submit_aid_request_for caller_first_name: "Steve",
                              caller_last_name: "Holt",
                              caller_phone_number: "1-555-555-5555",
@@ -46,39 +44,26 @@ sleep 1
       expect(find(".ShowAidRequest-persons")).to have_content("2 adults, 1 child")
       expect(find(".ShowAidRequest-notes")).to have_content("1 adult is diabetic")
       expect(find(".ShowAidRequest-specialRequests")).to have_content("A/C unit, microwave")
+
+      expect(all(".FulfillmentList-fulfillmentItem").size).to eq(3)
+      expect(all(".FulfillmentList-fulfillmentItem").all? { |i| i.text.include? "Pending" }).to be true
     end
 
-    # User PACKER creates a fulfillment 1
-    # - system should print a fulfillment sheet
-    #   - sheet has map of location and streetview
-    #   - sheet has details of request and fulfillment 1
-    #   - sheet lists total number of bags
-    #   - sheet displays unique id of request and fulfillment 1
-    # - fufillment form should have all details for request available
+    # User PACKER selects all fulfillments to work
+    # - system prints fulfillment sheet for all 
+    # - system moves fulfillments selected to packed
+    # - system distinguishes between special fulfillments and basic fulfillments
 
     signing_in_as(packer_volunteer) do
-      click_on "Holt, Steve"
-
-      click_on "Fulfill"
-sleep 3
-      expect(current_path).to eql(new_aid_request_fulfillment_path(AidRequest.last))
-      expect(find(".FulfillAidRequest-indicationsArea")).to have_content("diabet")
-      expect(find(".FulfillAidRequest-callerName")).to have_content("Holt, Steve")
-      expect(find(".FulfillAidRequest-callerPhone")).to have_content("(555) 555-5555")
-      expect(find(".FulfillAidRequest-persons")).to have_content("2 adults, 1 child")
-      expect(find(".FulfillAidRequest-notes")).to have_content("1 adult is diabetic")
-
-      attach_file "fulfillment[contents_sheet_image]", 
-                  "spec/contents_sheet.jpg"
-      fill_in "Packing notes", with: "Packed eggs separately"
-      fill_in "Number of bags", with: "2"
-
-      click_on "Ready for pickup"
-      expect(current_path).to eql(aid_request_path(AidRequest.last))
-      expect(the_flash(:notice)).to have_content("success")
-      
-      expect(find(".ShowAidRequest-status")).to have_content("In Progress")
-      expect(all(".FulfillmentList-fulfillmentItem").first).to have_content("Packed")
+      click_on "Packing"
+sleep 1
+      click_on "New packing slip"
+      click_on "Basic fulfillments"
+      all(".CreatePackingSlip-basicTable tbody tr input").each &:check
+      click_on "Print and pack"
+      expect(find(".ViewPackingSlip-table")).to have_content("milk, bread, bleach, soap")
+      expect(find(".ViewPackingSlip-table")).to have_content("bread, soup, bleach, paper towels")
+      expect(all(".ViewPackingSlip-table tbody tr").size).to eq(2)
     end
 
     # User DRIVER picks up this fulfillment and another, picks each in the delivery list, and submits them as a new delivery attached to him
@@ -88,11 +73,8 @@ sleep 3
 
     signing_in_as(driver_volunteer) do
       click_on "Make a delivery"
-
       expect(current_path).to eql(new_delivery_path)
-
-      page.find("div.form-check", text: /100 E Main St/i).check
-      page.find("div.form-check", text: /517 W 20th St/i).check
+      all(".delivery_fulfillments input").each &:check
       fill_in "Notes", with: "I'm driving today"
 
       click_on "Start delivery now"
@@ -107,13 +89,12 @@ sleep 3
     click_on "2 fulfillments started less than a minute ago"
 
     expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
-
-    within(".ViewDelivery-fulfillmentCard:first-child") do
-      click_on "Mark delivered"
-      sleep 1
-      expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
-    end
-
+    click_on "100 E Main St, Richmond VA"
+    click_on "Mark delivered"
+    sleep 1
+    expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
+    
+    click_on "517 W 20th St , Richmond VA 23225"
     click_on "Mark delivered"
     sleep 1
     all(".ViewDelivery-successHeader").each { |e| expect(e).to have_content("Delivered!") }
@@ -141,12 +122,12 @@ sleep 3
       expect(current_path).to eql(my_deliveries_path)
 
       click_on "2 fulfillments started less than a minute ago"
-
       expect(all(".ViewDelivery-fulfillmentCard").size).to eql(2)
-
+      click_on "100 E Main St, Richmond VA"
       click_on "Mark delivered"
       sleep 1
-      
+      expect(find(".ViewDelivery-successHeader")).to have_content("Delivered!")
+
       expect(find(".ViewDelivery-fulfillmentCard:first-child")).to have_content("Delivered!")
       expect(find(".ViewDelivery-fulfillmentCard:last-child")).to have_content("CANCELLED") 
     end

@@ -3,7 +3,7 @@
     h1.h3.ShowAidRequest-callerName.p-1
       .badge.badge-dark.badge-pill.mr-2 ##{@aid_request.id}
       = [@aid_request.caller_last_name, @aid_request.caller_first_name].reject(&:blank?).join(", ").titleize
-      - if @aid_request.call_back?
+      /- if @aid_request.call_back?
         span.ShowAidRequest-callBack.bg-success.badge.text-dark.float-right= fa_icon 'phone-alt', text: "CALL BACK"
       span.small.ShowAidRequest-status.float-right.ml-5= status_badge_for(@aid_request)
       - if @aid_request.urgent?
@@ -17,9 +17,9 @@
       dd.col-9.ShowAidRequest-callerAddress= link_to raw(@aid_request.caller_address&.gsub(/\n/, '<br />')), "#gmap-top"
       dt.col-3 Neighborhood
       dd.col-9.ShowAidRequest-neighborhood= @aid_request.neighborhood || "N/A"
-      dt.col-3 Normal Needs
+      dt.col-3 Basic requests
       dd.col-9.ShowAidRequest-suppliesNeeded= @aid_request.supplies_needed
-      dt.col-3 Special Requests
+      dt.col-3 Special requests
       dd.col-9.ShowAidRequest-specialRequests= @aid_request.special_requests
       dt.col-3 Persons
       dd.col-9.ShowAidRequest-persons= @aid_request.persons
@@ -32,14 +32,6 @@
         dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at.to_s(:date_and_time)
       dt.col-3 Notes
       dd.col-9.ShowAidRequest-notes= @aid_request.notes
-    .list-group.FulfillmentList-listParent
-      - @aid_request.fulfillments.each do |f|
-        .list-group-item.FulfillmentList-fulfillmentItem(class=('bg-dark' if f.cancelled?))
-          .badge.badge-pill.badge-dark.mr-3 #{@aid_request.id}F#{'%03d' % f.id}
-          - if f.contents_sheet_image.attached?
-            = link_to url_for(f.contents_sheet_image) do
-              = fa_icon 'file-signature', title: "Open attached contents sheet"
-          = link_to raw("<strong>#{f.status.titleize}</strong> fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"
   .col-sm-6
     - if @aid_request.indications.any?
       .alert.alert-danger.ShowAidRequest-indicationsArea
@@ -49,12 +41,19 @@
     - unless Rails.env.test?
       iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{@aid_request.caller_address}" allowfullscreen="true")
 .row
+  .list-group.FulfillmentList-listParent.mx-auto
+    - @aid_request.fulfillments.each do |f|
+      .list-group-item.FulfillmentList-fulfillmentItem(class=('bg-dark' if f.cancelled?))
+        .badge.badge-pill.badge-dark.mr-3 #{f.public_id}
+        - status = f.returned? ? "returned" : f.status
+        = link_to raw("<strong>#{status.titleize}</strong> #{"special " if f.special?}fulfillment (#{time_ago_in_words f.created_at} old)"), [@aid_request, f], class: "ml-3"
+.row
   .col.btn-group.w-100.mt-5.d-print-none(role='group')
       = link_to aid_requests_path, class: "btn btn-lg btn-outline-dark" do
         = fa_icon 'arrow-left', text: "Back"
       - unless @aid_request.terminal?
         = link_to new_aid_request_fulfillment_path(@aid_request), class: "btn btn-lg btn-success" do
-          = fa_icon 'box-open', text: "Fulfill"
+          = fa_icon 'box-open', text: "Add fulfillment"
         = link_to dismiss_aid_request_path(@aid_request), class: "btn btn-lg btn-dark", method: :patch, data: { confirm: 'Are you sure?' }  do
           = fas_icon 'ban', text: "Dismiss"
         = link_to edit_aid_request_path(@aid_request), class: "btn btn-lg btn-primary" do

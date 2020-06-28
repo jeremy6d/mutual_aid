@@ -1,0 +1,30 @@
+.mx-auto
+  h1 Packing Slip for #{@packing_slip.created_at.to_s(:human)}
+  .m-5.progress(style="height: 10vh;")
+    .progress-bar.progress-bar-striped.bg-success(role="progressbar" style="width: #{@packing_slip.percentage_complete}%;" aria-valuenow="#{@packing_slip.percentage_complete}" aria-valuemin="0" aria-valuemax="100")
+      | #{@packing_slip.percentage_complete}% complete
+  - unless @packing_slip.remarks.blank?
+    .alert.alert-info= @packing_slip.remarks
+  table.table.table-sm.ViewPackingSlip-table
+      thead
+        th 
+        th Status
+        th Updated
+        th Location
+        th Contents
+        th Notes
+      tbody
+        - @packing_slip.fulfillments.each do |f|
+          tr(class=table_row_class_for(f))
+            td= link_to f.public_id, [f.aid_request, f]
+            td= f.returned? ? "RETURNED" : f.status.upcase
+            td
+              = time_ago_in_words f.updated_at
+              |  ago
+            td= location_of f
+            td= truncate f.contents, length: 50
+            td= truncate f.aid_request.notes, length: 50
+  .text-center
+    = link_to print_packing_slip_path(@packing_slip), class: "btn btn-primary btn-lg", target: "_blank" do
+      i.fas.fa-print
+      | Print all

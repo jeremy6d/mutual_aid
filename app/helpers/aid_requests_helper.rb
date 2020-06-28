@@ -8,13 +8,15 @@ module AidRequestsHelper
   def status_color_for(obj)
     status = obj.is_a?(AidRequest) ? obj.status : obj
     case status.to_s
-    when "unfulfilled"
+    when "fresh", "packed"
+      "info"
+    when "call_back", "pending"
       "danger"
-    when "in_progress"
+    when "in_progress", "on_the_way"
       "warning"
-    when "fulfilled"
+    when "complete", "delivered"
       "success"
-    when "dismissed"
+    when "dismissed", "cancelled"
       "dark"
     end
   end
@@ -22,10 +24,12 @@ module AidRequestsHelper
   def header_class_for(obj)
     if obj.urgent? && !obj.terminal?
       'bg-danger text-white'
-    elsif obj.call_back? && obj.unfulfilled?
+    elsif obj.call_back?
       'bg-success text-white'
-    elsif obj.call_back? && obj.in_progress? 
+    elsif obj.in_progress? 
        'bg-warning text-dark'
+    elsif obj.fresh?
+      'bg-info text-dark'
     else  
       'bg-light text-black'
     end
@@ -34,11 +38,13 @@ module AidRequestsHelper
   def status_icon_for(obj)
     status = obj.is_a?(AidRequest) ? obj.status : obj
     icon = case status.to_s
-    when "unfulfilled"
-      "inbox"
+    when "fresh"
+      "cloud"
+    when "call_back"
+      "phone"
     when "in_progress"
       "tasks"
-    when "fulfilled"
+    when "complete"
       "check-square"
     when "dismissed"
       "ban"

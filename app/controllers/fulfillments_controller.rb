@@ -1,11 +1,11 @@
 class FulfillmentsController < AuthorizedOnlyController
-  before_action :set_fulfillment, only: %i(show edit update destroy mutate)
+  before_action :set_fulfillment, only: %i(show edit update destroy)
   respond_to :html, :json
 
   # GET /fulfillments
   # GET /fulfillments.json
   def index
-    @fulfillments = aid_request.fulfillments
+    @fulfillments = Fulfillment.all
   end
 
   # GET /fulfillments/1
@@ -53,18 +53,27 @@ class FulfillmentsController < AuthorizedOnlyController
   end
 
   def mutate
+    @fulfillments = Fulfillment.find(params[:fulfillment_ids])
     use_logidze_responsible do
       unless params[:message].blank?
-        @fulfillment.notes.create body: params[:message], author: current_volunteer
+        @fulfillments.each { |f| f.notes.create body: params[:message], author: current_volunteer }
       end 
-      @fulfillment.deliver! if params.key? :delivered
-      @fulfillment.return!  if params.key? :returned
-      @fulfillment.cancel!  if params.key? :cancelled
+      @fulfillments.each(&:deliver!) if params.key? :delivered
+      @fulfillments.each(&:cancel!)  if params.key? :cancelled
+      if params.key? :returned
+        if params[:message].present?
+          @fulfillments.each(&:return!)
+        else
+          head :bad_request
+          return
+        end
+      end
     end
-    respond_to do |format| 
-      format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
-      format.html { redirect_to [@aid_request, @fulfillment], notice: "Fulfillment has been #{@fulfillment.status}." }
-    end 
+    # respond_to do |format| 
+    #   format.json { render :show, status: :ok, location: [@aid_request, @fulfillment] }
+    #   format.html { redirect_to [@aid_request, @fulfillment], notice: "Fulfillment has been #{@fulfillment.status}." }
+    # end 
+    head status: :ok
   end
 
   # DELETE /fulfillments/1
@@ -80,17 +89,25 @@ class FulfillmentsController < AuthorizedOnlyController
   private
     def aid_request
       @aid_request ||= AidRequest.find(params[:aid_request_id])
+    rescue ActiveRecord::RecordNotFound
+      nil
+    end
+
+    def fulfillments_set
+      if aid_request&.persisted?
+        aid_request.fulfillments
+      else
+        Fulfillment
+      end
     end
 
     def set_fulfillment
-      @fulfillment = aid_request.fulfillments.find(params[:id])
+      @fulfillment = fulfillments_set.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def fulfillment_params
-      params.require(:fulfillment).permit(:packing_notes, 
-                                          :contents, 
-                                          :contents_sheet_image, 
-                                          :num_bags)
+      params.require(:fulfillment).permit(:special, 
+                                          :contents)
     end
 end

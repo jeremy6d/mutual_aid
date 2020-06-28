@@ -46,6 +46,10 @@ $(document).on('turbolinks:load', function() {
     }
   });
 
+  $('.ViewDelivery-reportStatusForm').on('ajax:error', function(event) {
+    alert("You must provide a note");
+  });
+
   $('body').popover({
     selector: '[data-toggle="popover"]',
     container: 'body',
@@ -53,7 +57,7 @@ $(document).on('turbolinks:load', function() {
     trigger: 'hover',
   });
 
-  $(document).find("#aid_request_call_back").bootstrapToggle({
+  $(document).find("#aid_request_needs_call_back").bootstrapToggle({
     on: "CALLBACK",
     off: "Callback",
     onstyle: "success",
@@ -67,6 +71,32 @@ $(document).on('turbolinks:load', function() {
     onstyle: "danger",
     offstyle: "light",
     width: 100
+  });
+
+  $(document).find("a#all-toggle").click(function() {
+    console.log("all");
+    $(".CreatePackingSlip-fulfillmentRow").show();
+    $(".nav-item .nav-link").removeClass("active");
+    $("a#all-toggle").addClass("active");
+    return false;
+  });
+
+  $(document).find("a#basic-toggle").click(function() {
+    console.log("Basic");
+    $(".CreatePackingSlip-basicRow").show();
+    $(".CreatePackingSlip-specialRow").hide();
+    $(".nav-item .nav-link").removeClass("active");
+    $("a#basic-toggle").addClass("active");
+    return false;
+  });
+
+  $(document).find("a#special-toggle").click(function() {
+    console.log("special");
+    $(".CreatePackingSlip-basicRow").hide();
+    $(".CreatePackingSlip-specialRow").show();
+    $(".nav-item .nav-link").removeClass("active");
+    $("a#special-toggle").addClass("active");
+    return false;
   });
 
 

@@ -1,0 +1,27 @@
+h1 Packing Dashboard
+/ put sorting / filtering here
+= form_with(model: @packing_slip, url: packing_slip_path) do |psf|
+  table.table.PackingDashboard-basicTable
+    thead
+      th Pack now
+      th Requested at
+      th Original request
+      th Location
+      th Contents
+      th Notes
+      th 
+    tbody
+      = psf.collection_check_boxes(:fulfillment_ids, @fulfillments, :id, :public_id) do |cb|
+        - suffix_class = "table-danger" if f.aid_request.urgent?
+        tr(class=["PackingDashboard-fulfillmentRow",suffix_class].compact.join(" "))
+          td
+            = cb.check_box(class: "checkbox checkbox-primary")
+            span= cb.text
+          td= f.created_at.to_s(:human)
+          td= link_to "##{f.aid_request.id}", f.aid_request
+          td= [f.aid_request.neighborhood, f.aid_request.caller_address].reject(&:blank?).join(": ")
+          td= f.contents
+          td= f.aid_request.notes
+          td= f.aid_request.indications.join(", ")
+          td= link_to "View", [f.aid_request, f]
+  = submit_tag "Print and pack"

@@ -2,6 +2,45 @@ require 'rails_helper'
 
 RSpec.describe AidRequest, type: :model do
   subject { FactoryBot.build :aid_request }
+
+  it "starts as a fresh" do
+    expect(subject).to be_fresh
+  end
+
+  describe "on save if call back not toggled" do
+    before do 
+      subject.needs_call_back = false
+      subject.save
+    end
+
+    it { expect(subject).to be_in_progress }
+    it { expect(subject.fulfillments.count).to eq(3) }
+  end
+
+  describe "creating special fulfillments" do
+    before do 
+      subject.special_requests = "one, two"
+      subject.supplies_needed = ""
+      subject.save
+    end
+
+    it { expect(subject.fulfillments.special.count).to eq(2) }
+    it { expect(subject.fulfillments.count).to eq(2) }
+  end
+
+  it "saves as call_back if call back toggled" do
+    subject.needs_call_back = true
+    subject.save
+    expect(subject).to be_call_back
+  end
+
+  it "updates as call_back if call back toggled" do
+    subject.save
+    assert(subject.in_progress?)
+    subject.needs_call_back = true
+    subject.save
+    expect(subject).to be_call_back
+  end
   
   it "removes blank indications" do
     subject.indications = ["", "diabetes", ""]

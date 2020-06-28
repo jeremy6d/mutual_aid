@@ -1,19 +1,19 @@
-h1 Listing fulfillments
+h1 Listing fulfillments ready to pack
 
-table
+table.table
   thead
+    th Fulfillment ID
+    th Neighborhood
+    th Address
+    th People served
+    th Needs
+    th First called
+
+  - @fulfillments.each do |f|
     tr
-      th
-      th
-      th
-
-  tbody
-    - @fulfillments.each do |fulfillment|
-      tr
-        td = link_to 'Show', fulfillment
-        td = link_to 'Edit', edit_fulfillment_path(fulfillment)
-        td = link_to 'Destroy', fulfillment, data: { confirm: 'Are you sure?' }, method: :delete
-
-br
-
-= link_to 'New Fulfillment', new_aid_request_fulfillment_path(@aid_request)
+      td= link_to f.public_id, [f.aid_request, f]
+      td= f.neighborhood
+      td= f.address
+      td= f.aid_request.persons
+      td= f.contents
+      td= time_ago_in_words f.aid_request.created_at

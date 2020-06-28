@@ -350,7 +350,6 @@ CREATE TABLE public.aid_requests (
     original_taker_id bigint,
     log_data jsonb,
     urgent boolean DEFAULT false,
-    call_back boolean DEFAULT false,
     neighborhood character varying,
     special_requests text
 );
@@ -429,12 +428,13 @@ CREATE TABLE public.fulfillments (
     fulfiller_id bigint,
     aid_request_id bigint,
     contents text,
-    packing_notes text,
     status character varying,
-    num_bags integer DEFAULT 1,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    delivery_id bigint
+    delivery_id bigint,
+    packing_slip_id bigint,
+    special boolean DEFAULT false,
+    public_id character varying
 );
 
 
@@ -489,6 +489,39 @@ CREATE SEQUENCE public.notes_id_seq
 --
 
 ALTER SEQUENCE public.notes_id_seq OWNED BY public.notes.id;
+
+
+--
+-- Name: packing_slips; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.packing_slips (
+    id bigint NOT NULL,
+    creator_name character varying,
+    creator_id bigint,
+    remarks text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: packing_slips_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.packing_slips_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: packing_slips_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.packing_slips_id_seq OWNED BY public.packing_slips.id;
 
 
 --
@@ -587,6 +620,13 @@ ALTER TABLE ONLY public.notes ALTER COLUMN id SET DEFAULT nextval('public.notes_
 
 
 --
+-- Name: packing_slips id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.packing_slips ALTER COLUMN id SET DEFAULT nextval('public.packing_slips_id_seq'::regclass);
+
+
+--
 -- Name: volunteers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -647,6 +687,14 @@ ALTER TABLE ONLY public.fulfillments
 
 ALTER TABLE ONLY public.notes
     ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: packing_slips packing_slips_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.packing_slips
+    ADD CONSTRAINT packing_slips_pkey PRIMARY KEY (id);
 
 
 --
@@ -722,6 +770,13 @@ CREATE INDEX index_fulfillments_on_fulfiller_id ON public.fulfillments USING btr
 
 
 --
+-- Name: index_fulfillments_on_packing_slip_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fulfillments_on_packing_slip_id ON public.fulfillments USING btree (packing_slip_id);
+
+
+--
 -- Name: index_notes_on_author_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -733,6 +788,13 @@ CREATE INDEX index_notes_on_author_id ON public.notes USING btree (author_id);
 --
 
 CREATE INDEX index_notes_on_noteable_type_and_noteable_id ON public.notes USING btree (noteable_type, noteable_id);
+
+
+--
+-- Name: index_packing_slips_on_creator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_packing_slips_on_creator_id ON public.packing_slips USING btree (creator_id);
 
 
 --
@@ -788,6 +850,14 @@ ALTER TABLE ONLY public.volunteers
 
 
 --
+-- Name: packing_slips fk_rails_5faf5010f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.packing_slips
+    ADD CONSTRAINT fk_rails_5faf5010f5 FOREIGN KEY (creator_id) REFERENCES public.volunteers(id);
+
+
+--
 -- Name: fulfillments fk_rails_62debf2cb1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -834,6 +904,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200407052848'),
 ('20200408194004'),
 ('20200410160210'),
-('20200616174851');
+('20200616174851'),
+('20200622205101'),
+('20200624154700');
 
 

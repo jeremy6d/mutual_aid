@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :delivery do
     driver { create :another_volunteer }
-    fulfillments { create_list :fulfillment, fulfillment_ct }
+    fulfillments do 
+      ar = create :aid_request
+      ar.fulfillments.each &:pack!
+      ar.fulfillments
+    end
 
     transient do
       fulfillment_ct { 1 }

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Fulfillment, type: :model do
   subject { FactoryBot.build :fulfillment }
-  
+
   # it "must have an image attachment when contents list is empty" do
   #   subject.contents = ""
   #   subject.contents_sheet_image.attach io: File.open(Rails.root.join("spec", "contents_sheet.jpg")), 
@@ -21,7 +21,20 @@ RSpec.describe Fulfillment, type: :model do
   #   expect(subject.errors[:base]).to include("Either a contents list or an image are required")
   # end
 
+  it "starts out as pending" do
+    expect(subject).to be_pending
+  end
+
+  it "creates a unique public id" do
+    ar = FactoryBot.create :aid_request, supplies_needed: "food, bleach, baking soda",
+                                         special_requests: "tv, oven"
+    expected_ids = [ "##{ar.id}-A", "#S#{ar.id}-B", "#S#{ar.id}-C"]
+    expect(Fulfillment.pluck :public_id).to eql(expected_ids)
+  end
+
   context "when part of a delivery" do
+    before { subject.pack! }
+  
     let!(:delivery) { FactoryBot.create :delivery, fulfillments: [subject] }
 
     it { expect(subject.reload).to be_on_the_way }

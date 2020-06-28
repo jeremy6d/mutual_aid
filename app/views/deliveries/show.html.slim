@@ -6,86 +6,50 @@
   h1 View delivery
   
   #accordion
-    - @delivery.fulfillments.each do |f|
-      .card.w-100.ViewDelivery-fulfillmentCard(id="fulfillment-#{f}")
-        .card-header(id="header-f#{f.id}" class=('bg-dark text-white' if f.cancelled?))
+    - @delivery_map.each do |aid_request, fulfillments|
+      .card.w-100.ViewDelivery-fulfillmentCard(id="fulfillment-#{fulfillments.first.id}")
+        .card-header(id="header-f#{fulfillments.first.id}" class=('bg-dark text-white' if fulfillments.all?(&:cancelled?)))
           h4.mb-0
-            button.btn.btn-link.ViewDelivery-collapseToggle(class="#{'collapsed' if f.delivered?}" data-toggle="collapse" data-target="#collapse-f#{f.id}" aria-expanded="true" aria-controls="collapse-f#{f.id}")
-              = "CANCELLED " if f.cancelled?
-              | fulfillment #{[ f.public_id, f.aid_request.neighborhood, f.aid_request.caller_address.split("/").first ].reject(&:blank?).join(" / ")}
-              .ViewDelivery-successHeader.float-left.mr-3(class="#{'d-none' unless f.delivered?}")
+            button.btn.btn-link.ViewDelivery-collapseToggle(class="#{'collapsed' if fulfillments.all?(&:delivered?)}" data-toggle="collapse" data-target="#collapse-f#{fulfillments.first.id}" aria-expanded="true" aria-controls="collapse-f#{fulfillments.first.id}")
+              = "CANCELLED " if fulfillments.all?(&:cancelled?)
+              = [aid_request.neighborhood, aid_request.caller_address.split(/\n\s*/).join(", ") ].reject(&:blank?).join(" / ")
+              .ViewDelivery-successHeader.float-left.mr-3(class="#{'d-none' unless fulfillments.all?(&:delivered?)}")
                 .badge.badge-success.badge-pill
                   i.fas.fa-check-square
                   span.ml-2 Delivered!
-              .ViewDelivery-returnHeader.float-left.mr-3(class="#{'d-none' unless f.returned?}")
+              .ViewDelivery-returnHeader.float-left.mr-3(class="#{'d-none' unless fulfillments.all?(&:returned?)}")
                 .badge.badge-danger.badge-pill
                   i.fas.fa-exclamation-circle
                   span.ml-2 RETURNED
-        .collapse(class="#{'show' unless f.delivered?}" aria-labelledby="header-f#{f.id}" data-parent="#accordion" id="collapse-f#{f.id}")
+        .collapse(class="#{'show' unless fulfillments.all(&:delivered?)}" aria-labelledby="header-f#{fulfillments.first.id}" data-parent="#accordion" id="collapse-f#{fulfillments.first.id}")
           .card-body.mr-3.ml-3.container
             .row
-              .col-md-4
+              .col-md-6
                 h5.mt-0
-                  .ViewDelivery-callerName= link_to f.aid_request.caller_name, f.aid_request
-                  .ViewDelivery-callerPhone= link_to_phone(f.aid_request.caller_phone_number)
+                  .ViewDelivery-callerName= link_to aid_request.caller_name, aid_request
+                  .ViewDelivery-callerPhone= link_to_phone(aid_request.caller_phone_number)
                 dl
-                  dt Address
-                  dd= raw f.aid_request.caller_address&.gsub(/\n/, '<br />')
-                  dt Number of bags
-                  dd= f.num_bags
-                  dt Notes
+                  dt Fulfillments
                   dd
-                    p= f.packing_notes
-                    p= f.aid_request.notes
-              .col-md-8
-                ul.nav.nav-tabs(id="myTab" role="tablist")
-                  li.nav-item
-                    a.nav-link.active#form-tab(data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true")
-                      = fa_icon 'info-circle', text: 'Status'
-                  li.nav-item 
-                    a.nav-link#map-tab(data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true")
-                      = fas_icon 'map-marker', text: 'Map'
-                  li.nav-item
-                    a.nav-link#streetview-tab(data-toggle="tab" href="#streetview" role="tab" aria-controls="streetview" aria-selected="true")
-                      = fa_icon 'street-view', text: "Streetview"
-                .tab-content.text-center
-                  .tab-pane.active(id="form" role="tabpanel" aria-labelledby="form-tab")
-                    - if f.delivered? || f.returned?
-                      - if f.delivered?
-                        .h2.badge.badge-success
-                          i.fas.fa-check-square
-                          span.ml-2 Delivered!
-                      - if f.returned?
-                        .h2.badge.badge-danger
-                          i.fas.fa-exclamation-circle
-                          span.ml-2 RETURNED
-                      ul.list-group.list-unstyled
-                        - f.notes.each do |n|
-                          li.list-group-item
-                            .blockquote
-                              p= n.body
-                              footer.blockquote-footer.text-right= n.author&.full_name || "Unknown"
-                              .small.text-right= n.created_at.to_s(:human)
-                    - elsif f.on_the_way?
-                      .border.p-4.rounded.ViewDelivery-reportStatusArea
-                        = form_with url: mutate_aid_request_fulfillment_url(f.aid_request, f, format: :json), remote: true, method: :patch, class: "ViewDelivery-reportStatusForm" do
-                          .row
-                            .h4 Delivery notes
-                          .row
-                             = text_area_tag :message, '', class: "col-12", rows: 5
-                          .row.mt-3
-                            button.btn.btn-success.ViewDelivery-deliverFulfillmentButton.col-6[name="delivered"]
-                              = fa_icon 'truck-loading', text: "Mark delivered"  
-                            button.btn.btn-danger.ViewDelivery-returnFulfillmentButton.col-6[name="returned"]
-                              = fa_icon 'exclamation-circle', text: "Mark returned" 
-                    - else 
-                      | ERROR
-                  .tab-pane(id="map" role="tabpanel" aria-labelledby="map-tab")
-                    - unless Rails.env.test?
-                      iframe(height="300px" width="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=#{Rails.application.credentials.google[:platform_api_key]}&q=#{f.aid_request.caller_address}" allowfullscreen="true")
-                  .tab-pane(id="streetview" role="tabpanel" aria-labelledby="streetview-tab")
-                    - unless Rails.env.test?
-                      img src="https://maps.googleapis.com/maps/api/streetview?location=#{f.aid_request.caller_address}&key=#{Rails.application.credentials.google[:platform_api_key]}&size=300x300" 
+                    ul 
+                      - fulfillments.each do |f|
+                        li.ViewDelivery-fulfillmentItem
+                          .badge.badge-dark.badge-pill= f.public_id
+                          span.ml-1= f.contents
+              .col-md-6
+                .border.p-4.rounded.ViewDelivery-reportStatusArea
+                  = form_with url: update_delivery_path(@delivery, format: :json), remote: true, method: :patch, class: "ViewDelivery-reportStatusForm" do
+                    - fulfillments.map(&:id).each do |id|
+                      = hidden_field_tag 'fulfillment_ids[]', id
+                    .row
+                      .h4 Delivery notes
+                    .row
+                       = text_area_tag :message, '', class: "ViewDelivery-deliveryNote col-12", rows: 5
+                    .row.mt-3
+                      button.btn.btn-success.ViewDelivery-deliverFulfillmentButton.col-6[name="delivered"]
+                        = fa_icon 'truck-loading', text: "Mark delivered"  
+                      button.btn.btn-danger.ViewDelivery-returnFulfillmentButton.col-6[name="returned"]
+                        = fa_icon 'exclamation-circle', text: "Mark returned" 
   = link_to :back, class: "btn btn-outline-dark" do
     = fa_icon 'arrow-left', text: "Back"
   = link_to [:edit, @delivery], class: "btn btn-secondary" do

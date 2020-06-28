@@ -3,7 +3,7 @@
     .col-md-6  
       h1 Aid request details
     .col-md-6
-      .float-left= f.input :call_back, as: :boolean, label: false
+      .float-left= f.input :needs_call_back, as: :boolean, label: false
       .float-right= f.input :urgent, as: :boolean, label: false
   .row
     .col-md-3= f.input :caller_first_name, label: "First name"
@@ -13,8 +13,8 @@
   .row
     .col-md-3= f.input :caller_address, as: :text, input_html: { rows: 6 }
     .col-md-3= f.input :persons, as: :text, hint: "List all adults, children, and seniors with ages if important", input_html: { rows: 6 }
-    .col-md-3= f.input :supplies_needed, as: :text, input_html: { rows: 6 }, hint: "Use commas to separate items"
-    .col-md-3= f.input :special_requests, as: :text, input_html: { rows: 6 }, hint: "Use commas to separate items"
+    .col-md-3= f.input :supplies_needed, as: :text, input_html: { rows: 6 }, hint: "Use commas to separate items normally delivered like food, cleaning supplies, etc.", label: "Basic requests"
+    .col-md-3= f.input :special_requests, as: :text, input_html: { rows: 6 }, hint: "Use commas to separate items that need to be specially sourced"
   .row
     .col-md-6= f.input :notes, as: :text, input_html: { rows: 6 }, hint: "Notes only get printed out on the delivery if the \"See notes\" indication checkbox is checked" 
     .col-md-6= f.input :indications, as: :check_boxes, collection: AidRequest::INDICATIONS

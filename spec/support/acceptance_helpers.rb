@@ -30,7 +30,7 @@ module AcceptanceHelpers
     fill_in "Last name", with: info[:caller_last_name]
     fill_in "Phone number", with: info[:caller_phone_number]
     fill_in "address", with: info[:caller_address]
-    fill_in "Supplies needed", with: info[:supplies_needed]
+    fill_in "Basic requests", with: info[:supplies_needed]
     fill_in "Special requests", with: info[:special_requests]
     fill_in "Persons", with: info[:persons]
     fill_in "Notes", with: info[:notes]
@@ -38,7 +38,7 @@ module AcceptanceHelpers
       check i
     end
     find('.aid_request_urgent .toggle-off').click if info[:urgent]
-    find('.aid_request_call_back .toggle-off').click if info[:call_back]
+    find('.aid_request_needs_call_back').click if info[:needs_call_back]
     click_on "Submit"
   end
 

@@ -15,18 +15,20 @@ class DeliveriesController < AuthorizedOnlyController
   # GET /deliveries/1
   # GET /deliveries/1.json
   def show
+    @delivery_map = delivery_fulfillment_map
   end
 
   # GET /deliveries/new
   def new
-    @fulfillments = Fulfillment.packed.order(created_at: :asc)
+    @fulfillments_by_request = packed_fulfillment_map
     @delivery = Delivery.new
     @delivery.notes.build
   end
 
   # GET /deliveries/1/edit
   def edit
-    @fulfillments = Fulfillment.packed.order(created_at: :asc)
+    @fulfillments = Fulfillment.includes(:aid_request).packed.
+                                order('aid_requests.neighborhood desc, fulfillments.created_at asc')
     @delivery.notes.build
   end
 
@@ -74,24 +76,42 @@ class DeliveriesController < AuthorizedOnlyController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_delivery
-      @delivery = Delivery.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_delivery
+    @delivery = Delivery.includes(:fulfillments).find(params[:id])
+  end
 
-    def delivery
-      @delivery || set_delivery
-    end
+  def delivery
+    @delivery || set_delivery
+  end
 
-    # Only allow a list of trusted parameters through.
-    def delivery_params
-      params.require(:delivery).
-             permit(notes_attributes: [ :body ], fulfillment_ids: []).
-             tap do |dp|
-        ids = dp[:fulfillment_ids] + @delivery.try(:fulfillment_ids).to_a
-        dp[:fulfillment_ids] = ids.uniq.reject(&:blank?)
-        dp[:notes_attributes].each { |n, attrs| attrs[:author] = current_volunteer }
-        dp
-      end
+  # Only allow a list of trusted parameters through.
+  def delivery_params
+    params.require(:delivery).
+           permit(notes_attributes: [ :body ], fulfillment_ids: []).
+           tap do |dp|
+      ids = dp[:fulfillment_ids] + @delivery.try(:fulfillment_ids).to_a
+      dp[:fulfillment_ids] = ids.uniq.reject(&:blank?)
+      dp[:notes_attributes].each { |n, attrs| attrs[:author] = current_volunteer }
+      dp
     end
+  end
+
+  def packed_fulfillment_map
+    AidRequest.includes(:fulfillments). 
+                where(fulfillments: { status: "packed" }).
+                order('aid_requests.neighborhood desc, fulfillments.created_at asc').
+                each_with_object({}) do |ar, out| 
+                  out[ar] = ar.fulfillments
+                end
+  end
+
+  def delivery_fulfillment_map
+    AidRequest.includes(:fulfillments). 
+              where(fulfillments: { delivery_id: delivery.id }).
+              order('aid_requests.neighborhood desc, fulfillments.created_at asc').
+              each_with_object({}) do |ar, out| 
+                out[ar] = ar.fulfillments
+              end
+  end
 end

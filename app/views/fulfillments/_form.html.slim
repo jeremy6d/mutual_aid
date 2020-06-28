@@ -20,20 +20,21 @@
           p.FulfillAidRequest-notes= @aid_request.notes
         .card-footer
           - if @aid_request.supplies_needed
-            h5 Needs
+            h5 Basic requests
             ul
               - @aid_request.supplies_needed.split(",").each do |need|
                 li= need
-          - else
-            .jumbotron.text-center.lead No recorded needs            
+          - if @aid_request.special_requests
+            h5 Special requests
+            ul
+              - @aid_request.special_requests.split(",").each do |need|
+                li= need          
 
     .col-md-6
       .form-inputs
+        = f.input :special, as: :boolean
         = f.input :contents, as: :text
-        = f.input :packing_notes, as: :text
-        = f.input :contents_sheet_image, as: :file
-        = f.input :num_bags, as: :numeric, label: "Number of bags"
       .form-actions.text-center
         button.btn.btn-success
-          = fa_icon 'truck-pickup', text: "Ready for pickup"
+          = fa_icon 'check', text: "Save"
 

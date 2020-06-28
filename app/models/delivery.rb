@@ -32,6 +32,10 @@ class Delivery < ApplicationRecord
   scope :delivered, -> { where(status: Delivery::Status::DELIVERED) }
   scope :on_the_way, -> { where(status: Delivery::Status::ON_THE_WAY) }
 
+  def destinations
+    fulfillments.includes(:aid_requests).group_by(:aid_request_id)
+  end
+
   def delivered?
     self.status == Delivery::Status::DELIVERED
   end
