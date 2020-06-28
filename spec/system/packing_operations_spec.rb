@@ -1,17 +1,6 @@
 require 'rails_helper'
 
 RSpec.feature "Packing operations", type: :system, js: true do
-  # it "allows a fulfillment to be cancelled" do
-  #   fulfillment = FactoryBot.create :fulfillment
-  #   volunteer = FactoryBot.create(:volunteer)
-  #   sign_in! volunteer
-  #   click_on "Packing"
-  #   click_on "Packed fulfillment (less than a minute old)"
-  #   accept_confirm { click_on "Cancel" }
-
-  #   expect(page).to have_content("cancelled")
-  # end
-
   let(:volunteer) { FactoryBot.create(:volunteer) }
   let(:fulfillment_ids) do 
     all(".CreatePackingSlip-basicTable tbody tr").map { |r| 
@@ -44,7 +33,6 @@ RSpec.feature "Packing operations", type: :system, js: true do
 
     packed_ids = all(".CreatePackingSlip-basicTable tbody tr td:first-child").first(3).map do |e|
       e.check
-      puts e.find("input")[:id]
       e.text
     end
     fill_in "Remarks", with: "Let's go get it!"

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature "Hotline operations", type: :system, js: true do
-  let(:attributes) { FactoryBot.attributes_for(:random_aid_request) }
+  let(:attributes) { FactoryBot.attributes_for(:aid_request) }
   before do
     sign_in! FactoryBot.create(:volunteer)
     click_on "New"
@@ -46,6 +46,6 @@ RSpec.feature "Hotline operations", type: :system, js: true do
     click_on "Save"
 
     expect(all(".FulfillmentList-fulfillmentItem").last).to have_content("special")
-    expect(all(".FulfillmentList-fulfillmentItem").size).to eq(2)
+    expect(all(".FulfillmentList-fulfillmentItem").size).to eq(4)
   end
 end

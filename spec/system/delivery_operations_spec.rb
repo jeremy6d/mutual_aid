@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
+RSpec.feature "Delivery operations", type: :system, js: true do
   let(:aid_request) do 
     FactoryBot.create :aid_request, caller_first_name: "Tobias",
                                     caller_last_name: "Fuenke",
@@ -36,8 +36,7 @@ RSpec.feature "Delivery operations", type: :system, js: true, headless: false do
                        creator: FactoryBot.create(:volunteer)
     sign_in! driver
     click_on "Make a delivery"
-    all(".delivery_fulfillments input").each { |c| c.check }
-    all(".delivery_fulfillments input").at(2).uncheck
+    all(".delivery_fulfillments input").each(&:check).at(2).uncheck
     click_on "Start delivery now"
   end
 
