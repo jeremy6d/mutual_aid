@@ -6,7 +6,7 @@ class PackingSlipsController < AuthorizedOnlyController
   def new
     @fulfillments = Fulfillment.includes(:aid_request).
                                 pending.
-                                order('aid_requests.neighborhood desc, created_at asc')
+                                order('aid_requests.neighborhood desc, fulfillments.created_at asc')
     @packing_slip = PackingSlip.new
   end
 
