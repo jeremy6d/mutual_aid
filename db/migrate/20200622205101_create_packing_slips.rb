@@ -14,8 +14,7 @@ class CreatePackingSlips < ActiveRecord::Migration[6.0]
     puts AidRequest.where(call_back: true).
                update_all(status: 'call_back')
     puts AidRequest.where(status: "unfulfilled").
-                    update_all(status: 'fresh').
-                    each &:start!
+                    update_all(status: 'fresh')
 # should have run "create_fulfillments!" manually on fresh ones
 
     puts AidRequest.where(status: "in_progress").
@@ -23,7 +22,7 @@ class CreatePackingSlips < ActiveRecord::Migration[6.0]
                each { |ar| ar.send :create_fulfillments! }
     puts AidRequest.where(status: "fulfilled").
                update_all(status: "complete")
-
+AidRequest.fresh.each &:start!
     remove_column :aid_requests, :call_back, :boolean
   end
 end
