@@ -58,6 +58,13 @@ RSpec.describe AidRequest, type: :model do
     expect(subject.indications).to include("diabetes")
   end
 
+  it "keeps it in call back if there's no way to fulfill it and needs_call_back not toggled" do
+    subject.special_requests = subject.supplies_needed = ""
+    subject.needs_call_back
+    subject.save
+    expect(subject).to be_call_back
+  end
+
   it "defaults urgency to false" do
     expect(subject).not_to be_urgent
   end

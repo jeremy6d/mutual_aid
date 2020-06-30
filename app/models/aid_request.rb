@@ -7,7 +7,7 @@ class AidRequest < ApplicationRecord
   aasm column: :status do
     state :fresh, initial: true
     state :call_back
-    state :in_progress, after_enter: :create_fulfillments!
+    state :in_progress, before_enter: :create_fulfillments!
     state :complete
     state :dismissed, before_enter: :cancel_fulfillments!
 
@@ -133,7 +133,14 @@ private
     if needs_call_back?
       hold if in_progress? || fresh?
     else
-      start if call_back? || fresh?
-    end
+      if call_back? || fresh?
+        if [ supplies_needed, 
+             special_requests ].any?(&:present?)
+          start
+        else
+          hold if fresh?
+        end
+      end
+    end       
   end
 end
