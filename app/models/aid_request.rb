@@ -91,7 +91,7 @@ class AidRequest < ApplicationRecord
   end
 
   def self.to_csv
-    attributes = %w{id status created_at caller_name caller_address supplies_needed persons}
+    attributes = %w{id status created_at caller_name caller_address supplies_needed special_requests persons}
 
     CSV.generate(headers: true) do |csv|
       csv << attributes
