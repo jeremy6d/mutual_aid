@@ -40,6 +40,7 @@ module DeliveriesHelper
   def location_list(delivery)
     delivery.fulfillments.
               map { |f| f.aid_request.neighborhood&.titleize }.
+              uniq.
               to_sentence
   end
 
