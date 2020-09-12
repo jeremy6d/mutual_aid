@@ -1,19 +1,62 @@
-h1 Listing deliveries
+h1.text-center Deliveries
 
-table
-  thead
-    tr
-      th
-      th
-      th
-
-  tbody
-    - @deliveries.each do |delivery|
-      tr
-        td = link_to 'Show', delivery
-        td = link_to 'Edit', edit_delivery_path(delivery)
-        td = link_to 'Destroy', delivery, data: { confirm: 'Are you sure?' }, method: :delete
-
-br
-
-= link_to 'New Delivery', new_delivery_path
+nav
+  .nav.nav-tabs#nav-tab(role="tablist")
+    .nav-item.nav-link.active#nav-en-route-tab(data-toggle="tab" href="#nav-en-route" role="tab" aria-controls="nav-en-route" aria-selected="true") On the way
+    .nav-item.nav-link#nav-profile-tab(data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false") Profile
+    .nav-item.nav-link#nav-contact-tab(data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false") Contact
+.tab-content#nav-tabContent
+  .tab-pane.fade.show.active#nav-home(role="tabpanel" aria-labelledby="nav-home-tab")
+    table.table
+      thead
+        th Driver
+        th Recipient
+        th Address
+        th Started
+        th Updated
+        th
+      tbody
+        - @deliveries_en_route.each do |d|
+          tr
+            td= d.driver.full_name
+            td= link_to d.aid_request.caller_name, d.aid_request
+            td= link_to d.aid_request.caller_address, "https://maps.google.com/?q=#{d.aid_request.caller_address}"
+            td= d.created_at.to_s :human
+            td= d.updated_at.to_s :human
+            td= link_to 'View', d
+  .tab-pane.fade#nav-profile(role="tabpanel" aria-labelledby="nav-profile-tab")
+    table.table
+      thead
+        th Driver
+        th Recipient
+        th Address
+        th Started
+        th Completed
+        th
+      tbody
+        - @deliveries_completed.each do |d|
+          tr
+            td= d.driver.full_name
+            td= link_to d.aid_request.caller_name, d.aid_request
+            td= link_to d.aid_request.caller_address, "https://maps.google.com/?q=#{d.aid_request.caller_address}"
+            td= d.created_at.to_s :human
+            td= d.updated_at.to_s :human
+            td= link_to 'View', d
+  .tab-pane.fade#nav-contact(role="tabpanel" aria-labelledby="nav-contact-tab")
+    table.table
+      thead
+        th Driver
+        th Recipient
+        th Address
+        th Started
+        th Cancelled
+        th
+      tbody
+        - @deliveries_cancelled.each do |d|
+          tr
+            td= d.driver.full_name
+            td= link_to d.aid_request.caller_name, d.aid_request
+            td= link_to d.aid_request.caller_address, "https://maps.google.com/?q=#{d.aid_request.caller_address}"
+            td= d.created_at.to_s :human
+            td= d.updated_at.to_s :human
+            td= link_to 'View', d

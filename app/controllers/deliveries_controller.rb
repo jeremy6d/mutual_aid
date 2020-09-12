@@ -1,13 +1,19 @@
 class DeliveriesController < AuthorizedOnlyController
   before_action :set_delivery, only: [:show, :edit, :update, :destroy]
 
+  STALE_INTERVAL = 3.weeks.freeze
+
   # GET /deliveries
   # GET /deliveries.json
   def index
-    @deliveries = Delivery.all
+    scope = Delivery.where("updated_at > ?", STALE_INTERVAL.ago).
+                     order(updated_at: :desc)
+    @deliveries_en_route = scope.on_the_way
+    @deliveries_completed = scope.delivered
+    @deliveries_cancelled = scope.where(status: 'cancelled')
   end
 
-  def mine
+  def mi
     @in_progress_deliveries = current_volunteer.deliveries.on_the_way
     @past_deliveries = current_volunteer.deliveries.delivered
   end

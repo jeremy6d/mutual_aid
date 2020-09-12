@@ -41,6 +41,9 @@ html lang="en"
           li(class="nav-item #{'active' if @controller == 'deliveries'}")
             = link_to my_deliveries_path, class: "nav-link" do
               = fa_icon 'shipping-fast', text: "My deliveries"
+          li(class="nav-item #{'active' if @controller == 'deliveries'}")
+            = link_to deliveries_path, class: "nav-link" do
+              = fa_icon 'boxes', text: "All deliveries"
           - if (pending_ct = Volunteer.where(approved_by: nil).count) > 0
             li(class="nav-item #{'active' if @controller == 'unapproved_volunteers'}")
               = link_to unapproved_volunteers_path, class: "nav-link" do
