@@ -7,7 +7,7 @@ nav
     .nav-item.nav-link#nav-cancelled-tab(data-toggle="tab" href="#nav-cancelled" role="tab" aria-controls="nav-cancelled" aria-selected="false") Cancelled
 .tab-content#nav-tabContent
   .tab-pane.fade.show.active#nav-en-route(role="tabpanel" aria-labelledby="nav-en-route-tab")
-    table.table
+    table.table.table-striped
       thead
         th Driver
         th Number of fulfillments
@@ -19,19 +19,19 @@ nav
         - @deliveries_en_route.each do |d|
           tr
             td
-              = d.driver.full_name
-              = link_to_phone d.driver.phone_number 
+              .DeliveryTable-name= d.driver.full_name
+              .DeliveryTable-phone= link_to_phone d.driver.phone_number 
             td= d.fulfillments.count
             td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
             td
-              = d.created_at.to_s :date_no_year
-              = d.created_at.to_s :time_only
+              .DeliveryTable-date= d.created_at.to_s :date_no_year
+              .DeliveryTable-time= d.created_at.to_s :time_only
             td
-              = d.updated_at.to_s :date_no_year
-              = d.updated_at.to_s :time_only
+              .DeliveryTable-date= d.updated_at.to_s :date_no_year
+              .DeliveryTable-time= d.updated_at.to_s :time_only
             td= link_to 'View', d
   .tab-pane.fade#nav-delivered(role="tabpanel" aria-labelledby="nav-delivered-tab")
-    table.table
+    table.table.table-striped
       thead
         th Driver
         th Number of fulfillments
@@ -42,14 +42,20 @@ nav
       tbody
         - @deliveries_completed.each do |d|
           tr
-            td= d.driver.full_name
+            td
+              .DeliveryTable-name= d.driver.full_name
+              .DeliveryTable-phone= link_to_phone d.driver.phone_number 
             td= d.fulfillments.count
             td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
-            td= d.created_at.to_s :human
-            td= d.updated_at.to_s :human
+            td
+              .DeliveryTable-date= d.created_at.to_s :date_no_year
+              .DeliveryTable-time= d.created_at.to_s :time_only
+            td
+              .DeliveryTable-date= d.updated_at.to_s :date_no_year
+              .DeliveryTable-time= d.updated_at.to_s :time_only
             td= link_to 'View', d
   .tab-pane.fade#nav-cancelled(role="tabpanel" aria-labelledby="nav-cancelled-tab")
-    table.table
+    table.table.table-striped
       thead
         th Driver
         th Number of fulfillments
@@ -60,9 +66,15 @@ nav
       tbody
         - @deliveries_cancelled.each do |d|
           tr
-            td= d.driver.full_name
+            td
+              .DeliveryTable-name= d.driver.full_name
+              .DeliveryTable-phone= link_to_phone d.driver.phone_number 
             td= d.fulfillments.count
-            td=   d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
-            td= d.created_at.to_s :human
-            td= d.updated_at.to_s :human
+            td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td
+              .DeliveryTable-date= d.created_at.to_s :date_no_year
+              .DeliveryTable-time= d.created_at.to_s :time_only
+            td
+              .DeliveryTable-date= d.updated_at.to_s :date_no_year
+              .DeliveryTable-time= d.updated_at.to_s :time_only
             td= link_to 'View', d
