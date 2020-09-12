@@ -20,14 +20,14 @@ nav
           tr
             td
               .DeliveryTable-name= d.driver.full_name
-              .DeliveryTable-phone= link_to_phone d.driver.phone_number 
+              .DeliveryTable-phone= link_to_phone d.driver.phone_number unless d.driver.phone_number.blank?
             td= summary_of d
             td= recipient_names d
             td
-              .DeliveryTable-date= d.created_at.to_s :date_no_year
+              .DeliveryTable-date= d.created_at.today?  ? "Today" : d.created_at.to_s(:date_no_year)
               .DeliveryTable-time= d.created_at.to_s :time_only
             td
-              .DeliveryTable-date= d.updated_at.to_s :date_no_year
+              .DeliveryTable-date= d.updated_at.today? ? "Today" : d.created_at.to_s(:date_no_year)
               .DeliveryTable-time= d.updated_at.to_s :time_only
             td= link_to 'View', d
   .tab-pane.fade#nav-delivered(role="tabpanel" aria-labelledby="nav-delivered-tab")
@@ -44,14 +44,14 @@ nav
           tr
             td
               .DeliveryTable-name= d.driver.full_name
-              .DeliveryTable-phone= link_to_phone d.driver.phone_number 
+              .DeliveryTable-phone= link_to_phone d.driver.phone_number unless d.driver.phone_number.blank?
             td= summary_of d
             td= recipient_names d
             td
-              .DeliveryTable-date= d.created_at.to_s :date_no_year
+              .DeliveryTable-date= d.created_at.today? ? "Today" : d.created_at.to_s(:date_no_year)
               .DeliveryTable-time= d.created_at.to_s :time_only
             td
-              .DeliveryTable-date= d.updated_at.to_s :date_no_year
+              .DeliveryTable-date= d.updated_at.today? ? "Today" : d.created_at.to_s(:date_no_year)
               .DeliveryTable-time= d.updated_at.to_s :time_only
             td= link_to 'View', d
   .tab-pane.fade#nav-cancelled(role="tabpanel" aria-labelledby="nav-cancelled-tab")
@@ -68,13 +68,13 @@ nav
           tr
             td
               .DeliveryTable-name= d.driver.full_name
-              .DeliveryTable-phone= link_to_phone d.driver.phone_number 
+              .DeliveryTable-phone= link_to_phone d.driver.phone_number unless d.driver.phone_number.blank?
             td= summary_of d
             td= recipient_names d
             td
-              .DeliveryTable-date= d.created_at.to_s :date_no_year
+              .DeliveryTable-date= d.created_at.today? ? "Today" : d.created_at.to_s(:date_no_year)
               .DeliveryTable-time= d.created_at.to_s :time_only
             td
-              .DeliveryTable-date= d.updated_at.to_s :date_no_year
+              .DeliveryTable-date= d.updated_at.today? ? "Today" : d.created_at.to_s(:date_no_year)
               .DeliveryTable-time= d.updated_at.to_s :time_only
             td= link_to 'View', d

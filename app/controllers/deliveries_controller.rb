@@ -13,7 +13,7 @@ class DeliveriesController < AuthorizedOnlyController
     @deliveries_cancelled = scope.where(status: 'cancelled')
   end
 
-  def mi
+  def mine
     @in_progress_deliveries = current_volunteer.deliveries.on_the_way
     @past_deliveries = current_volunteer.deliveries.delivered
   end
