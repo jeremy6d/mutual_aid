@@ -32,9 +32,12 @@ module DeliveriesHelper
   end
 
   def recipient_names(delivery)
-    delivery.fulfillments.
-              map { |f| f.aid_request.caller_name }.
-              to_sentence
+    links = delivery.fulfillments.map do |f|
+      pid = "(#{f.public_id})"
+      title = [f.aid_request.caller_name, pid].join(" ")
+      link_to title, f.aid_request
+    end
+    links.to_sentence
   end
 
   def location_list(delivery)
