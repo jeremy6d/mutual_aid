@@ -3,8 +3,8 @@ h1.text-center Deliveries
 nav
   .nav.nav-tabs#nav-tab(role="tablist")
     .nav-item.nav-link.active#nav-en-route-tab(data-toggle="tab" href="#nav-en-route" role="tab" aria-controls="nav-en-route" aria-selected="true") On the way
-    .nav-item.nav-link#nav-profile-tab(data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false") Profile
-    .nav-item.nav-link#nav-contact-tab(data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false") Contact
+    .nav-item.nav-link#nav-delivered-tab(data-toggle="tab" href="#nav-delivered" role="tab" aria-controls="nav-delivered" aria-selected="false") Delivered
+    .nav-item.nav-link#nav-cancelled-tab(data-toggle="tab" href="#nav-cancelled" role="tab" aria-controls="nav-cancelled" aria-selected="false") Cancelled
 .tab-content#nav-tabContent
   .tab-pane.fade.show.active#nav-home(role="tabpanel" aria-labelledby="nav-home-tab")
     table.table
@@ -25,7 +25,7 @@ nav
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
-  .tab-pane.fade#nav-profile(role="tabpanel" aria-labelledby="nav-profile-tab")
+  .tab-pane.fade#nav-delivered(role="tabpanel" aria-labelledby="nav-delivered-tab")
     table.table
       thead
         th Driver
@@ -43,7 +43,7 @@ nav
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
-  .tab-pane.fade#nav-contact(role="tabpanel" aria-labelledby="nav-contact-tab")
+  .tab-pane.fade#nav-cancelled(role="tabpanel" aria-labelledby="nav-cancelled-tab")
     table.table
       thead
         th Driver
