@@ -11,7 +11,6 @@ nav
       thead
         th Driver
         th Number of fulfillments
-        th Recipients
         th Locations
         th Started
         th Updated
@@ -19,11 +18,17 @@ nav
       tbody
         - @deliveries_en_route.each do |d|
           tr
-            td= d.driver.full_name
+            td
+              = d.driver.full_name
+              = link_to_phone d.driver.phone_number 
             td= d.fulfillments.count
             td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
-            td= d.created_at.to_s :human
-            td= d.updated_at.to_s :human
+            td
+              = d.created_at.to_s :date_no_year
+              = d.created_at.to_s :time_only
+            td
+              = d.updated_at.to_s :date_no_year
+              = d.updated_at.to_s :time_only
             td= link_to 'View', d
   .tab-pane.fade#nav-delivered(role="tabpanel" aria-labelledby="nav-delivered-tab")
     table.table
