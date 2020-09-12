@@ -10,8 +10,7 @@ nav
     table.table.table-striped
       thead
         th Driver
-        th Number of fulfillments
-        th Locations
+        th Summary
         th Started
         th Updated
         th
@@ -21,8 +20,7 @@ nav
             td
               .DeliveryTable-name= d.driver.full_name
               .DeliveryTable-phone= link_to_phone d.driver.phone_number 
-            td= d.fulfillments.count
-            td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td= summary_of d
             td
               .DeliveryTable-date= d.created_at.to_s :date_no_year
               .DeliveryTable-time= d.created_at.to_s :time_only
@@ -34,8 +32,7 @@ nav
     table.table.table-striped
       thead
         th Driver
-        th Number of fulfillments
-        th Locations
+        th Summary
         th Started
         th Completed
         th
@@ -45,8 +42,7 @@ nav
             td
               .DeliveryTable-name= d.driver.full_name
               .DeliveryTable-phone= link_to_phone d.driver.phone_number 
-            td= d.fulfillments.count
-            td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td= summary_of d
             td
               .DeliveryTable-date= d.created_at.to_s :date_no_year
               .DeliveryTable-time= d.created_at.to_s :time_only
@@ -58,8 +54,7 @@ nav
     table.table.table-striped
       thead
         th Driver
-        th Number of fulfillments
-        th Locations
+        th Summary
         th Started
         th Cancelled
         th
@@ -69,8 +64,7 @@ nav
             td
               .DeliveryTable-name= d.driver.full_name
               .DeliveryTable-phone= link_to_phone d.driver.phone_number 
-            td= d.fulfillments.count
-            td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td= summary_of d
             td
               .DeliveryTable-date= d.created_at.to_s :date_no_year
               .DeliveryTable-time= d.created_at.to_s :time_only

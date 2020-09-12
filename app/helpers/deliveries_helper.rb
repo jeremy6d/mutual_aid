@@ -42,4 +42,10 @@ module DeliveriesHelper
               map { |f| f.aid_request.neighborhood&.titleize }.
               to_sentence
   end
+
+  def summary_of(delivery)
+    delivery_ct = delivery.fulfillments.count
+    locations = location_list(delivery)
+    "#{delivery_ct} deliveries going to #{locations}"
+  end
 end
