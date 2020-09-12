@@ -30,4 +30,16 @@ module DeliveriesHelper
       'clipboard-check'
     end
   end
+
+  def recipient_names(delivery)
+    delivery.fulfillments.
+              map { |f| f.aid_request.caller_name }.
+              to_sentence
+  end
+
+  def location_list(delivery)
+    delivery.fulfillments.
+              map { |f| f.aid_request.neighborhood&.titleize }.
+              to_sentence
+  end
 end

@@ -10,8 +10,9 @@ nav
     table.table
       thead
         th Driver
-        th Recipient
-        th Address
+        th Number of fulfillments
+        th Recipients
+        th Locations
         th Started
         th Updated
         th
@@ -19,8 +20,8 @@ nav
         - @deliveries_en_route.each do |d|
           tr
             td= d.driver.full_name
-            td= link_to d.aid_request.caller_name, d.aid_request
-            td= link_to d.aid_request.caller_address, "https://maps.google.com/?q=#{d.aid_request.caller_address}"
+            td= link_to d.fulfillments.count
+            td= link_to d.fulfillements.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
@@ -28,8 +29,8 @@ nav
     table.table
       thead
         th Driver
-        th Recipient
-        th Address
+        th Number of fulfillments
+        th Locations
         th Started
         th Completed
         th
@@ -37,8 +38,8 @@ nav
         - @deliveries_completed.each do |d|
           tr
             td= d.driver.full_name
-            td= link_to d.aid_request.caller_name, d.aid_request
-            td= link_to d.aid_request.caller_address, "https://maps.google.com/?q=#{d.aid_request.caller_address}"
+            td= link_to d.fulfillments.count
+            td= link_to d.fulfillements.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
@@ -46,8 +47,8 @@ nav
     table.table
       thead
         th Driver
-        th Recipient
-        th Address
+        th Number of fulfillments
+        th Locations
         th Started
         th Cancelled
         th
