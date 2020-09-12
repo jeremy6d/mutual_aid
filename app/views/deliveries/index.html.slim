@@ -20,8 +20,8 @@ nav
         - @deliveries_en_route.each do |d|
           tr
             td= d.driver.full_name
-            td= link_to d.fulfillments.count
-            td= link_to d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td= d.fulfillments.count
+            td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
@@ -38,8 +38,8 @@ nav
         - @deliveries_completed.each do |d|
           tr
             td= d.driver.full_name
-            td= link_to d.fulfillments.count
-            td= link_to d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td= d.fulfillments.count
+            td= d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
@@ -56,8 +56,8 @@ nav
         - @deliveries_cancelled.each do |d|
           tr
             td= d.driver.full_name
-            td= link_to d.fulfillments.count
-            td= link_to d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
+            td= d.fulfillments.count
+            td=   d.fulfillments.map { |f| f.aid_request.neighborhood&.titleize }.uniq.join(', ')
             td= d.created_at.to_s :human
             td= d.updated_at.to_s :human
             td= link_to 'View', d
