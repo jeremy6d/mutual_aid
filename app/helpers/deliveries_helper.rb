@@ -42,7 +42,7 @@ module DeliveriesHelper
 
   def location_list(delivery)
     delivery.fulfillments.
-              map { |f| f.aid_request.neighborhood&.titleize }.
+              map { |f| f.aid_request.neighborhood&.titleize.strip }.
               uniq.
               to_sentence
   end
