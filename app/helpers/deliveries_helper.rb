@@ -32,11 +32,12 @@ module DeliveriesHelper
   end
 
   def recipient_names(delivery)
-    links = delivery.fulfillments.map do |f|
-      pid = link_to "(#{f.public_id})", f.aid_request
-      [f.aid_request.caller_last_name, pid].join(" ")
+    names = delivery.fulfillments.map do |f|
+      [ f.aid_request.caller_last_name,
+        link_to("(#{f.public_id})", f.aid_request) 
+      ].join(" ")
     end
-    raw links.to_sentence
+    raw names.to_sentence
   end
 
   def location_list(delivery)
@@ -56,5 +57,13 @@ module DeliveriesHelper
     a = "#{delivery_ct} deliveries" 
     b = locations.empty? ? nil : "going to #{locations}" 
     [a,b].compact.join(" ")
+  end
+
+  def en_route_summary_of(delivery)
+    en_route_ct = delivery.fulfillments.on_the_way.count
+    done_ct = delivery.fulfillments.count - en_route_ct
+    a = "#{done_ct}/#{delivery.fulfillments.count} delivered"
+    b = locations.empty? ? nil : "going to #{locations}" 
+    [a,b].join(" ")
   end
 end

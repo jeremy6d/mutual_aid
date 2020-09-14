@@ -9,12 +9,12 @@ nav
   .tab-pane.fade.show.active#nav-en-route(role="tabpanel" aria-labelledby="nav-en-route-tab")
     table.table.table-striped
       thead
-        th Driver
-        th Summary
-        th Recipients
-        th Started
-        th Updated
-        th
+        th(style="width: 20%;") Driver
+        th(style="width: 25%;") Summary
+        th(style="width: 25%;") Recipients
+        th(style="width: 10%;") Started
+        th(style="width: 10%;") Updated
+        th(style="width: 10%;")
       tbody
         - @deliveries_en_route.each do |d|
           tr
@@ -33,12 +33,12 @@ nav
   .tab-pane.fade#nav-delivered(role="tabpanel" aria-labelledby="nav-delivered-tab")
     table.table.table-striped
       thead
-        th Driver
-        th Summary
-        th Recipients
-        th Started
-        th Completed
-        th
+        th(style="width: 20%;") Driver
+        th(style="width: 25%;") Summary
+        th(style="width: 25%;") Recipients
+        th(style="width: 10%;") Started
+        th(style="width: 10%;") Completed
+        th(style="width: 10%;")
       tbody
         - @deliveries_completed.each do |d|
           tr
@@ -57,12 +57,12 @@ nav
   .tab-pane.fade#nav-cancelled(role="tabpanel" aria-labelledby="nav-cancelled-tab")
     table.table.table-striped
       thead
-        th Driver
-        th Summary
-        th Recipients
-        th Started
-        th Cancelled
-        th
+        th(style="width: 20%;") Driver
+        th(style="width: 25%;") Summary
+        th(style="width: 25%;") Recipients
+        th(style="width: 10%;") Started
+        th(style="width: 10%;") Cancelled
+        th(style="width: 10%;")
       tbody
         - @deliveries_cancelled.each do |d|
           tr
