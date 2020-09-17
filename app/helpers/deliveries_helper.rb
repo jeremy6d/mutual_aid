@@ -66,4 +66,10 @@ module DeliveriesHelper
     b = locations.empty? ? nil : "going to #{locations}" 
     [a,b].join(" ")
   end
+
+  def searchable_data_for(req)
+    %i(id caller_name neighborhood caller_address).
+      map { |f| req.send(f).to_s.strip.downcase.gsub(/[^0-9a-z ]/i, '') }.
+      join(' ')
+  end
 end

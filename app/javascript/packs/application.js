@@ -74,7 +74,6 @@ $(document).on('turbolinks:load', function() {
   });
 
   $(document).find("a#all-toggle").click(function() {
-    console.log("all");
     $(".CreatePackingSlip-fulfillmentRow").addClass('d-flex').show();
     $(".nav-item .nav-link").removeClass("active");
     $("a#all-toggle").addClass("active");
@@ -82,7 +81,6 @@ $(document).on('turbolinks:load', function() {
   });
 
   $(document).find("a#basic-toggle").click(function() {
-    console.log("Basic");
     $(".CreatePackingSlip-basicRow").addClass('d-flex').show();
     $(".CreatePackingSlip-specialRow").removeClass('d-flex').hide();
     $(".nav-item .nav-link").removeClass("active");
@@ -91,7 +89,6 @@ $(document).on('turbolinks:load', function() {
   });
 
   $(document).find("a#special-toggle").click(function() {
-    console.log("special");
     $(".CreatePackingSlip-basicRow").removeClass('d-flex').hide();
     $(".CreatePackingSlip-specialRow").addClass('d-flex').show();
     $(".nav-item .nav-link").removeClass("active");
@@ -99,71 +96,80 @@ $(document).on('turbolinks:load', function() {
     return false;
   });
 
+  (function($) {
+    "use strict"; // Start of use strict
 
-    (function($) {
-      "use strict"; // Start of use strict
+    if ($(window).width() < 768) {
+      $("body").toggleClass("sidebar-toggled");
+      $(".sidebar").toggleClass("toggled");
+      if ($(".sidebar").hasClass("toggled")) {
+        $('.sidebar .collapse').collapse('hide');
+      };
+    }
 
+    // Toggle the side navigation
+    $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+      $("body").toggleClass("sidebar-toggled");
+      $(".sidebar").toggleClass("toggled");
+      if ($(".sidebar").hasClass("toggled")) {
+        $('.sidebar .collapse').collapse('hide');
+      };
+    });
+
+    // Close any open menu accordions when window is resized below 768px
+    $(window).resize(function() {
       if ($(window).width() < 768) {
-        $("body").toggleClass("sidebar-toggled");
-        $(".sidebar").toggleClass("toggled");
-        if ($(".sidebar").hasClass("toggled")) {
-          $('.sidebar .collapse').collapse('hide');
-        };
-      }
+        $('.sidebar .collapse').collapse('hide');
+      };
+      
+      // Toggle the side navigation when window is resized below 480px
+      if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
+        $("body").addClass("sidebar-toggled");
+        $(".sidebar").addClass("toggled");
+        $('.sidebar .collapse').collapse('hide');
+      };
+    });
 
-      // Toggle the side navigation
-      $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
-        $("body").toggleClass("sidebar-toggled");
-        $(".sidebar").toggleClass("toggled");
-        if ($(".sidebar").hasClass("toggled")) {
-          $('.sidebar .collapse').collapse('hide');
-        };
-      });
-
-      // Close any open menu accordions when window is resized below 768px
-      $(window).resize(function() {
-        if ($(window).width() < 768) {
-          $('.sidebar .collapse').collapse('hide');
-        };
-        
-        // Toggle the side navigation when window is resized below 480px
-        if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
-          $("body").addClass("sidebar-toggled");
-          $(".sidebar").addClass("toggled");
-          $('.sidebar .collapse').collapse('hide');
-        };
-      });
-
-      // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-      $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
-        if ($(window).width() > 768) {
-          var e0 = e.originalEvent,
-            delta = e0.wheelDelta || -e0.detail;
-          this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-          e.preventDefault();
-        }
-      });
-
-      // Scroll to top button appear
-      $(document).on('scroll', function() {
-        var scrollDistance = $(this).scrollTop();
-        if (scrollDistance > 100) {
-          $('.scroll-to-top').fadeIn();
-        } else {
-          $('.scroll-to-top').fadeOut();
-        }
-      });
-
-      // Smooth scrolling using jQuery easing
-      $(document).on('click', 'a.scroll-to-top', function(e) {
-        var $anchor = $(this);
-        $('html, body').stop().animate({
-          scrollTop: ($($anchor.attr('href')).offset().top)
-        }, 1000, 'easeInOutExpo');
+    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+    $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
+      if ($(window).width() > 768) {
+        var e0 = e.originalEvent,
+          delta = e0.wheelDelta || -e0.detail;
+        this.scrollTop += (delta < 0 ? 1 : -1) * 30;
         e.preventDefault();
-      });
+      }
+    });
 
-    })(jQuery); // End of use strict
+    // Scroll to top button appear
+    $(document).on('scroll', function() {
+      var scrollDistance = $(this).scrollTop();
+      if (scrollDistance > 100) {
+        $('.scroll-to-top').fadeIn();
+      } else {
+        $('.scroll-to-top').fadeOut();
+      }
+    });
+
+    // Smooth scrolling using jQuery easing
+    $(document).on('click', 'a.scroll-to-top', function(e) {
+      var $anchor = $(this);
+      $('html, body').stop().animate({
+        scrollTop: ($($anchor.attr('href')).offset().top)
+      }, 1000, 'easeInOutExpo');
+      e.preventDefault();
+    });
+
+    $('.NewDelivery-filterInput').keyup(function(e) {
+      var term = $('.NewDelivery-filterInput').val();
+      if (term == "") {
+        $('.NewDelivery-item').show();
+      } else {
+        $('.NewDelivery-item').hide();
+        $(".NewDelivery-item[data-search*='" + term + "']").show();
+      }
+    });
+
+  })(jQuery); // End of use strict
 });
 
 
