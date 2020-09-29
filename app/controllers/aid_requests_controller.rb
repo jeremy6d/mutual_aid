@@ -8,9 +8,9 @@ class AidRequestsController < AuthorizedOnlyController
   def index
     if params[:search_by]
       terms = params[:search_by].gsub(/[\-\.\(\)]*/, "")
-      @aid_requests = AidRequest.basic_search(terms)
+      requests = AidRequest.basic_search(terms)
     else
-      @aid_requests = case params[:status]
+      requests = case params[:status]
       when "", nil, "all"
         AidRequest.order(created_at: :desc)
       when "call_back_hotline"
@@ -22,6 +22,7 @@ class AidRequestsController < AuthorizedOnlyController
                    order(updated_at: :desc)
       end
     end
+    @aid_requests = requests.page params[:page]
     respond_to do |format|
       format.html
       format.csv { send_data @aid_requests.to_csv, filename: "aid_requests-#{Date.today}.csv" }

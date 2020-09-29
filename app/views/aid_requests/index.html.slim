@@ -87,10 +87,4 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
           .small= fa_icon 'inbox', text: "#{time_ago_in_words aid_request.created_at} ago"
           - if aid_request.updated_at > aid_request.created_at
             .small= fa_icon 'clock', text: "#{time_ago_in_words aid_request.updated_at} ago"
-
-          / dl.small 
-          /   dt Recieved
-          /   dd #{time_ago_in_words aid_request.created_at} ago
-          /   - if aid_request.updated_at > aid_request.created_at
-          /     dt Updated
-          /     dd  
+= paginate @aid_requests, theme: 'twitter-bootstrap-4', pagination_class: "pagination-sm justify-content-center"

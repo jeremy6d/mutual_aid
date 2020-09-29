@@ -48,6 +48,8 @@ class AidRequest < ApplicationRecord
     where.not(special_requests: ["", nil])
   }
 
+  paginates_per 25
+
   def volunteer_name
     original_taker&.full_name
   end
