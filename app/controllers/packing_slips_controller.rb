@@ -1,6 +1,11 @@
 class PackingSlipsController < AuthorizedOnlyController
   def index
     @packing_slips = PackingSlip.order(created_at: :desc)
+    @packing_slips = if params[:archive]
+      @packing_slips.where('updated_at <= ?', 1.week.ago)
+    else
+      @packing_slips.where('updated_at > ?', 1.week.ago)
+    end
   end
 
   def new
