@@ -8,7 +8,8 @@ class AidRequestsController < AuthorizedOnlyController
   def index
     if params[:search_by]
       terms = params[:search_by].gsub(/[\-\.\(\)]*/, "")
-      requests = AidRequest.basic_search(terms)
+      ids = AidRequest.basic_search(terms).map(&:id)
+      requests = AidRequest.where(id: ids)
     else
       requests = case params[:status]
       when "", nil, "all"
