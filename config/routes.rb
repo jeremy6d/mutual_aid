@@ -19,5 +19,6 @@ Rails.application.routes.draw do
   post "/volunteers/approve" => "unapproved_volunteers#update", as: :approve_volunteers
   get "/special-requests" => "special_requests#index", as: :special_requests
   patch "/deliveries/:id/update" => "delivery_fulfillments#update", as: :update_delivery
+  get '/overview' => 'static#overview', as: :overview
   root to: 'static#index'
 end

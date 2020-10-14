@@ -28,6 +28,9 @@ html lang="en"
         /! Divider
         hr.sidebar-divider.my-0/
         / ! Nav Item - Dashboard
+        li(class="nav-item")
+            = link_to overview_path, class: "nav-link" do
+              = fa_icon 'info-circle', text: "Overview"
         - if volunteer_signed_in?
           li(class="nav-item #{'active' if @controller == 'aid_requests'}")
             = link_to aid_requests_path, class: "nav-link" do

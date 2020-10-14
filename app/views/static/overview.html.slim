@@ -1,0 +1,29 @@
+h1 How this application works
+
+p This app is designed to help Richmond Mutual Aid's supply drive efforts. It attempts to model the workflow that has emerged over the last year or so. The purpose of this document is to make the application's understanding of the workflow clear. That way, if the supply drive changes how they want to do things, they can translate operations to the app's workflow and identify opportunities for software changes.
+
+p Menu items on the sidebar are entry points into the major classes of operation and are marked in <strong>bold</strong>  .
+
+h2 1. Hotline Operations
+
+p Clicking on the <strong>Requests</strong> menu item takes the user to the aid requests view. This view allows listing all aid requests by their status as well as searching for a particular aid request and starting a new one.
+
+h3 Recording new requests
+
+p Most hotline operators are going through the voice mails and entering information from the messages into the system as new aid requests. This means clicking on the "new" button at the top of the requests view and filling in all the details. Often, the message has insufficient details to fill, so we need to call them back. That's what the big "call back" switch is for on the new request page. Just make sure you hit save once all the details are entered, and make sure call back is on if the order is not ready to be filled.
+
+h3 Calling back 
+
+p The requests list can sorted by all those requests in call back status. This allows somebody calling people back to get a list of just those in need of call back. Each request can be edited to change or add information or modify the status. Once sufficient details have been gathered, the call back switch should be toggled off.
+
+h2 2. Packing Slips
+
+p A packing slip is a set of aid requests that have enough information to pack and are intended to be packed at one time. A single aid request represents the call from the person, but what gets packed and delivered is a <em>fulfillment</em>. An aid request has at least one fulfillment, which is usually for food and normal supplies. However, special requests can be tracked in separate fulfillments. Fulfillment ids go off of the aid request number and a letter, so aid request #3456 might have two fulfillments, #3456-A and #3456-B. Since the B one is special and we might need to source the item, this fulfillment might be saved for a later delivery and therefore wouldn't need to be packed right now.
+
+p Packing slips are accessed on the <strong>Packing</strong> sidebar menu item. This will show you all recent packing slips and their delivery progress. To create a new packing slip, hit the "New Packing Slip" button. This will allow you to check all fulfillments the system thinks are ready to go. This is usually a job for the coordinator to figure out what can be delivered today. Once the slip is created, each fulfillment part of the slip will transition from "pending" status to "packed" status. Drivers can only deliver "packed" fulfillments.
+
+p Once the slip is created, you can view it's fulfillments and there's a "print all" button at the bottom.  This will print the sheet for each fulfillment as a unit so you don't have to do it one by one. The packers will pack based off of each of these items.
+
+h2 3. Delivery
+
+p Delivery drivers create <em>deliveries</em> that are sets of fulfillments that have been marked "packed". To start a new delivery, click on the <strong>Make a delivery</strong> sidebar menu item. This shows the new delivery screen, which allows you to pick from all fulfillments ready to be packed. There's a search bar so you can easily look up an item by number, name, etc. You check all the fulfillments you want to deliver and hit "start delivery now" at the bottom. This will take the driver to a "View delivery" screen and list each fulfillment. You mark each fulfillment "delivered" or "Returned" as necessary during the delivery run. When all items are delivered or returned, the delivery is complete.
