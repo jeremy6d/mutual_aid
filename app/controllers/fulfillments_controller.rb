@@ -3,9 +3,26 @@ class FulfillmentsController < AuthorizedOnlyController
   respond_to :html, :json
 
   # GET /fulfillments
-  # GET /fulfillments.json
   def index
-    @fulfillments = Fulfillment.all
+    if params[:search_by]
+      terms = params[:search_by].gsub(/[\-\.\(\)]*/, "")
+      ids = Fulfillment.basic_search(terms).map(&:id)
+      requests = Fulfillment.include(:aid_requests).where(id: ids)
+      @count = ids.size
+    else
+      @fulfillments = case params[:status]
+      when "", nil, "all"
+        Fulfillment.order(created_at: :desc)
+      else
+        Fulfillment.where(status: params[:status]).
+                    order(updated_at: :desc)
+      end
+    end
+    @fulfillments = @fulfillments.page params[:page]
+    respond_to do |format|
+      format.html
+      format.csv { send_data @fulfillments.to_csv, filename: "aid_requests-#{Date.today}.csv" }
+    end
   end
 
   # GET /fulfillments/1
@@ -84,6 +101,7 @@ class FulfillmentsController < AuthorizedOnlyController
 
     def set_fulfillment
       @fulfillment = fulfillments_set.find(params[:id])
+      @aid_request = @fulfillment.aid_request
     end
 
     # Only allow a list of trusted parameters through.

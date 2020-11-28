@@ -10,10 +10,11 @@ Rails.application.routes.draw do
   end
   resources :aid_requests do
     member { patch 'dismiss' }
-    resources :fulfillments do
+    resources :fulfillments   do
       member { patch 'cancel' }
     end
   end
+  resources :fulfillments
   get "/r/:id" => "aid_requests#show", as: :shortlink
   get "/volunteers/unapproved" => "unapproved_volunteers#index", as: :unapproved_volunteers
   post "/volunteers/approve" => "unapproved_volunteers#update", as: :approve_volunteers
