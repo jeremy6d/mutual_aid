@@ -1,10 +1,4 @@
 module AidRequestsHelper
-  def status_badge_for(req)
-    content_tag :span, class: "badge badge-#{status_color_for(req)}" do
-      fa_icon status_icon_for(req), text: req.status.titleize
-    end
-  end
-
   def status_color_for(obj)
     status = obj.is_a?(AidRequest) ? obj.status : obj
     case status.to_s
@@ -32,22 +26,6 @@ module AidRequestsHelper
       'bg-info text-dark'
     else  
       'bg-light text-black'
-    end
-  end
-
-  def status_icon_for(obj)
-    status = obj.is_a?(AidRequest) ? obj.status : obj
-    icon = case status.to_s
-    when "fresh"
-      "cloud"
-    when "call_back"
-      "phone"
-    when "in_progress"
-      "tasks"
-    when "complete"
-      "check-square"
-    when "dismissed"
-      "ban"
     end
   end
 
