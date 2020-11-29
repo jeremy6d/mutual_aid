@@ -57,6 +57,9 @@ class Fulfillment < ApplicationRecord
 
   before_create :set_public_id
 
+  delegate :neighborhood, :caller_address, :caller_name, :persons, 
+           :caller_phone_number, to: :aid_request
+
   def set_public_id
     req_id = "##{"S" if special?}#{aid_request.id}"
     f_id = ('A'..'Z').to_a.at(aid_request.fulfillments.count % 26)

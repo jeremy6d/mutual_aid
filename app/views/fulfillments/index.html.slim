@@ -1,19 +1,88 @@
-h1 Listing fulfillments ready to pack
-
-table.table
-  thead
-    th Fulfillment ID
-    th Neighborhood
-    th Address
-    th People served
-    th Needs
-    th First called
-
+ul.nav.nav-tabs
+  - Fulfillment.aasm.states.map(&:name).map(&:to_s).each do |status|
+    - next if status == "Fresh"
+    li.nav-item
+      = link_to fulfillments_path(status: status), title: status, class: "nav-link #{'active' if status_filter == status}" do
+        .d-none.d-md-block= fa_icon status_icon_for(status), text: status.humanize
+        .d-xs-block.d-md-none= fa_icon status_icon_for(status)
+  li.nav-item
+    = link_to fulfillments_path(status: "all"), class: "nav-link #{'active' if status_filter == "all"}" do
+      .d-none.d-md-block= fa_icon "folder", text: "All"
+      .d-xs-block.d-md-none= fa_icon "folder"
+h1
+  .d-none.d-md-block
+    .float-right.btn-group.mt-2
+      = link_to fulfillments_path(format: :csv), class: "btn btn-outline-primary" do
+        = fa_icon 'file-csv', text: 'Export'
+    - if params.key? :search_by
+      - @count ||=  @fulfillments.size
+      | #{pluralize @count, 'search result'} for "#{params[:search_by]}"
+    - else 
+      = [status_filter.humanize.titleize, "Requests"].join(" ")
+  .d-xs-block.d-md-none.h3
+    - if params.key? :search_by
+      | #{@fulfillments.size} search results for "#{params[:search_by]}"
+    - else 
+      = [status_filter.humanize.titleize, "Requests"].join(" ")
+  
+.card-deck.d-xs-block.d-sm-none
   - @fulfillments.each do |f|
+    .card(style="min-width: 20%; max-width: 18rem;")
+      .card-header 
+        /(class=header_class_for(f))
+        small.float-right
+          - if f.created_at < 1.week.ago
+            = f.created_at.to_s(:date_only)
+          - elsif f.created_at > 1.day.ago
+            = f.created_at.to_s(:time_only)
+          - else 
+            = f.created_at.strftime("%A")
+        h5.card-title
+          .badge.badge-dark.badge-pill.mr-3 ##{f.id}
+          = link_to(f.aid_request.caller_name, f, class: "text-dark")
+      .card-body
+        ul.list-unstyled
+          li= link_to_phone(f.aid_request.caller_phone_number) 
+          li
+            em= raw f.caller_address&.gsub(/\n/, '<br />')
+            = "(#{f.neighborhood})" unless f.neighborhood.blank?
+          li
+            strong Persons: 
+            = f.persons
+          li 
+            strong Requests: 
+            = f.contents
+      .card-footer updated #{time_ago_in_words f.updated_at} ago
+
+table.table.d-none.d-sm-block(style="text-size: 12pt;")
+  thead
     tr
-      td= link_to f.public_id, [f.aid_request, f]
-      td= f.neighborhood
-      td= f.address
-      td= f.aid_request.persons
-      td= f.contents
-      td= time_ago_in_words f.aid_request.created_at
+      th(scope="col") Status
+      th(scope="col") Name
+      th(scope="col") Phone
+      th(scope="col" width="20%") Needs
+      th(scope="col" width="20%") Address
+      th(scope="col") 
+
+  tbody
+    - @fulfillments.each do |fulfillment|
+      tr
+        /(class=header_class_for(fulfillment))
+        td 
+          = status_badge_for fulfillment
+          / if urgent, say so!
+        td 
+          = link_to fulfillment do
+            .badge.badge-dark.badge-pill.mr-3 ##{fulfillment.id}
+            span= fulfillment.caller_name
+            /(class=(header_class_for(fulfillment).split(" ").last))= 
+
+          br/
+        td= link_to_phone fulfillment.caller_phone_number  
+        td = truncate fulfillment.contents, length: 50
+        td = fulfillment.caller_address
+        td 
+          .small= fa_icon 'inbox', text: "#{time_ago_in_words fulfillment.created_at} ago"
+          - if fulfillment.updated_at > fulfillment.created_at
+            .small= fa_icon 'clock', text: "#{time_ago_in_words fulfillment.updated_at} ago"
+= paginate @fulfillments, theme: 'twitter-bootstrap-4', pagination_class: "pagination-sm justify-content-center"

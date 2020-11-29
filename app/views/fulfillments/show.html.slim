@@ -1,7 +1,7 @@
 h1
   .badge.badge-pill.badge-dark.mr-3= @fulfillment.public_id 
   = "Special " if @fulfillment.special?
-  | Fulfillment for #{@aid_request.caller_name}
+  | Fulfillment for #{@fulfillment.caller_name}
 .row
   .col-md-4
     dt Phone
