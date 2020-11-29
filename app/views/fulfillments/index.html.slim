@@ -18,12 +18,12 @@ h1
       - @count ||=  @fulfillments.size
       | #{pluralize @count, 'search result'} for "#{params[:search_by]}"
     - else 
-      = [status_filter.humanize.titleize, "Requests"].join(" ")
+      = [status_filter.humanize.titleize, "Fulfillments"].join(" ")
   .d-xs-block.d-md-none.h3
     - if params.key? :search_by
       | #{@fulfillments.size} search results for "#{params[:search_by]}"
     - else 
-      = [status_filter.humanize.titleize, "Requests"].join(" ")
+      = [status_filter.humanize.titleize, "Fulfillments"].join(" ")
   
 .card-deck.d-xs-block.d-sm-none
   - @fulfillments.each do |f|
