@@ -1,20 +1,4 @@
 module AidRequestsHelper
-  def status_color_for(obj)
-    status = obj.is_a?(AidRequest) ? obj.status : obj
-    case status.to_s
-    when "fresh", "packed"
-      "info"
-    when "call_back", "pending"
-      "danger"
-    when "in_progress", "on_the_way"
-      "warning"
-    when "complete", "delivered"
-      "success"
-    when "dismissed", "cancelled"
-      "dark"
-    end
-  end
-
   def header_class_for(obj)
     if obj.urgent? && !obj.terminal?
       'bg-danger text-white'

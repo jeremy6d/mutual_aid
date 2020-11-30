@@ -52,12 +52,24 @@ h1
           li
             strong Persons: 
             = req.persons
-          li 
-            strong Basic requests: 
-            = req.supplies_needed
-          li
-            strong Special requests:
-            = req.special_requests
+          - if req.fulfillments.any?
+            li
+              strong Fulfillments
+              dl
+                - req.fulfillments.each do |f|
+                  dl
+                    = link_to [req, f] do
+                      = status_icon_for(f)
+                      = f.public_id
+                  dt= f.contents
+          - else 
+            li 
+              strong Basic requests: 
+              = req.supplies_needed
+            li
+              strong Special requests:
+              = req.special_requests
+
       .card-footer updated #{time_ago_in_words req.updated_at} ago
 
 table.table.d-none.d-sm-block(style="text-size: 12pt;")
@@ -66,8 +78,7 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
       th(scope="col") Status
       th(scope="col") Name
       th(scope="col") Phone
-      th(scope="col" width="20%") Needs
-      th(scope="col" width="20%") Address
+      th(scope="col" width="40%") Needs
       th(scope="col") 
 
   tbody
@@ -80,12 +91,24 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
           = link_to aid_request do
             .badge.badge-dark.badge-pill.mr-3 ##{aid_request.id}
             span(class=(header_class_for(aid_request).split(" ").last))= aid_request.caller_name
-          br/
         td= link_to_phone aid_request.caller_phone_number  
-        td = truncate aid_request.supplies_needed, length: 50
-        td = aid_request.caller_address
+        td
+          - if aid_request.fulfillments.any?
+            ul.small
+              - aid_request.fulfillments.each do |f|
+                li
+                  = link_to [aid_request, f] do
+                    = status_badge_for(f)
+                    = f.public_id
+                  span.ml-1= truncate f.contents, length: 50
+          - else
+            = truncate aid_request.supplies_needed, length: 50
+        / td = aid_request.caller_address
         td 
-          .small= fa_icon 'inbox', text: "#{time_ago_in_words aid_request.created_at} ago"
           - if aid_request.updated_at > aid_request.created_at
             .small= fa_icon 'clock', text: "#{time_ago_in_words aid_request.updated_at} ago"
+          - else 
+            .small= fa_icon 'inbox', text: "#{time_ago_in_words aid_request.created_at} ago"
+          - if aid_request.neighborhood.present?
+            .small.text-center= aid_request.neighborhood
 = paginate @aid_requests, theme: 'twitter-bootstrap-4', pagination_class: "pagination-sm justify-content-center"

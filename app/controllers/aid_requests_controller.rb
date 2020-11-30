@@ -9,7 +9,9 @@ class AidRequestsController < AuthorizedOnlyController
     if params[:search_by]
       terms = params[:search_by].gsub(/[\-\.\(\)]*/, "")
       ids = AidRequest.basic_search(terms).map(&:id)
-      requests = AidRequest.where(id: ids)
+      requests = AidRequest.includes(:fulfillments).
+                            where(id: ids).
+                            order(updated_at: :desc)
       @count = ids.size
     else
       requests = case params[:status]
