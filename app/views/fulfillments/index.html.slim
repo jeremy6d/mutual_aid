@@ -73,7 +73,7 @@ table.table.d-none.d-sm-block(style="text-size: 12pt;")
           / if urgent, say so!
         td 
           = link_to fulfillment do
-            .badge.badge-dark.badge-pill.mr-3 ##{fulfillment.id}
+            .badge.badge-dark.badge-pill.mr-3 #{fulfillment.public_id}
             span= fulfillment.caller_name
             /(class=(header_class_for(fulfillment).split(" ").last))= 
 
