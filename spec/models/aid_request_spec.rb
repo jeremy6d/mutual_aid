@@ -26,6 +26,15 @@ RSpec.describe AidRequest, type: :model do
 
     it { expect(subject.fulfillments.special.count).to eq(2) }
     it { expect(subject.fulfillments.count).to eq(2) }
+    it 'recognizes when an aid request is complete' do
+      subject.fulfillments.first.cancel!
+      subject.fulfillments.last.pack!
+      subject.fulfillments.last.pickup!
+      subject.fulfillments.last.deliver!
+      subject.reload
+
+      expect(AidRequest.outstanding).not_to include(subject)
+    end
   end
 
   it "saves as call_back if call back toggled" do

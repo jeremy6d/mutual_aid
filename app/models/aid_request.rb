@@ -41,7 +41,7 @@ class AidRequest < ApplicationRecord
   }
 
   scope :outstanding, -> {
-    where.not(status: %i(dismissed fulfilled))
+    where.not(status: %i(dismissed complete))
   }
 
   scope :special_requests, -> {
