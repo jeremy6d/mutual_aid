@@ -34,6 +34,9 @@ class Fulfillment < ApplicationRecord
     end
   end
 
+  TERMINAL_STATUSES = %i(cancelled delivered).freeze
+  OUTSTANDING_STATUSES = (aasm.states.map(&:name) - TERMINAL_STATUSES).freeze
+
   has_many :notes, as: :noteable
 
   belongs_to :delivery, optional: true, inverse_of: :driver
@@ -52,8 +55,9 @@ class Fulfillment < ApplicationRecord
     aid_request.check_deliveries! if delivered?
   end
 
-  scope :terminal, -> { where(status: %w(cancelled delivered)) }
+  scope :terminal, -> { where(status: TERMINAL_STATUSES) }
   scope :special, -> { where(special: true) }
+  scope :outstanding, -> { where(status: OUTSTANDING_STATUSES) }
 
   before_create :set_public_id
 
