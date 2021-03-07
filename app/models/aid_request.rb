@@ -132,6 +132,7 @@ private
   end
 
   def perform_transitions
+    check_deliveries! if in_progress?
     if needs_call_back?
       hold if in_progress? || fresh?
     else
