@@ -100,7 +100,7 @@ class FulfillmentsController < AuthorizedOnlyController
     end
 
     def set_fulfillment
-      @fulfillment = fulfillments_set.find(params[:id])
+      @fulfillment = fulfillments_set.from_param(params[:id])
       @aid_request = @fulfillment.aid_request
     end
 

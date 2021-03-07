@@ -64,8 +64,16 @@ class Fulfillment < ApplicationRecord
   delegate :neighborhood, :caller_address, :caller_name, :persons, 
            :caller_phone_number, to: :aid_request
 
+  def to_param
+    public_id.gsub('#', '')
+  end
+
+  def self.from_param(param)
+    find_by_public_id("##{param}")
+  end
+
   def set_public_id
-    req_id = "##{"S" if special?}#{aid_request.id}"
+    req_id = "#{"S" if special?}#{aid_request.id}"
     f_id = ('A'..'Z').to_a.at(aid_request.fulfillments.count % 26)
     self.public_id = [req_id, f_id].join("-")
   end
