@@ -36,3 +36,6 @@ yarn-debug.log*
 .yarn-integrity
 /spec/examples.txt
 .DS_Store
+
+# Ignore db dumps
+/db/dumps/*

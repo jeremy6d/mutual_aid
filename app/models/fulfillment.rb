@@ -30,7 +30,7 @@ class Fulfillment < ApplicationRecord
     end
 
     event :cancel do
-      transitions to: :cancelled
+      transitions from: %i(pending packed on_the_way), to: :cancelled
     end
   end
 
@@ -45,14 +45,12 @@ class Fulfillment < ApplicationRecord
                          inverse_of: :fulfillments_packed,
                          optional: true
 
-  # has_one_attached :contents_sheet_image
-
-  # validate :contents_provided
+  validates_uniqueness_of :public_id
 
   after_create { aid_request.start! unless aid_request.in_progress? }
   after_update do
     delivery.touch if delivery.present?
-    aid_request.check_deliveries! if delivered?
+    aid_request.check_deliveries! if terminal?
   end
 
   scope :terminal, -> { where(status: TERMINAL_STATUSES) }
@@ -66,16 +64,21 @@ class Fulfillment < ApplicationRecord
 
   def to_param
     set_public_id if public_id.blank?
-    public_id.gsub('#', '')
+    public_id
   end
 
   def self.from_param(param)
-    find_by_public_id("##{param}")
+    find_by_public_id(param)
   end
 
   def set_public_id
     req_id = "#{"S" if special?}#{aid_request.id}"
-    f_id = ('A'..'Z').to_a.at(aid_request.fulfillments.count % 26)
+    f_seq = if new_record?
+      aid_request.fulfillments.count
+    else
+      aid_request.fulfillments.order(id: :asc).pluck(:id).index(id).to_i
+    end
+    f_id = ('A'..'Z').to_a.at(f_seq % 26)
     self.public_id = [req_id, f_id].join("-")
   end
 

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Fulfillment, type: :model do
   subject { FactoryBot.build :fulfillment }
+  let(:aid_request) { subject.aid_request }
 
   # it "must have an image attachment when contents list is empty" do
   #   subject.contents = ""
@@ -28,7 +29,7 @@ RSpec.describe Fulfillment, type: :model do
   it "creates a unique public id" do
     ar = FactoryBot.create :aid_request, supplies_needed: "food, bleach, baking soda",
                                          special_requests: "tv, oven"
-    expected_ids = [ "##{ar.id}-A", "#S#{ar.id}-B", "#S#{ar.id}-C"]
+    expected_ids = [ "#{ar.id}-A", "S#{ar.id}-B", "S#{ar.id}-C"]
     expect(Fulfillment.pluck :public_id).to eql(expected_ids)
   end
 
@@ -40,6 +41,7 @@ RSpec.describe Fulfillment, type: :model do
     it { expect(subject.reload).to be_on_the_way }
     
     it "notifies the delivery when it's cancelled" do  
+      expect(aid_request).to receive(:check_deliveries!)
       subject.cancel!
       expect(delivery).to be_cancelled
     end
