@@ -65,6 +65,7 @@ class Fulfillment < ApplicationRecord
            :caller_phone_number, to: :aid_request
 
   def to_param
+    set_public_id if public_id.blank?
     public_id.gsub('#', '')
   end
 
