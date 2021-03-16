@@ -42,10 +42,8 @@ module DeliveriesHelper
 
   def summary_of(delivery)
     delivery_ct = delivery.fulfillments.count
-    locations = delivery.neighborhoods
-    a = "#{delivery_ct} deliveries" 
-    b = locations.empty? ? nil : "going to #{locations}" 
-    [a,b].compact.join(" ")
+    destinations = delivery.neighborhoods
+    "#{delivery_ct} deliveries going to #{destinations}" 
   end
 
   def en_route_summary_of(delivery)
