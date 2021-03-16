@@ -42,15 +42,17 @@ module DeliveriesHelper
 
   def summary_of(delivery)
     delivery_ct = delivery.fulfillments.count
-    destinations = delivery.neighborhoods
+    destinations = delivery.neighborhoods.to_s
+    destinations = "?" if destinations.blank?
     "#{delivery_ct} deliveries going to #{destinations}" 
   end
 
   def en_route_summary_of(delivery)
     en_route_ct = delivery.fulfillments.on_the_way.count
     done_ct = delivery.fulfillments.count - en_route_ct
-    a = "#{done_ct}/#{delivery.fulfillments.count} delivered"
-    b = locations.empty? ? nil : "going to #{locations}" 
+    locations = delivery.neighborhoods
+    "#{done_ct}/#{delivery.fulfillments.count} delivered"
+    b = locations.blank? ? nil : "going to #{locations}" 
     [a,b].join(" ")
   end
 
