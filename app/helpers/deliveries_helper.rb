@@ -40,20 +40,9 @@ module DeliveriesHelper
     raw names.to_sentence
   end
 
-  def location_list(delivery)
-    delivery.fulfillments.
-              map { |f| f.aid_request.neighborhood }.
-              compact.
-              map(&:titleize).
-              map(&:strip).
-              compact.
-              uniq.
-              to_sentence
-  end
-
   def summary_of(delivery)
     delivery_ct = delivery.fulfillments.count
-    locations = location_list(delivery)
+    locations = delivery.neighborhoods
     a = "#{delivery_ct} deliveries" 
     b = locations.empty? ? nil : "going to #{locations}" 
     [a,b].compact.join(" ")

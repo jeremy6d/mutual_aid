@@ -19,7 +19,7 @@ class Delivery < ApplicationRecord
   after_save do
     fulfillments.packed.each &:pickup!
   end
-  before_save :update_status
+  before_save :update_status, :cache_neighborhoods!
   after_touch :update_status!
   after_initialize :update_status
 
@@ -53,6 +53,17 @@ class Delivery < ApplicationRecord
   end
 
 private
+  def cache_neighborhoods!
+    self.neighborhoods = fulfillments.
+      map { |f| f.aid_request.neighborhood }.
+      compact.
+      map(&:titleize).
+      map(&:strip).
+      compact.
+      uniq.
+      to_sentence
+  end
+
   def deliveries_complete?
     fulfillments.all? { |f| %w(cancelled delivered).include? f.status }
   end

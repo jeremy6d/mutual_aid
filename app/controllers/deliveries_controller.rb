@@ -6,7 +6,8 @@ class DeliveriesController < AuthorizedOnlyController
   # GET /deliveries
   # GET /deliveries.json
   def index
-    scope = Delivery.where("updated_at > ?", STALE_INTERVAL.ago).
+    scope = Delivery.includes(:fulfillments, :driver).
+                     where("updated_at > ?", STALE_INTERVAL.ago).
                      order(updated_at: :desc)
     @deliveries_en_route = scope.on_the_way
     @deliveries_completed = scope.delivered

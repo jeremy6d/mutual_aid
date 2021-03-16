@@ -85,7 +85,7 @@ class AidRequest < ApplicationRecord
   end
 
   def check_deliveries!
-    complete! if in_progress? && fulfillments.all? { |f| f.cancelled? || f.delivered? }
+    complete! if in_progress? && fulfillments.all? { |f| f.terminal? }
   end
 
   def terminal?

@@ -85,7 +85,8 @@ RSpec.describe AidRequest, type: :model do
 
     it "marks all fulfillments cancelled" do
       subject.dismiss!
-      expect(subject.fulfillments.pluck(:status).uniq).to contain_exactly("cancelled")
+      fulfillment_statuses = subject.reload.fulfillments.pluck(:status).uniq
+      expect(fulfillment_statuses).to contain_exactly("cancelled")
     end
   end
 

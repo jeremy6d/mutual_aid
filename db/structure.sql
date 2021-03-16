@@ -396,7 +396,8 @@ CREATE TABLE public.deliveries (
     driver_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    status character varying
+    status character varying,
+    neighborhoods text
 );
 
 
@@ -907,6 +908,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200616174851'),
 ('20200622205101'),
 ('20200624154700'),
-('20210308151807');
+('20210308151807'),
+('20210316163203');
 
 
