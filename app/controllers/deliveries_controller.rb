@@ -1,7 +1,7 @@
 class DeliveriesController < AuthorizedOnlyController
   before_action :set_delivery, only: [:show, :edit, :update, :destroy]
 
-  STALE_INTERVAL = 3.weeks.freeze
+  STALE_INTERVAL = 1.weeks.freeze
 
   # GET /deliveries
   # GET /deliveries.json
