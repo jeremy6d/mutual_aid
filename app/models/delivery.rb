@@ -69,6 +69,7 @@ private
   end
 
   def update_status
+    return unless status_changed?
     self.status = case 
     when fulfillments.empty?
       Status::EMPTY
