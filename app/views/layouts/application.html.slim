@@ -66,7 +66,7 @@ html lang="en"
             = link_to new_volunteer_session_path, class: "nav-link" do
               = fa_icon 'sign-in-alt', text: 'Sign in'
           li.nav-item
-            = link_to new_volunteer_registration_path, class: "nav-link" do
+            = link_to new_volunteer_registration_url(protocol: 'https'), class: "nav-link" do
               = fa_icon 'user-plus', text: 'Sign up'
           /! End of Topbar
         /! Divider
@@ -265,7 +265,7 @@ html lang="en"
                     = link_to new_volunteer_session_path do
                       = fa_icon 'sign-in-alt', text: 'Sign in'
                   li.nav-item.d-md-block.d-none
-                    = link_to new_volunteer_registration_path do
+                    = link_to new_volunteer_registration_url(protocol: 'https') do
                       = fa_icon 'user-plus', text: 'Sign up'
           /! End of Topbar
           /! Begin Page Content
