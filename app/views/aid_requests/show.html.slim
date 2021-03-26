@@ -31,7 +31,7 @@
         dt.col-3 Updated
         dd.col-9.ShowAidRequest-lastUpdated= @aid_request.updated_at.to_s(:date_and_time)
       dt.col-3 Notes
-      dd.col-9.ShowAidRequest-notes= @aid_request.notes
+      dd.col-9.ShowAidRequest-notes= simple_format @aid_request.notes
   .col-sm-6
     - if @aid_request.indications.any?
       .alert.alert-danger.ShowAidRequest-indicationsArea
