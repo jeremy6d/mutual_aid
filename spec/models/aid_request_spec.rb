@@ -23,14 +23,16 @@ RSpec.describe AidRequest, type: :model do
       subject.supplies_needed = ""
       subject.save
     end
+    let(:f1) { subject.fulfillments[0] }
+    let(:f2) { subject.fulfillments[1] }
 
     it { expect(subject.fulfillments.special.count).to eq(2) }
     it { expect(subject.fulfillments.count).to eq(2) }
     it 'recognizes when an aid request is complete' do
-      subject.fulfillments.first.cancel!
-      subject.fulfillments.last.pack!
-      subject.fulfillments.last.pickup!
-      subject.fulfillments.last.deliver!
+      f1.cancel!
+      f2.pack!
+      f2.pickup!
+      f2.deliver!
       subject.reload
 
       expect(AidRequest.outstanding).not_to include(subject)

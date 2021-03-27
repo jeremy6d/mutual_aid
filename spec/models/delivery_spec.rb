@@ -40,6 +40,7 @@ RSpec.describe Delivery, type: :model do
     end
 
     it "registers as delivered when all fulfillments are delivered" do
+      raise "delivery not on the way" unless subject.on_the_way?
       subject.fulfillments.each &:deliver!
       expect(subject.reload).to be_delivered
     end
